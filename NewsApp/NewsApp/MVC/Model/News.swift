@@ -7,21 +7,23 @@
 //
 
 import Foundation
+import RealmSwift
 
-final class News {
+final class News: Object {
     
-    var newsTitle: String
-    var newsDescription: String
-    var imageData: Data?
-    var publishedAt: String?
+    @objc dynamic var newsTitle: String = ""
+    @objc dynamic var newsDescription: String = ""
+    @objc dynamic var imageData: Data?
+    @objc dynamic var publishedAt: String?
     
-    init(newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?) {
-        
-        self.newsTitle = newsTitle
-        self.newsDescription = newsDescription
-        self.imageData = imageData
-        self.publishedAt = publishedAt
-    }
+//    init(newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?) {
+//
+//        self.newsTitle = newsTitle
+//        self.newsDescription = newsDescription
+//        self.imageData = imageData
+//        self.publishedAt = publishedAt
+//    }
+    
 }
 
 extension News: JSONDecodable {
@@ -47,6 +49,12 @@ extension News: JSONDecodable {
         } catch let error {
             print("error \(error.localizedDescription)")
         }
-        self.init(newsTitle: title, newsDescription: description, imageData: imageData, publishedAt: publishedAt)
+//        self.init(newsTitle: title, newsDescription: description, imageData: imageData, publishedAt: publishedAt)
+        self.init()
+        
+        self.newsTitle = title
+        self.newsDescription = description
+        self.imageData = imageData
+        self.publishedAt = publishedAt
     }
 }

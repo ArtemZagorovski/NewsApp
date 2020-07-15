@@ -20,16 +20,15 @@ class NewsCell: UITableViewCell {
                 newsImage.image = image
             }
             titleLabel.text = news.newsTitle
-            var text = news.newsDescription
-            if text.count > 180 {
-                text.removeLast(text.count - 180)
-                let readmoreFont = UIFont(name: "Helvetica-Oblique", size: 11.0)
-                let readmoreFontColor = UIColor.blue
-                DispatchQueue.main.async {
-                    self.descriptionLabel.addTrailing(with: "... ", moreText: "Readmore", moreTextFont: readmoreFont!, moreTextColor: readmoreFontColor)
+            descriptionLabel.text = news.newsDescription
+            
+            DispatchQueue.main.async {
+                if self.descriptionLabel.actualNumberOfLines() > 3 {
+                    self.showMoreLabel.isHidden = false
+                } else {
+                    self.showMoreLabel.isHidden = true
                 }
             }
-            descriptionLabel.text = text
         }
         
     }
@@ -59,8 +58,18 @@ class NewsCell: UITableViewCell {
         lbl.text = "description"
         lbl.textColor = .black
         lbl.textAlignment = .left
-        lbl.font = UIFont.italicSystemFont(ofSize: 10.0)
+        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
         lbl.numberOfLines = 3
+
+        return lbl
+    }()
+    
+    private let showMoreLabel : UILabel = {
+        let lbl = UILabel()
+        lbl.text = "...show more"
+        lbl.textColor = .blue
+        lbl.textAlignment = .right
+        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
 
         return lbl
     }()
@@ -68,7 +77,9 @@ class NewsCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(newsImage)
+        
         newsImage.translatesAutoresizingMaskIntoConstraints = false
+        showMoreLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let textStack = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         textStack.axis = .vertical
@@ -88,9 +99,17 @@ class NewsCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             textStack.leadingAnchor.constraint(equalTo: newsImage.trailingAnchor, constant: 10),
-            textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
             textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10)
+        ])
+        
+        insertSubview(showMoreLabel, aboveSubview: textStack)
+        
+        NSLayoutConstraint.activate([
+            showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 0),
+
+            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 1)
         ])
         
     }

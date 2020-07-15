@@ -6,4 +6,15 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+struct Formatter {
+
+    static let dateFormatter = DateFormatter()
+    
+    static func getStringWithWeekDay(date: Date) -> String {
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: date)
+    }
+    
+}

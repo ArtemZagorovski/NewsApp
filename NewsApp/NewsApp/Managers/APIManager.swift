@@ -22,6 +22,7 @@ typealias JSONCompletionHandler = ([String: AnyObject]?, HTTPURLResponse?, Error
 
 
 class APIManager {
+    
     let urlbase = "http://newsapi.org/v2/everything?q=Apple&from="
     let toDate = "T00:00:00&to="
     let sortAndApiKey = "T23:59:59&sortBy=popular&apiKey=6a2f2df98b7d4086a3aa0b9877d333a9"
@@ -30,7 +31,7 @@ class APIManager {
     func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>) -> Void){
         currentDateString = dateString
         guard let url = URL(string: urlbase + currentDateString + toDate + currentDateString + sortAndApiKey) else { return }
-        print(url)
+        
         var news = [News]()
         
         let request = URLRequest(url: url)
@@ -62,5 +63,4 @@ class APIManager {
         }
         dataTask.resume()
     }
-    
 }

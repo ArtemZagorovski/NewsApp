@@ -11,29 +11,16 @@ import RealmSwift
 let realm = try! Realm()
 
 class StorageManager {
-    static func saveTaskToDo(_ tasks: Task) {
+    static func saveNews(_ news: News) {
         
         try! realm.write {
-            realm.add(tasks)
+            realm.add(news)
         }
     }
     
-    static func deliteTaskToDo (_ tasks: Task) {
+    static func deliteNews (_ news: News) {
         try! realm.write {
-            realm.delete(tasks)
-        }
-    }
-    
-    static func saveGoal(_ goal: Goal) {
-        
-        try! realm.write {
-            realm.add(goal)
-        }
-    }
-    
-    static func deliteGoal (_ goal: Goal) {
-        try! realm.write {
-            realm.delete(goal)
+            realm.delete(news)
         }
     }
     

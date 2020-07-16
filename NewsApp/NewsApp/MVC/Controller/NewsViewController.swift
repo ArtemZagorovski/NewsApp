@@ -37,7 +37,7 @@ class NewsViewController: UIViewController {
         let s = UISearchController(searchResultsController: nil)
         s.searchResultsUpdater = self
         s.obscuresBackgroundDuringPresentation = false
-        s.searchBar.placeholder = "News"
+        s.searchBar.placeholder = "Search news"
         s.searchBar.sizeToFit()
         s.searchBar.searchBarStyle = .prominent
         s.searchBar.delegate = self
@@ -69,9 +69,12 @@ class NewsViewController: UIViewController {
         let searchbarScopeIsFiltring = searchController.searchBar.selectedScopeButtonIndex != 0
         return searchController.isActive && (!isSearchBarEmpty || searchbarScopeIsFiltring)
     }
+}
+
+//MARK: - Get data from DB and API
+extension NewsViewController {
     
     private func getDataFromRealm() {
-        
         if newsFromDB.count == 0 {
             mainPageLoadActivityIndicator.startAnimating()
             getDataFromAPI()
@@ -80,30 +83,25 @@ class NewsViewController: UIViewController {
     }
     
     private func getDataFromAPI() {
-        
-
-            let date = Date().rewindDays(-self.countOfDays)
-            let dateString = Formatter.getStringWithWeekDay(date: date)
-            self.apiManager.getNews(dateString: dateString) {[unowned self] (result) in
-                switch result {
-                    
-                case .Success(let totalNews):
-                    DispatchQueue.main.async {
-                        if self.countOfDays == 0 {
-                            totalNews.0.forEach { (news) in
-                                StorageManager.saveNews(news)
-                            }
-                            self.mainPageLoadActivityIndicator.stopAnimating()
-                        }
-                        
-                        self.countOfDays += 1
-                        self.getDataFromRealm()
+        let date = Date().rewindDays(-self.countOfDays)
+        let dateString = Formatter.getStringWithWeekDay(date: date)
+        self.apiManager.getNews(dateString: dateString) {[unowned self] (result) in
+            switch result {
+            case .Success(let totalNews):
+                DispatchQueue.main.async {
+                    if self.countOfDays == 0 {
+                        self.mainPageLoadActivityIndicator.stopAnimating()
                     }
-                    self.totalNews = totalNews.1
-                case .Failure(let error):
-                    print(error)
+                    totalNews.0.forEach { (news) in
+                        StorageManager.saveNews(news)
+                    }
+                    self.countOfDays += 1
+                    self.getDataFromRealm()
                 }
-            
+                self.totalNews = totalNews.1
+            case .Failure(let error):
+                print(error)
+            }
         }
     }
 }
@@ -112,7 +110,7 @@ class NewsViewController: UIViewController {
 extension NewsViewController{
     
     private func setupView() {
-        self.title = "News searching..."
+        self.title = "News"
         mainPageLoadActivityIndicator.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
         mainPageLoadActivityIndicator.layer.cornerRadius = 5
         tableView.register(NewsCell.self, forCellReuseIdentifier: "New")
@@ -149,7 +147,6 @@ extension NewsViewController: UITableViewDelegate {
 }
 
 extension NewsViewController: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFiltring() {
             return searchNews.count
@@ -218,7 +215,6 @@ extension NewsViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
-        
         filterContentForSearchText(searchBar.text!)
     }
 }

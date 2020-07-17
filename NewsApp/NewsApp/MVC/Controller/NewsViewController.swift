@@ -11,6 +11,7 @@ import RealmSwift
 
 class NewsViewController: UIViewController {
     
+//MARK: - Variables and constatns
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
@@ -19,89 +20,52 @@ class NewsViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         return refreshControl
     }
-    private let apiManager = APIManager()
-
-    private var newsFromDB: Results<News>! {
-        didSet{
-            
-            tableView.reloadData()
-            
-            newPageLoadActivityIndicator.stopAnimating()
-        }
-    }
-    
-    private var totalNews = 140
-    private var countOfDays = 0
     
     lazy var searchController: UISearchController = {
         let s = UISearchController(searchResultsController: nil)
         s.searchResultsUpdater = self
         s.obscuresBackgroundDuringPresentation = false
-        s.searchBar.placeholder = "Search news"
+        s.searchBar.placeholder = Constants.SystemWords.searchNews
         s.searchBar.sizeToFit()
         s.searchBar.searchBarStyle = .prominent
         s.searchBar.delegate = self
         return s
     }()
     
-    var searchNews: [News?] = [News]()
+    var searchNews: [News] = [News]()
     var isSearchBarEmpty: Bool {
       return searchController.searchBar.text?.isEmpty ?? true
     }
     
+//MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.refreshControl = refreshControl
-        
-        navigationItem.searchController = searchController
-        
-        newsFromDB = realm.objects(News.self)
-        countOfDays = newsFromDB.count / 20
-        getDataFromRealm()
-        
+        setDelegats()
+        DBDataLoader.getDataFromRealm()
+        animateActivity()
+        countOfDays()
+        addObservers()
         setupView()
         setupLayout()
     }
     
-    func isFiltring() -> Bool {
-        let searchbarScopeIsFiltring = searchController.searchBar.selectedScopeButtonIndex != 0
-        return searchController.isActive && (!isSearchBarEmpty || searchbarScopeIsFiltring)
+//MARK: - Private Methods
+    fileprivate func setDelegats() {
+        tableView.delegate = self
+        tableView.dataSource = self
     }
-}
-
-//MARK: - Get data from DB and API
-extension NewsViewController {
     
-    private func getDataFromRealm() {
-        if newsFromDB.count == 0 {
+    fileprivate func countOfDays() {
+        Constants.Logic.countOfDays = DBDataLoader.newsFromDB != nil ? DBDataLoader.newsFromDB.count / 18 : 0
+    }
+    
+    fileprivate func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdate), name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
+    }
+    
+    fileprivate func animateActivity() {
+        if DBDataLoader.newsFromDB.count == 0 {
             mainPageLoadActivityIndicator.startAnimating()
-            getDataFromAPI()
-        }
-        newsFromDB = realm.objects(News.self)
-    }
-    
-    private func getDataFromAPI() {
-        let date = Date().rewindDays(-self.countOfDays)
-        let dateString = Formatter.getStringWithWeekDay(date: date)
-        self.apiManager.getNews(dateString: dateString) {[unowned self] (result) in
-            switch result {
-            case .Success(let totalNews):
-                DispatchQueue.main.async {
-                    if self.countOfDays == 0 {
-                        self.mainPageLoadActivityIndicator.stopAnimating()
-                    }
-                    totalNews.0.forEach { (news) in
-                        StorageManager.saveNews(news)
-                    }
-                    self.countOfDays += 1
-                    self.getDataFromRealm()
-                }
-                self.totalNews = totalNews.1
-            case .Failure(let error):
-                print(error)
-            }
         }
     }
 }
@@ -110,12 +74,13 @@ extension NewsViewController {
 extension NewsViewController{
     
     private func setupView() {
-        self.title = "News"
-        mainPageLoadActivityIndicator.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
-        mainPageLoadActivityIndicator.layer.cornerRadius = 5
-        tableView.register(NewsCell.self, forCellReuseIdentifier: "New")
-        tableView.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
-        view.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        self.title = Constants.SystemWords.news
+        navigationItem.searchController = searchController
+        tableView.tableFooterView = UIView()
+        tableView.refreshControl = refreshControl
+        tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID)
+        tableView.backgroundColor = Constants.AppColors.white
+        view.backgroundColor = Constants.AppColors.white
     }
     
     private func setupLayout() {
@@ -133,89 +98,74 @@ extension NewsViewController{
         
         NSLayoutConstraint.activate([
             mainPageLoadActivityIndicator.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
-            mainPageLoadActivityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-            newPageLoadActivityIndicator.heightAnchor.constraint(equalToConstant: 30),
-            newPageLoadActivityIndicator.widthAnchor.constraint(equalToConstant: 30)
+            mainPageLoadActivityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
     }
     
 }
 
 //MARK: - TableView Delegate and Datasource
-extension NewsViewController: UITableViewDelegate {
-    
-}
+extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltring() {
-            return searchNews.count
-        } else {
-            return newsFromDB.count
-        }
+        return isFiltring() ? searchNews.count : DBDataLoader.newsFromDB.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "New", for: indexPath) as! NewsCell
-        cell.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        cell.layer.cornerRadius = 15
-        cell.clipsToBounds = true
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
         
-        if isFiltring() {
-            let news = searchNews[indexPath.row]
-            cell.news = news
-            return cell
-        } else {
-            let news = newsFromDB[indexPath.row]
-            cell.news = news
-            return cell
-        }
+        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
+        cell.news = news
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 110
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let detailViewController = NewsDetailsViewController()
+        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
+        detailViewController.news = news
+        navigationController?.pushViewController(detailViewController, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == newsFromDB.count - 1 {
-            
-            if newsFromDB.count < totalNews && countOfDays < 7 {
-                getDataFromAPI()
-            }
-        }
-        
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && countOfDays < 7 {
+        if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && DBDataLoader.newsFromDB.count < Constants.Logic.totalNews{
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
 
             self.tableView.tableFooterView = newPageLoadActivityIndicator
             self.tableView.tableFooterView?.isHidden = false
+            DBDataLoader.getDataFromAPI()
         }
     }
 }
 
 //MARK: - SearchController Extension
-
 extension NewsViewController: UISearchResultsUpdating {
     
     func filterContentForSearchText(_ searchText: String)  {
-        searchNews = newsFromDB.filter { (news: News?) -> Bool in
+        searchNews = DBDataLoader.newsFromDB.filter { (news: News?) -> Bool in
             guard let news = news else { return false }
             
-            if isSearchBarEmpty {
-                return true
-            } else {
-                return news.newsTitle.lowercased().contains(searchText.lowercased()) || news.newsDescription.lowercased().contains(searchText.lowercased())
-            }
-      }
-      tableView.reloadData()
+            return isSearchBarEmpty ? true : (news.newsTitle.lowercased().contains(searchText.lowercased()) || news.newsDescription.lowercased().contains(searchText.lowercased()))
+        }
+        tableView.reloadData()
     }
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
         filterContentForSearchText(searchBar.text!)
+    }
+    
+    func isFiltring() -> Bool {
+        let searchbarScopeIsFiltring = searchController.searchBar.selectedScopeButtonIndex != 0
+        return searchController.isActive && (!isSearchBarEmpty || searchbarScopeIsFiltring)
     }
 }
 
@@ -228,34 +178,18 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        countOfDays = 0
-        newsFromDB.forEach { (news) in
-            StorageManager.deliteNews(news)
+        Constants.Logic.countOfDays = 0
+        DBDataLoader.newsFromDB.forEach { (news) in
+            RealmManager.deliteNews(news)
         }
-        getDataFromRealm()
-        mainPageLoadActivityIndicator.startAnimating()
+        DBDataLoader.getDataFromRealm()
         sender.endRefreshing()
     }
-}
-
-// MARK: - SwiftUI
-import SwiftUI
-
-struct ViewsVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
     
-    struct ContainerView: UIViewControllerRepresentable {
-        
-        let signUpVC = NewsViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<ViewsVCProvider.ContainerView>) -> NewsViewController {
-            return signUpVC
-        }
-        
-        func updateUIViewController(_ uiViewController: ViewsVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<ViewsVCProvider.ContainerView>) {
-            
+    @objc func didUpdate() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.mainPageLoadActivityIndicator.stopAnimating()
         }
     }
 }

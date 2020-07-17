@@ -178,7 +178,6 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        sender.isHidden = false
         Constants.Logic.countOfDays = 0
         DBDataLoader.newsFromDB.forEach { (news) in
             RealmManager.deliteNews(news)

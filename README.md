@@ -8,6 +8,6 @@ To run this app:
 4) Build and run the project.
 
 
-I use https://newsapi.org as api tp get news.
+I use https://newsapi.org as api to get news.
 You can see details of news by tap on in.
 If you have any questions you can email me a.zagorovski23@gmail.com.

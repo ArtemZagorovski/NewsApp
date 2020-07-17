@@ -16,14 +16,6 @@ final class News: Object {
     @objc dynamic var imageData: Data?
     @objc dynamic var publishedAt: String?
     
-//    init(newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?) {
-//
-//        self.newsTitle = newsTitle
-//        self.newsDescription = newsDescription
-//        self.imageData = imageData
-//        self.publishedAt = publishedAt
-//    }
-    
 }
 
 extension News: JSONDecodable {
@@ -43,13 +35,13 @@ extension News: JSONDecodable {
                 if let imageUrl = URL(string: imageUrlString as! String) {
                     imageData = try Data(contentsOf: imageUrl)
                 } else {
-                    print("\(imageUrlString) is not an image")
+                    print("imageUrlString is not an image")
                 }
             }
         } catch let error {
             print("error \(error.localizedDescription)")
         }
-//        self.init(newsTitle: title, newsDescription: description, imageData: imageData, publishedAt: publishedAt)
+
         self.init()
         
         self.newsTitle = title

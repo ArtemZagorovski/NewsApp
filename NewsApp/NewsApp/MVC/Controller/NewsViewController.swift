@@ -178,18 +178,21 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
+        sender.isHidden = false
         Constants.Logic.countOfDays = 0
         DBDataLoader.newsFromDB.forEach { (news) in
             RealmManager.deliteNews(news)
         }
         DBDataLoader.getDataFromRealm()
-        sender.endRefreshing()
     }
     
     @objc func didUpdate() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
+            if self.tableView.numberOfRows(inSection: 0) > 1 {
+                self.tableView.refreshControl?.endRefreshing()
+            }
         }
     }
 }

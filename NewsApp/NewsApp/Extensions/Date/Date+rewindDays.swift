@@ -10,10 +10,6 @@ import Foundation
 
 extension Date {
 
-    var today: Date {
-        return rewindDays(0)
-    }
-
     func rewindDays (_ days:Int) -> Date{
         return Calendar.current.date(byAdding: .day, value: days, to: self)!
     }

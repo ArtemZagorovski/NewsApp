@@ -9,38 +9,38 @@
 import Foundation
 import RealmSwift
 
-struct DBDataLoader {
+class DBDataLoader {
+    
+    static var newsFromDB: Results<News>! {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
+        }
+    }
 
     static func getDataFromRealm() {
-        if newsFromDB.count == 0 {
-            mainPageLoadActivityIndicator.startAnimating()
+        DBDataLoader.newsFromDB = realm.objects(News.self)
+        if newsFromDB != nil && newsFromDB.count == 0 {
             DBDataLoader.getDataFromAPI()
         }
-        newsFromDB = realm.objects(News.self)
     }
     
     static func getDataFromAPI() {
-        let date = Date().rewindDays(-self.countOfDays)
+        let date = Date().rewindDays(-Constants.Logic.countOfDays)
         let dateString = Formatter.getStringWithWeekDay(date: date)
-        APIManager().getNews(dateString: dateString) {[weak self] result in
+        APIService().getNews(dateString: dateString) { result in
             switch result {
             case .Success(let news, let totalNews):
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    if self.countOfDays == 0 {
-                        self.mainPageLoadActivityIndicator.stopAnimating()
+                DispatchQueue.main.async {
+                    news.forEach { news in
+                        RealmManager.saveNews(news)
                     }
-                    news.forEach { (news) in
-                        StorageManager.saveNews(news)
-                    }
-                    countOfDays += 1
+                    Constants.Logic.countOfDays += 1
                     DBDataLoader.getDataFromRealm()
                 }
-                self.totalNews = totalNews
+                Constants.Logic.totalNews = totalNews
             case .Failure(let error):
                 print(error)
             }
         }
     }
-
 }

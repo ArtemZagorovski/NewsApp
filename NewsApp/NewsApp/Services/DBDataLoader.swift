@@ -43,4 +43,11 @@ class DBDataLoader {
             }
         }
     }
+    
+    static func deleteAndGetNewData() {
+        newsFromDB.forEach { (news) in
+            RealmManager.deliteNews(news)
+        }
+        getDataFromRealm()
+    }
 }

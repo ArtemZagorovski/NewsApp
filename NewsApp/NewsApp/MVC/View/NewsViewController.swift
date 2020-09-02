@@ -135,7 +135,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        let isNeedToLoadNewData = indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && DBDataLoader.newsFromDB.count < Constants.Logic.totalNews
+        let isNeedToLoadNewData = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && DBDataLoader.newsFromDB.count < Constants.Logic.totalNews
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
@@ -180,10 +180,7 @@ extension NewsViewController: UISearchBarDelegate {
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
         Constants.Logic.countOfDays = 0
-        DBDataLoader.newsFromDB.forEach { (news) in
-            RealmManager.deliteNews(news)
-        }
-        DBDataLoader.getDataFromRealm()
+        DBDataLoader.deleteAndGetNewData()
     }
     
     @objc func didUpdate() {

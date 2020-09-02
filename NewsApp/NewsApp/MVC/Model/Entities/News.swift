@@ -15,6 +15,7 @@ final class News: Object {
     @objc dynamic var newsDescription: String = ""
     @objc dynamic var imageData: Data?
     @objc dynamic var publishedAt: String?
+    @objc dynamic var isFavourite: Bool = false
     
 }
 

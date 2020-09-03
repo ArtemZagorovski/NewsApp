@@ -11,11 +11,11 @@ import Foundation
 protocol ViewDelegate {
     func viewDidLoad()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavButton(for viewModel: Type)
+    func viewDidTapFavButton(for viewModel: ViewmodelProtocol)
 }
 
 protocol Viewable {
-    func updateView(with: [viewmodelProtocol])
+    func updateView(with: [ViewmodelProtocol])
 }
 
 protocol NewsModel {
@@ -25,18 +25,21 @@ protocol NewsModel {
 }
 
 protocol ModelDelegate {
-    func modelDidLoadNews(_ news: [viewmodelProtocol])
+    func modelDidLoadNews(_ news: [News])
 }
 
-protocol RemoteDataGetable {
-    func getData(dateString: String)
-}
-
-protocol LocalDataGetable {
+protocol ServiceGetable {
     func getData()
+}
+
+protocol LocalDataChangeble {
     func reloadData()
 }
 
+protocol DBDataLoaderDelegate {
+    func localDataDidLoad(_ news: [News])
+}
+
 protocol APIServiceDelegate {
-    func remoteDataDidLoad(_ news: [viewmodelProtocol])
+    func remoteDataDidLoad(_ news: [News])
 }

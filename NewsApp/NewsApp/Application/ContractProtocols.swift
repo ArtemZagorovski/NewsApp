@@ -15,7 +15,7 @@ protocol ViewDelegate {
 }
 
 protocol Viewable {
-    func updateView(with: [viewmodelProtocol])
+    func updateView(with: [ViewmodelProtocol])
 }
 
 protocol NewsModel {
@@ -25,6 +25,5 @@ protocol NewsModel {
 }
 
 protocol ModelDelegate {
-    func modelDidLoadNews(_ news: [viewmodelProtocol])
+    func modelDidLoadNews(_ news: [News])
 }
-

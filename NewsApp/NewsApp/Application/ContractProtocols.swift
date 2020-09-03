@@ -28,3 +28,12 @@ protocol ModelDelegate {
     func modelDidLoadNews(_ news: [viewmodelProtocol])
 }
 
+protocol RemoteDataGetable {
+    func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>))
+}
+
+protocol LocalDataGetable {
+    func getDataFromRealm()
+    func getDataFromAPI()
+    func deleteAndGetNewData()
+}

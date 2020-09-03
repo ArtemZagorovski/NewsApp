@@ -43,3 +43,4 @@ protocol DBDataLoaderDelegate {
 protocol APIServiceDelegate {
     func remoteDataDidLoad(_ news: [News])
 }
+

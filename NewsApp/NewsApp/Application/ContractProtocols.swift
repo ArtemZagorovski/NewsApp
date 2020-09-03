@@ -29,11 +29,14 @@ protocol ModelDelegate {
 }
 
 protocol RemoteDataGetable {
-    func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>))
+    func getData(dateString: String)
 }
 
 protocol LocalDataGetable {
-    func getDataFromRealm()
-    func getDataFromAPI()
-    func deleteAndGetNewData()
+    func getData()
+    func reloadData()
+}
+
+protocol APIServiceDelegate {
+    func remoteDataDidLoad(_ news: [viewmodelProtocol])
 }

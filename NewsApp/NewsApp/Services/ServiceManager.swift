@@ -7,3 +7,18 @@
 //
 
 import Foundation
+
+class ServiceManager: DataLoader, DataLoaderDelegate {
+    
+    var serviceManagerDelegate: DataManagerDelegate?
+    var apiService: DataLoader?
+    
+    func didLoadData(_ news: [News]) {
+        serviceManagerDelegate?.dataManagerDidLoadData(news)
+    }
+    
+    func getData() {
+        apiService?.getData()
+    }
+    
+}

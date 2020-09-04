@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+class ViewModel {
+    
+    var news: [News]
+    
+    init(news: [News]) {
+        self.news = news
+    }
+    
+}

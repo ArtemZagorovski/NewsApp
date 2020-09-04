@@ -7,3 +7,31 @@
 //
 
 import Foundation
+
+class Interpreter: ViewDelegate, ModelDelegate {
+    
+    var model: NewsManager
+    var view: View
+    
+    init (model: NewsManager, view: View) {
+        self.model = model
+        self.view = view
+    }
+    
+    func viewDidLoad() {
+        model.loadNews()
+    }
+    
+    func viewDidChangeSearchTerm(_ term: String) {
+        model.filter(for: term)
+    }
+    
+    func viewDidTapFavouriteButton(for viewModel: ViewModel) {
+        model.updateFavourite()
+    }
+    
+    func modelDidLoadNews(_ news: [News]) {
+        view.updateView(with: ViewModel(news: news))
+    }
+    
+}

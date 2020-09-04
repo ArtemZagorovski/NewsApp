@@ -36,7 +36,7 @@ protocol DataManagerDelegate {
     func dataManagerDidLoadData(_ news: [News])
 }
 
-protocol LocalDataManager {
+protocol LocalDataChanger {
     func saveData(_ news: [News])
     func removeData()
 }

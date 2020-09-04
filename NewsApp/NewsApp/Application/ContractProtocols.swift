@@ -15,7 +15,7 @@ protocol ViewDelegate {
 }
 
 protocol View {
-    func updateView(with: [ViewModel])
+    func updateView(with: ViewModel)
 }
 
 protocol NewsManager {

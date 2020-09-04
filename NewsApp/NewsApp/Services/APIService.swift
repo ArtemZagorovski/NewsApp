@@ -17,9 +17,13 @@ enum APIResult<T, Int> {
     case Failure(Error)
 }
 
-class APIService {
+class APIService: DataLoader {
+    
+    var apiServiceDelegate: DataLoaderDelegate?
 
-    func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>) -> Void){
+    func getData(){
+        let date = Date().rewindDays(-Constants.Logic.countOfDays)
+        let dateString = Formatter.getStringWithWeekDay(date: date)
         Constants.Api.currentDateString = dateString
         guard let url = URL(string: Constants.Api.urlbase
                                   + Constants.Api.currentDateString
@@ -47,7 +51,7 @@ class APIService {
                         } else {
                             return
                         }
-                    completionHandler(.Success(news, totalNews))
+                    self.apiServiceDelegate?.didLoadData(news)
                 } catch let error as NSError {
                     print(error)
                 }
@@ -56,7 +60,7 @@ class APIService {
             }
             
             if let error = error {
-                completionHandler(.Failure(error))
+                print(error.localizedDescription)
             }
             
         }

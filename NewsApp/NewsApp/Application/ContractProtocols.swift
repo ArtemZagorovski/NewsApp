@@ -9,21 +9,39 @@
 import Foundation
 
 protocol ViewDelegate {
-    func loadNews()
-    func searchFor(text: String)
-    func newFavouriteAdded()
+    func viewDidLoad()
+    func viewDidChangeSearchTerm(_ term: String)
+    func viewDidTapFavouriteButton(for viewModel: ViewModel)
 }
 
-protocol Viewable {
-    func updateView(with: [News])
+protocol View {
+    func updateView(with: [ViewModel])
 }
 
-protocol NewsModel {
+protocol NewsManager {
     func loadNews()
-    func filterFor(text: String)
+    func filter(for text: String)
     func updateFavourite()
 }
 
 protocol ModelDelegate {
-    func dataIsReady(with: [News])
+    func modelDidLoadNews(_ news: [News])
 }
+
+protocol DataLoader {
+    func getData()
+}
+
+protocol DataManagerDelegate {
+    func dataManagerDidLoadData(_ news: [News])
+}
+
+protocol LocalDataChanger {
+    func saveData(_ news: [News])
+    func removeData()
+}
+
+protocol DataLoaderDelegate {
+    func didLoadData(_ news: [News])
+}
+

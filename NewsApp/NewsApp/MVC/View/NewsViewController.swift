@@ -37,12 +37,16 @@ class NewsViewController: UIViewController {
       return searchController.searchBar.text?.isEmpty ?? true
     }
     
+    var viewModel: ViewModel!
+    var viewDelegate: ViewDelegate?
+    
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
-        DBDataLoader.getDataFromRealm()
-        animateActivity()
+        //DBDataLoader.getDataFromRealm()
+        viewDelegate?.viewDidLoad()
+//        animateActivity()
         countOfDays()
         addObservers()
         setupView()
@@ -51,8 +55,8 @@ class NewsViewController: UIViewController {
     
 //MARK: - Private Methods
     fileprivate func setDelegats() {
-        tableView.delegate = self
-        tableView.dataSource = self
+        //tableView.delegate = self
+        //tableView.dataSource = self
     }
     
     fileprivate func countOfDays() {
@@ -63,11 +67,11 @@ class NewsViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdate), name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
     }
     
-    fileprivate func animateActivity() {
-        if DBDataLoader.newsFromDB.count == 0 {
-            mainPageLoadActivityIndicator.startAnimating()
-        }
-    }
+//    fileprivate func animateActivity() {
+//        if DBDataLoader.newsFromDB.count == 0 {
+//            mainPageLoadActivityIndicator.startAnimating()
+//        }
+//    }
 }
 
 //MARK: - Setup layout and views
@@ -109,13 +113,13 @@ extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isFiltring() ? searchNews.count : DBDataLoader.newsFromDB.count
+        return isFiltring() ? searchNews.count : viewModel.news.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
         
-        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
+        let news = isFiltring() ? searchNews[indexPath.row] : viewModel.news[indexPath.row]
         cell.news = news
         return cell
     }
@@ -127,7 +131,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let detailViewController = NewsDetailsViewController()
-        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
+        let news = isFiltring() ? searchNews[indexPath.row] : viewModel.news[indexPath.row]
         detailViewController.news = news
         navigationController?.pushViewController(detailViewController, animated: true)
     }
@@ -135,14 +139,14 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        let isNeedToLoadNewData = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && DBDataLoader.newsFromDB.count < Constants.Logic.totalNews
+        let isNeedToLoadNewData = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && viewModel.news.count < Constants.Logic.totalNews
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
 
             self.tableView.tableFooterView = newPageLoadActivityIndicator
             self.tableView.tableFooterView?.isHidden = false
-            DBDataLoader.getDataFromAPI()
+            //DBDataLoader.getDataFromAPI()
         }
     }
 }
@@ -192,4 +196,15 @@ extension NewsViewController {
             }
         }
     }
+}
+
+extension NewsViewController: View {
+    
+    func updateView(with: ViewModel) {
+        viewModel = with
+        DispatchQueue.main.sync {
+            self.tableView.reloadData()
+        }
+    }
+    
 }

@@ -44,3 +44,4 @@ protocol LocalDataManager {
 protocol DataLoaderDelegate {
     func didLoadData(_ news: [News])
 }
+

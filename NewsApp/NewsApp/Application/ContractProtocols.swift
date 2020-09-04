@@ -33,7 +33,7 @@ protocol DataLoader {
 }
 
 protocol DataManagerDelegate {
-    func dataLoaderDidLoadData(_ news: [News])
+    func dataManagerDidLoadData(_ news: [News])
 }
 
 protocol LocalDataManager {

@@ -11,20 +11,19 @@ import Foundation
 protocol ViewDelegate {
     func viewDidLoad()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavButton(for viewModel: Type)
+    func viewDidTapFavouriteButton(for viewModel: ViewModel)
 }
 
-protocol Viewable {
-    func updateView(with: [viewmodelProtocol])
+protocol View {
+    func updateView(with: [ViewModel])
 }
 
-protocol NewsModel {
+protocol NewsManager {
     func loadNews()
     func filter(for text: String)
     func updateFavourite()
 }
 
 protocol ModelDelegate {
-    func modelDidLoadNews(_ news: [viewmodelProtocol])
+    func modelDidLoadNews(_ news: [News])
 }
-

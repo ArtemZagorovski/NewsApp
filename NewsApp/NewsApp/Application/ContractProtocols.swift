@@ -11,14 +11,14 @@ import Foundation
 protocol ViewDelegate {
     func viewDidLoad()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavButton(for viewModel: ViewmodelProtocol)
+    func viewDidTapFavouriteButton(for viewModel: ViewModel)
 }
 
-protocol Viewable {
-    func updateView(with: [ViewmodelProtocol])
+protocol View {
+    func updateView(with: [ViewModel])
 }
 
-protocol NewsModel {
+protocol NewsManager {
     func loadNews()
     func filter(for text: String)
     func updateFavourite()
@@ -28,18 +28,19 @@ protocol ModelDelegate {
     func modelDidLoadNews(_ news: [News])
 }
 
-protocol ServiceGetable {
+protocol DataLoader {
     func getData()
 }
 
-protocol LocalDataChangeble {
-    func reloadData()
+protocol DataManagerDelegate {
+    func dataLoaderDidLoadData(_ news: [News])
 }
 
-protocol DBDataLoaderDelegate {
-    func localDataDidLoad(_ news: [News])
+protocol LocalDataManager {
+    func saveData(_ news: [News])
+    func removeData()
 }
 
-protocol APIServiceDelegate {
-    func remoteDataDidLoad(_ news: [News])
+protocol DataLoaderDelegate {
+    func didLoadData(_ news: [News])
 }

@@ -21,7 +21,9 @@ final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     
     func filter(for text: String) {
         let searchNews = news?.filter { news -> Bool in
-            return text.isEmpty ? true : (news.newsTitle.lowercased().contains(text.lowercased()) || news.newsDescription.lowercased().contains(text.lowercased()))
+            let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
+            let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
+            return text.isEmpty ? true : isTitleContainsFilter || isDescriptionContainsFilter
         }
         newsLogicDelegate?.modelDidLoadNews(searchNews!)
     }

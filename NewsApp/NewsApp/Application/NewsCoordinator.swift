@@ -8,16 +8,16 @@
 
 import UIKit
 
-class NewsCoordinator {
+final class NewsCoordinator {
     
     func createNewsViewController() -> UIViewController {
         
-        let model = NewsLogic()
+        let model = DefaultNewsManager()
         let view = NewsViewController()
         let serviceManager = ServiceManager()
         let apiService = APIService()
         let dbService = DBDataLoader()
-        let interpreter = Interpreter(model: model, view: view)
+        let interpreter = Coordinator(model: model, view: view)
         
         model.newsLogicDelegate = interpreter
         model.serviceManager = serviceManager

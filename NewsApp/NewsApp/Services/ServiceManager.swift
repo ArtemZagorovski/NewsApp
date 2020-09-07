@@ -12,13 +12,23 @@ class ServiceManager: DataLoader, DataLoaderDelegate {
     
     var serviceManagerDelegate: DataManagerDelegate?
     var apiService: DataLoader?
+    var dbService: LocalDataChanger?
     
     func didLoadData(_ news: [News]) {
         serviceManagerDelegate?.dataManagerDidLoadData(news)
+        DispatchQueue.main.async {
+            self.dbService?.saveData(news)
+        }
     }
     
     func getData() {
-        apiService?.getData()
+        if Constants.Logic.countOfDays > 0 {
+            apiService?.getData()
+        } else {
+            dbService?.removeData()
+            apiService?.getData()
+            
+        }
     }
     
 }

@@ -9,25 +9,23 @@
 import Foundation
 import RealmSwift
 
-class DBDataLoader: DataLoader {
+class DBDataLoader: DataLoader, LocalDataChanger {
     
-    static var newsFromDB: Results<News>! {
-        didSet {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
-        }
-    }
+    var dbDataLoaderDelegate: DataLoaderDelegate?
 
     func getData() {
-        DBDataLoader.newsFromDB = realm.objects(News.self)
-        if DBDataLoader.newsFromDB != nil && DBDataLoader.newsFromDB.count == 0 {
-            
+        dbDataLoaderDelegate?.didLoadData(Array(realm.objects(News.self)))
+    }
+    
+    func saveData(_ news: [News]) {
+        news.forEach { news in
+            RealmManager.saveNews(news)
         }
     }
     
-    static func deleteAndGetNewData() {
-        newsFromDB.forEach { (news) in
-            RealmManager.deliteNews(news)
+    func removeData() {
+        realm.objects(News.self).forEach{ object in
+            RealmManager.deliteNews(object)
         }
-        //getData()
     }
 }

@@ -4,10 +4,11 @@ xcuserdata/
 build/
 DerivedData/
 
-
 .build/
 
 Pods/
 *.xcworkspace
-*.lock
+
 *.DS_Store
+*.lock
+

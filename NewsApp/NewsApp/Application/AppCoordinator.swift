@@ -16,6 +16,7 @@ class AppCoordinator {
         let view = NewsViewController()
         let serviceManager = ServiceManager()
         let apiService = APIService()
+        let dbService = DBDataLoader()
         let interpreter = Interpreter(model: model, view: view)
         
         model.newsLogicDelegate = interpreter
@@ -23,7 +24,9 @@ class AppCoordinator {
         view.viewDelegate = interpreter
         serviceManager.serviceManagerDelegate = model
         serviceManager.apiService = apiService
+        serviceManager.dbService = dbService
         apiService.apiServiceDelegate = serviceManager
+        dbService.dbDataLoaderDelegate = serviceManager
         
         return view
     }

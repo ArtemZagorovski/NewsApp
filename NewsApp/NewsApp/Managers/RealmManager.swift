@@ -12,7 +12,6 @@ let realm = try! Realm()
 
 class RealmManager {
     static func saveNews(_ news: News) {
-        
         try! realm.write {
             realm.add(news)
         }
@@ -21,6 +20,12 @@ class RealmManager {
     static func deliteNews (_ news: News) {
         try! realm.write {
             realm.delete(news)
+        }
+    }
+    
+    static func deleteAll () {
+        try! realm.write {
+            realm.deleteAll()
         }
     }
     

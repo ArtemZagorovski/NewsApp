@@ -10,9 +10,9 @@ import UIKit
 
 class NewsDetailsViewController: UIViewController {
     
-    var news: News!
+    var news: ViewModel!
     
-    private let newsImage = UIImageView()
+    private var newsImage = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let publishedAt = UILabel()
@@ -30,12 +30,7 @@ extension NewsDetailsViewController{
     private func setupView() {
         view.backgroundColor = Constants.AppColors.white
         
-        if let newsImageData = news.imageData {
-            guard let image = UIImage(data: newsImageData) else { return }
-            newsImage.image = image
-        } else {
-            newsImage.image = UIImage(named: "news")
-        }
+        newsImage.image = news.image
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill

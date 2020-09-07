@@ -52,6 +52,7 @@ class APIService: DataLoader {
                             return
                         }
                     self.apiServiceDelegate?.didLoadData(news)
+                    Constants.Logic.countOfDays += 1
                 } catch let error as NSError {
                     print(error)
                 }

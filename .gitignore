@@ -4,8 +4,6 @@ xcuserdata/
 build/
 DerivedData/
 
-.build/
-
 Pods/
 *.xcworkspace
 

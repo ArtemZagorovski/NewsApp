@@ -22,8 +22,8 @@ class Interpreter: ViewDelegate, ModelDelegate {
         model.loadNews()
     }
     
-    func viewDidChangeSearchTerm(_ term: String) {
-        model.filter(for: term)
+    func viewDidChangeSearchTerm(_ term: String, isSearchBarEmpty: Bool) {
+        model.filter(for: term, isSearchBarEmpty: isSearchBarEmpty)
     }
     
     func viewDidTapFavouriteButton(for viewModel: ViewModel) {
@@ -31,7 +31,7 @@ class Interpreter: ViewDelegate, ModelDelegate {
     }
     
     func modelDidLoadNews(_ news: [News]) {
-        view.updateView(with: ViewModel(news: news))
+        view.updateView(with: news)
     }
     
 }

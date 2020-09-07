@@ -6,4 +6,12 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+struct ViewModel {
+    var newsTitle: String
+    var newsDescription: String
+    var image: UIImage
+    var publishedAt: String?
+    var isFavourite: Bool = false
+}

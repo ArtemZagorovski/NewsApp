@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class DBDataLoader: DataLoader, LocalDataChanger {
+final class DBDataLoader: DataLoader, LocalDataChanger {
     
     var dbDataLoaderDelegate: DataLoaderDelegate?
 

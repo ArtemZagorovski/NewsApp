@@ -8,25 +8,22 @@
 
 import Foundation
 
-final class NewsLogic: NewsManager, DataManagerDelegate {
+final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     
     var serviceManager: ServiceManager?
     var newsLogicDelegate: ModelDelegate?
     
-    var news: [News]?
+    private var news: [News]?
     
     func loadNews() {
         serviceManager?.getData()
     }
     
-    func filter(for text: String, isSearchBarEmpty: Bool) {
-        let searchNews = news?.filter { (news: News?) -> Bool in
-            guard let news = news else { return false }
-            
-            return isSearchBarEmpty ? true : (news.newsTitle.lowercased().contains(text.lowercased()) || news.newsDescription.lowercased().contains(text.lowercased()))
+    func filter(for text: String) {
+        let searchNews = news?.filter { news -> Bool in
+            return text.isEmpty ? true : (news.newsTitle.lowercased().contains(text.lowercased()) || news.newsDescription.lowercased().contains(text.lowercased()))
         }
         newsLogicDelegate?.modelDidLoadNews(searchNews!)
-        
     }
     
     func updateFavourite() {

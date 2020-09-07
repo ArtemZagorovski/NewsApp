@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AppCoordinator {
+class NewsCoordinator {
     
-    func createView() -> UIViewController {
+    func createNewsViewController() -> UIViewController {
         
         let model = NewsLogic()
         let view = NewsViewController()

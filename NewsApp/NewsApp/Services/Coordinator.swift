@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Interpreter: ViewDelegate, ModelDelegate {
+class Coordinator: ViewDelegate, ModelDelegate {
     
     var model: NewsManager
     var view: View
@@ -22,8 +22,16 @@ class Interpreter: ViewDelegate, ModelDelegate {
         model.loadNews()
     }
     
-    func viewDidChangeSearchTerm(_ term: String, isSearchBarEmpty: Bool) {
-        model.filter(for: term, isSearchBarEmpty: isSearchBarEmpty)
+    func viewDidScrollTheEnd() {
+        model.loadNews()
+    }
+    
+    func viewDidPullToRefresh() {
+        model.loadNews()
+    }
+    
+    func viewDidChangeSearchTerm(_ term: String) {
+        model.filter(for: term)
     }
     
     func viewDidTapFavouriteButton(for viewModel: ViewModel) {
@@ -31,7 +39,7 @@ class Interpreter: ViewDelegate, ModelDelegate {
     }
     
     func modelDidLoadNews(_ news: [News]) {
-        view.updateView(with: news)
+        view.updateView(news)
     }
     
 }

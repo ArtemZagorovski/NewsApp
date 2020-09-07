@@ -13,12 +13,20 @@ final class NewsLogic: NewsManager, DataManagerDelegate {
     var serviceManager: ServiceManager?
     var newsLogicDelegate: ModelDelegate?
     
+    var news: [News]?
+    
     func loadNews() {
         serviceManager?.getData()
     }
     
-    func filter(for text: String) {
-        print("filter for \(text)")
+    func filter(for text: String, isSearchBarEmpty: Bool) {
+        let searchNews = news?.filter { (news: News?) -> Bool in
+            guard let news = news else { return false }
+            
+            return isSearchBarEmpty ? true : (news.newsTitle.lowercased().contains(text.lowercased()) || news.newsDescription.lowercased().contains(text.lowercased()))
+        }
+        newsLogicDelegate?.modelDidLoadNews(searchNews!)
+        
     }
     
     func updateFavourite() {
@@ -26,6 +34,7 @@ final class NewsLogic: NewsManager, DataManagerDelegate {
     }
     
     func dataManagerDidLoadData(_ news: [News]) {
+        self.news = news
         newsLogicDelegate?.modelDidLoadNews(news)
     }
     

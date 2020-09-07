@@ -10,17 +10,19 @@ import Foundation
 
 protocol ViewDelegate {
     func viewDidLoad()
-    func viewDidChangeSearchTerm(_ term: String, isSearchBarEmpty: Bool)
-    func viewDidTapFavouriteButton(for viewModel: ViewModel)
+    func viewDidScrollTheEnd()
+    func viewDidPullToRefresh()
+    func viewDidChangeSearchTerm(_ term: String)
+    func viewDidTapFavouriteButton(for viewModel: [ViewModel])
 }
 
 protocol View {
-    func updateView(with: [News])
+    func updateView(_ news: [ViewModel])
 }
 
 protocol NewsManager {
     func loadNews()
-    func filter(for text: String, isSearchBarEmpty: Bool)
+    func filter(for text: String)
     func updateFavourite()
 }
 

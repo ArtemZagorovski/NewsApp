@@ -17,7 +17,7 @@ enum APIResult<T, Int> {
     case Failure(Error)
 }
 
-class APIService: DataLoader {
+final class APIService: DataLoader {
     
     var apiServiceDelegate: DataLoaderDelegate?
 

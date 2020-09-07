@@ -10,17 +10,15 @@ import UIKit
 
 class NewsCell: UITableViewCell {
     
-    var news : News? {
+    var news : ViewModel? {
         didSet {
             guard let news = news else {
                 return
             }
             
-            if let imageData = news.imageData, let image = UIImage(data: imageData) {
-                newsImage.image = image
-            }
             titleLabel.text = news.newsTitle
             descriptionLabel.text = news.newsDescription
+            newsImage.image = news.image
             
             DispatchQueue.main.async {
                 if self.descriptionLabel.actualNumberOfLines() > 3 {

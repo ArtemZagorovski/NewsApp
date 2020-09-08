@@ -27,7 +27,6 @@ class ServiceManager: DataLoader, DataLoaderDelegate {
         } else {
             dbService?.removeData()
             apiService?.getData()
-            
         }
     }
     

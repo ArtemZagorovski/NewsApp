@@ -33,13 +33,13 @@ class NewsViewController: UIViewController {
     }()
 
     var viewModel: [NewsViewModel] = []
-    var viewDelegate: ViewDelegate?
+    var delegate: NewsViewDelegate?
     
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
-        viewDelegate?.viewDidLoad()
+        delegate?.viewDidLoad()
         setupView()
         setupLayout()
     }
@@ -124,7 +124,7 @@ extension NewsViewController: UITableViewDataSource {
 
             self.tableView.tableFooterView = newPageLoadActivityIndicator
             self.tableView.tableFooterView?.isHidden = false
-            viewDelegate?.viewDidScrollTheEnd()
+            delegate?.viewDidScrollToEnd()
         }
     }
 }
@@ -133,7 +133,7 @@ extension NewsViewController: UITableViewDataSource {
 extension NewsViewController: UISearchResultsUpdating {
     
     func filterContentForSearchText(_ searchText: String)  {
-        viewDelegate?.viewDidChangeSearchTerm(searchText)
+        delegate?.viewDidChangeSearchTerm(searchText)
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -152,11 +152,11 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        viewDelegate?.viewDidPullToRefresh()
+        delegate?.viewDidPullToRefresh()
     }
 }
 
-extension NewsViewController: View {
+extension NewsViewController: NewsView {
     
     func updateView(_ news: [NewsViewModel]) {
         viewModel = news
@@ -168,9 +168,14 @@ extension NewsViewController: View {
     }
     
     func animateActivity() {
-        if viewModel.isEmpty {
-            mainPageLoadActivityIndicator.startAnimating()
-        }
+        mainPageLoadActivityIndicator.startAnimating()
+    }
+
+    func showAnError(error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
     }
     
 }

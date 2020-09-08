@@ -8,26 +8,43 @@
 
 import Foundation
 
-class ServiceManager: DataLoader, DataLoaderDelegate {
+final class ServiceManager {
     
-    weak var serviceManagerDelegate: DataManagerDelegate?
-    var apiService: DataLoader?
-    var dbService: LocalDataChanger?
+    weak var delegate: ServiceManagerDelegate?
+    private var apiService: DataLoader?
+    private var dbService: LocalDataChanger?
+    
+    init(apiService: DataLoader, dbService: LocalDataChanger) {
+        self.apiService = apiService
+        self.dbService = dbService
+    }
+    
+}
+
+extension ServiceManager: DataManager {
+    
+    func getData(date: String) {
+        if Constants.Logic.countOfDays > 0 {
+            apiService?.getData(date: date)
+        } else {
+            dbService?.removeData()
+            apiService?.getData(date: date)
+        }
+    }
+    
+}
+
+extension ServiceManager: DataLoaderDelegate {
     
     func didLoadData(_ news: [News]) {
-        serviceManagerDelegate?.dataManagerDidLoadData(news)
+        delegate?.dataManagerDidLoadData(news)
         DispatchQueue.main.async {
             self.dbService?.saveData(news)
         }
     }
     
-    func getData() {
-        if Constants.Logic.countOfDays > 0 {
-            apiService?.getData()
-        } else {
-            dbService?.removeData()
-            apiService?.getData()
-        }
+    func didGetAnError(error: Error) {
+        delegate?.dataManagerDidGetAnError(error: error)
     }
     
 }

@@ -16,6 +16,7 @@ final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     private var news: [News]?
     
     func loadNews() {
+        computeData()
         serviceManager?.getData()
         Constants.Logic.countOfDays += 1
     }
@@ -35,6 +36,7 @@ final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     }
     
     func loadMoreNews() {
+        computeData()
         serviceManager?.getData()
         Constants.Logic.countOfDays += 1
     }
@@ -46,6 +48,12 @@ final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     func dataManagerDidLoadData(_ news: [News]) {
         self.news = news
         newsLogicDelegate?.modelDidLoadNews(news)
+    }
+    
+    func computeData() {
+        let date = Date().rewindDays(-Constants.Logic.countOfDays)
+        let dateString = Formatter.getStringWithWeekDay(date: date)
+        Constants.Api.currentDateString = dateString
     }
     
 }

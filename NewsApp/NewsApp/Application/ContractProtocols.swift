@@ -8,17 +8,18 @@
 
 import UIKit
 
-protocol ViewDelegate: class {
+protocol NewsViewDelegate: class {
     func viewDidLoad()
-    func viewDidScrollTheEnd()
+    func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
     func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
 }
 
-protocol View {
+protocol NewsView {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
+    func showAnError(error: Error)
 }
 
 protocol NewsManager {
@@ -29,16 +30,22 @@ protocol NewsManager {
     func updateFavourite()
 }
 
-protocol ModelDelegate: class {
+protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
+    func modelDidGetAnError(error: Error)
 }
 
 protocol DataLoader {
-    func getData()
+    func getData(date: String)
 }
 
-protocol DataManagerDelegate: class {
+protocol DataManager {
+    func getData(date: String)
+}
+
+protocol ServiceManagerDelegate: class {
     func dataManagerDidLoadData(_ news: [News])
+    func dataManagerDidGetAnError(error: Error)
 }
 
 protocol LocalDataChanger {
@@ -48,12 +55,13 @@ protocol LocalDataChanger {
 
 protocol DataLoaderDelegate: class {
     func didLoadData(_ news: [News])
+    func didGetAnError(error: Error)
 }
 
 protocol ViewModel {
     var newsTitle: String { get set }
     var newsDescription: String { get set }
-    var image: UIImage { get set }
+    var image: UIImage? { get set }
     var publishedAt: String? { get set }
     var isFavourite: Bool { get set }
 }

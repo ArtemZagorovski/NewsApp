@@ -31,10 +31,8 @@ class NewsViewController: UIViewController {
         s.searchBar.delegate = self
         return s
     }()
-    
-    var searchNews: [News] = [News]()
 
-    var viewModel: [ViewModel]?
+    var viewModel: [NewsViewModel] = []
     var viewDelegate: ViewDelegate?
     
 //MARK: - ViewController lifecycle methods
@@ -42,7 +40,6 @@ class NewsViewController: UIViewController {
         super.viewDidLoad()
         setDelegats()
         viewDelegate?.viewDidLoad()
-        animateActivity()
         setupView()
         setupLayout()
     }
@@ -53,11 +50,6 @@ class NewsViewController: UIViewController {
         tableView.dataSource = self
     }
     
-    fileprivate func animateActivity() {
-        if viewModel?.isEmpty ?? true {
-            mainPageLoadActivityIndicator.startAnimating()
-        }
-    }
 }
 
 //MARK: - Setup layout and views
@@ -99,13 +91,13 @@ extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.count ?? 0
+        return viewModel.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
         
-        guard let news = viewModel?[indexPath.row] else { return UITableViewCell()}
+        let news = viewModel[indexPath.row]
         cell.news = news
         return cell
     }
@@ -116,9 +108,8 @@ extension NewsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let detailViewController = NewsDetailsViewController()
-        guard let news = viewModel?[indexPath.row] else { return }
-        detailViewController.news = news
+        let news = viewModel[indexPath.row]
+        let detailViewController = NewsDetailsViewController(news: news)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     
@@ -126,8 +117,7 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        let isLessThanWeekAndTotal = Constants.Logic.countOfDays < 7 && viewModel?.count ?? 0 < Constants.Logic.totalNews
-        let isNeedToLoadNewData = isLastSection && !isFiltring() && isLessThanWeekAndTotal
+        let isNeedToLoadNewData = isLastSection && !searchController.isActive
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
@@ -151,10 +141,6 @@ extension NewsViewController: UISearchResultsUpdating {
         filterContentForSearchText(searchBar.text!)
     }
     
-    func isFiltring() -> Bool {
-        let searchbarScopeIsFiltring = searchController.searchBar.selectedScopeButtonIndex != 0
-        return searchController.isActive
-    }
 }
 
 extension NewsViewController: UISearchBarDelegate {
@@ -166,19 +152,24 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        Constants.Logic.countOfDays = 0
         viewDelegate?.viewDidPullToRefresh()
     }
 }
 
 extension NewsViewController: View {
     
-    func updateView(_ news: [ViewModel]) {
+    func updateView(_ news: [NewsViewModel]) {
         viewModel = news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
             self.tableView.refreshControl?.endRefreshing()
+        }
+    }
+    
+    func animateActivity() {
+        if viewModel.isEmpty {
+            mainPageLoadActivityIndicator.startAnimating()
         }
     }
     

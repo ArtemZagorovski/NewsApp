@@ -11,10 +11,10 @@ import RealmSwift
 
 final class DBDataLoader: DataLoader, LocalDataChanger {
     
-    weak var dbDataLoaderDelegate: DataLoaderDelegate?
+    weak var delegate: DataLoaderDelegate?
 
-    func getData() {
-        dbDataLoaderDelegate?.didLoadData(Array(realm.objects(News.self)))
+    func getData(date: String) {
+        delegate?.didLoadData(Array(realm.objects(News.self)))
     }
     
     func saveData(_ news: [News]) {

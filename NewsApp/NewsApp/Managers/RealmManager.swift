@@ -21,7 +21,7 @@ class RealmManager {
         }
     }
     
-    static func deliteNews (_ news: News) {
+    static func deleteNews (_ news: News) {
         do {
             try realm.write {
                 realm.delete(news)

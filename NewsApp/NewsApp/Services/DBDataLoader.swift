@@ -11,7 +11,7 @@ import RealmSwift
 
 final class DBDataLoader: DataLoader, LocalDataChanger {
     
-    var dbDataLoaderDelegate: DataLoaderDelegate?
+    weak var dbDataLoaderDelegate: DataLoaderDelegate?
 
     func getData() {
         dbDataLoaderDelegate?.didLoadData(Array(realm.objects(News.self)))
@@ -25,7 +25,7 @@ final class DBDataLoader: DataLoader, LocalDataChanger {
     
     func removeData() {
         realm.objects(News.self).forEach{ object in
-            RealmManager.deliteNews(object)
+            RealmManager.deleteNews(object)
         }
     }
 }

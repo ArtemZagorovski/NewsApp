@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ViewModel {
+struct NewsViewModel {
     var newsTitle: String
     var newsDescription: String
     var image: UIImage

@@ -10,7 +10,7 @@ import UIKit
 
 class NewsCell: UITableViewCell {
     
-    var news : ViewModel? {
+    var news : NewsViewModel? {
         didSet {
             guard let news = news else {
                 return
@@ -33,8 +33,8 @@ class NewsCell: UITableViewCell {
     
     private let newsImage : UIImageView = {
         let imageName = Constants.SystemWords.defaultImageName
-        let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image!)
+        guard let image = UIImage(named: imageName) else { return UIImageView()}
+        let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

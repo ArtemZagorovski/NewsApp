@@ -11,21 +11,32 @@ import Foundation
 final class DefaultNewsManager: NewsManager, DataManagerDelegate {
     
     var serviceManager: ServiceManager?
-    var newsLogicDelegate: ModelDelegate?
+    weak var newsLogicDelegate: ModelDelegate?
     
     private var news: [News]?
     
     func loadNews() {
         serviceManager?.getData()
+        Constants.Logic.countOfDays += 1
     }
     
     func filter(for text: String) {
-        let searchNews = news?.filter { news -> Bool in
+        let searchNews = news?.filter { news in
             let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
             let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
             return text.isEmpty ? true : isTitleContainsFilter || isDescriptionContainsFilter
         }
         newsLogicDelegate?.modelDidLoadNews(searchNews!)
+    }
+    
+    func refresh() {
+        Constants.Logic.countOfDays = 0
+        serviceManager?.getData()
+    }
+    
+    func loadMoreNews() {
+        serviceManager?.getData()
+        Constants.Logic.countOfDays += 1
     }
     
     func updateFavourite() {

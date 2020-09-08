@@ -19,9 +19,9 @@ enum APIResult<T, Int> {
 
 final class APIService: DataLoader {
     
-    weak var apiServiceDelegate: DataLoaderDelegate?
+    weak var delegate: DataLoaderDelegate?
 
-    func getData() {
+    func getData(date: String) {
         guard let url = URL(string: Constants.Api.urlbase
                                   + Constants.Api.currentDateString
                                   + Constants.Api.toDate
@@ -48,7 +48,7 @@ final class APIService: DataLoader {
                         } else {
                             return
                         }
-                    self.apiServiceDelegate?.didLoadData(news)
+                    self.delegate?.didLoadData(news)
                 } catch let error as NSError {
                     print(error)
                 }
@@ -58,7 +58,7 @@ final class APIService: DataLoader {
             
             if let error = error {
                 print(error.localizedDescription)
-                self.apiServiceDelegate?.didLoadData([])
+                self.delegate?.didGetAnError(error: error)
             }
             
         }

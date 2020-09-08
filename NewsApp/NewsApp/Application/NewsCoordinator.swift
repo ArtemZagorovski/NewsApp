@@ -12,21 +12,18 @@ final class NewsCoordinator {
     
     func createNewsViewController() -> UIViewController {
         
-        let model = DefaultNewsManager()
         let view = NewsViewController()
-        let serviceManager = ServiceManager()
         let apiService = APIService()
         let dbService = DBDataLoader()
-        let interpreter = Coordinator(model: model, view: view)
+        let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
+        let model = DefaultNewsManager(serviceManager: serviceManager)
+        let interpreter = NewsController(model: model, view: view)
         
-        model.newsLogicDelegate = interpreter
-        model.serviceManager = serviceManager
-        view.viewDelegate = interpreter
-        serviceManager.serviceManagerDelegate = model
-        serviceManager.apiService = apiService
-        serviceManager.dbService = dbService
-        apiService.apiServiceDelegate = serviceManager
-        dbService.dbDataLoaderDelegate = serviceManager
+        model.delegate = interpreter
+        view.delegate = interpreter
+        serviceManager.delegate = model
+        apiService.delegate = serviceManager
+        dbService.delegate = serviceManager
         
         return view
     }

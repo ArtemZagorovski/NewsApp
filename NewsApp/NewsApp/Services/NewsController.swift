@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class NewsController: NewsViewDelegate, ModelDelegate {
+final class NewsController {
     
     private var model: NewsManager
     private var view: NewsView
@@ -18,12 +18,16 @@ final class NewsController: NewsViewDelegate, ModelDelegate {
         self.view = view
     }
     
+}
+
+extension NewsController: NewsViewDelegate {
+    
     func viewDidLoad() {
         view.animateActivity()
         model.loadNews()
     }
     
-    func viewDidScrollTheEnd() {
+    func viewDidScrollToEnd() {
         model.loadMoreNews()
     }
     
@@ -39,18 +43,16 @@ final class NewsController: NewsViewDelegate, ModelDelegate {
         model.updateFavourite()
     }
     
+}
+
+extension NewsController: NewsManagerDelegate {
+    
     func modelDidLoadNews(_ news: [News]) {
-        var viewModels: [NewsViewModel] = []
-        news.forEach { news in
-            guard let imageData = news.imageData, let image = UIImage(data: imageData) else { return }
-            let viewModel = NewsViewModel(newsTitle: news.newsTitle,
-                                          newsDescription: news.newsDescription,
-                                          image: image,
-                                          publishedAt: news.publishedAt,
-                                          isFavourite: news.isFavourite)
-            viewModels.append(viewModel)
-        }
+        let viewModels = news.map{ NewsViewModel(news: $0) }
         view.updateView(viewModels)
     }
     
+    func modelDidGetAnError(error: Error) {
+        view.showAnError(error: error)
+    }
 }

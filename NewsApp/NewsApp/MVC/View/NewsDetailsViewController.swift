@@ -10,9 +10,9 @@ import UIKit
 
 class NewsDetailsViewController: UIViewController {
     
-    var news: ViewModel!
+    var news: NewsViewModel
     
-    private var newsImage = UIImageView()
+    private let newsImage = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let publishedAt = UILabel()
@@ -21,6 +21,15 @@ class NewsDetailsViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupLayout()
+    }
+    
+    init(news: NewsViewModel) {
+        self.news = news
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

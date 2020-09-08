@@ -22,9 +22,6 @@ final class APIService: DataLoader {
     weak var apiServiceDelegate: DataLoaderDelegate?
 
     func getData() {
-        let date = Date().rewindDays(-Constants.Logic.countOfDays)
-        let dateString = Formatter.getStringWithWeekDay(date: date)
-        Constants.Api.currentDateString = dateString
         guard let url = URL(string: Constants.Api.urlbase
                                   + Constants.Api.currentDateString
                                   + Constants.Api.toDate

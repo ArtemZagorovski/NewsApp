@@ -19,7 +19,7 @@ enum APIResult<T, Int> {
 
 final class APIService: DataLoader {
     
-    var apiServiceDelegate: DataLoaderDelegate?
+    weak var apiServiceDelegate: DataLoaderDelegate?
 
     func getData(){
         let date = Date().rewindDays(-Constants.Logic.countOfDays)
@@ -52,7 +52,6 @@ final class APIService: DataLoader {
                             return
                         }
                     self.apiServiceDelegate?.didLoadData(news)
-                    Constants.Logic.countOfDays += 1
                 } catch let error as NSError {
                     print(error)
                 }
@@ -62,6 +61,7 @@ final class APIService: DataLoader {
             
             if let error = error {
                 print(error.localizedDescription)
+                self.apiServiceDelegate?.didLoadData([])
             }
             
         }

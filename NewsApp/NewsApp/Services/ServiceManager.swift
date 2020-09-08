@@ -10,7 +10,7 @@ import Foundation
 
 class ServiceManager: DataLoader, DataLoaderDelegate {
     
-    var serviceManagerDelegate: DataManagerDelegate?
+    weak var serviceManagerDelegate: DataManagerDelegate?
     var apiService: DataLoader?
     var dbService: LocalDataChanger?
     

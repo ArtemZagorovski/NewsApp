@@ -24,7 +24,7 @@ final class DBDataLoader: DataLoader, LocalDataChanger {
     }
     
     func removeData() {
-        realm.objects(News.self).forEach{ object in
+        realm.objects(News.self).forEach { object in
             RealmManager.deleteNews(object)
         }
     }

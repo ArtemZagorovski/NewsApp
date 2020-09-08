@@ -8,12 +8,12 @@
 
 import UIKit
 
-final class Coordinator: ViewDelegate, ModelDelegate {
+final class NewsController: NewsViewDelegate, ModelDelegate {
     
     private var model: NewsManager
-    private var view: View
+    private var view: NewsView
     
-    init (model: NewsManager, view: View) {
+    init (model: NewsManager, view: NewsView) {
         self.model = model
         self.view = view
     }

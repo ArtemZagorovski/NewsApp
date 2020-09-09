@@ -8,10 +8,14 @@
 
 import Foundation
 
-protocol RemoteNewsService: NewsServiceCoordinator {
+protocol NewsService {
+    func getData(date: String)
 }
 
-protocol LocalNewsService: NewsServiceCoordinator {
+protocol RemoteNewsService: NewsService {
+}
+
+protocol LocalNewsService: NewsService {
     func saveData(_ news: [News])
     func removeData()
 }

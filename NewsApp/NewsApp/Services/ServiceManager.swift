@@ -9,7 +9,7 @@
 import Foundation
 
 protocol NewsServiceCoordinator {
-    func getData(date: String)
+    func getData(page: Int)
 }
 
 protocol NewsServiceCoordinatorDelegate: class {
@@ -28,12 +28,12 @@ final class ServiceManager: NewsServiceCoordinator {
         self.dbService = dbService
     }
     
-    func getData(date: String) {
+    func getData(page: Int) {
         if Constants.Logic.countOfDays > 0 {
-            apiService?.getData(date: date)
+            apiService?.getData(page: page)
         } else {
             dbService?.removeData()
-            apiService?.getData(date: date)
+            apiService?.getData(page: page)
         }
     }
     

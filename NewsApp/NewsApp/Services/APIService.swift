@@ -12,12 +12,10 @@ final class APIService: RemoteNewsService {
     
     weak var delegate: NewsServiceDelegate?
 
-    func getData(date: String) {
+    func getData(page: Int) {
         guard let url = URL(string: Constants.Api.urlbase
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.toDate
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.sortAndApiKey)
+                                    + String(page)
+                                    + Constants.Api.apiKey)
         else { return }
         var news = [News]()
         let request = URLRequest(url: url)
@@ -52,6 +50,38 @@ final class APIService: RemoteNewsService {
                 self.delegate?.didGetAnError(error: error)
             }
             
+        }
+        dataTask.resume()
+    }
+    
+    func getNewsTotalNumber(){
+        
+        guard let url = URL(string: Constants.Api.urlbase
+                                    + String(1)
+                                    + Constants.Api.apiKey)
+        else { return }
+        let request = URLRequest(url: url)
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        let dataTask = session.dataTask(with: request) { (data, response, error) in
+            guard let HTTPResponse = response as? HTTPURLResponse else { return }
+            
+            switch HTTPResponse.statusCode {
+            case 200:
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: AnyObject]
+                    guard let totalNews = json!["totalResults"] as? Int else { return }
+                    self.delegate?.didGetTotalNews(total: totalNews)
+                } catch let error as NSError {
+                    print(error)
+                }
+            default:
+                print("We have got response status \(HTTPResponse.statusCode)")
+            }
+            
+            if let error = error {
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
+            }
         }
         dataTask.resume()
     }

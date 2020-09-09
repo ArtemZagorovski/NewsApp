@@ -8,54 +8,42 @@
 
 import Foundation
 
-final class DefaultNewsManager {
+final class DefaultNewsManager: NewsManager {
     
-    private var serviceManager: ServiceManager?
+    private var serviceManager: ServiceManager
     weak var delegate: NewsManagerDelegate?
     
     private var news: [News]?
-    private var searchNews: [News]?
     private var countOfDays = 0
     
     init(serviceManager: ServiceManager) {
         self.serviceManager = serviceManager
     }
     
-    func computeDate() -> String {
-        let date = Date().rewindDays(-countOfDays)
-        return Formatter.getStringWithWeekDay(date: date)
-    }
-    
-}
-
-extension DefaultNewsManager: NewsManager {
-    
     func loadNews() {
-        serviceManager?.getData(date: computeDate())
+        serviceManager.getData(date: computeDate())
         countOfDays += 1
     }
     
     func filter(for text: String) {
-        if text.isEmpty {
-            searchNews = news
-        } else {
-            searchNews = news?.filter { news in
+        if !text.isEmpty {
+            news = news?.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
             }
         }
-        guard let searchNews = searchNews else { return }
-        delegate?.modelDidLoadNews(searchNews)
+        guard let news = news else { return }
+        delegate?.modelDidLoadNews(news)
     }
     
     func refresh() {
         countOfDays = 0
-        serviceManager?.getData(date: computeDate())
+        serviceManager.getData(date: computeDate())
     }
     
     func loadMoreNews() {
-        serviceManager?.getData(date: computeDate())
+        serviceManager.getData(date: computeDate())
         countOfDays += 1
     }
     
@@ -63,9 +51,15 @@ extension DefaultNewsManager: NewsManager {
         print("New favourite")
     }
     
+    func computeDate() -> String {
+        let date = Date().rewindDays(-countOfDays)
+        return Formatter.getStringWithWeekDay(date: date)
+    }
+    
+    
 }
 
-extension DefaultNewsManager: ServiceManagerDelegate {
+extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
     
     func dataManagerDidLoadData(_ news: [News]) {
         self.news = news

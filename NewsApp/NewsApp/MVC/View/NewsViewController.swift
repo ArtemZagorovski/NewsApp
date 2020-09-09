@@ -153,13 +153,15 @@ extension NewsViewController: UISearchBarDelegate {
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
         delegate?.viewDidPullToRefresh()
+        viewModel = []
+        tableView.reloadData()
     }
 }
 
 extension NewsViewController: NewsView {
     
     func updateView(_ news: [NewsViewModel]) {
-        viewModel = news
+        viewModel += news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()

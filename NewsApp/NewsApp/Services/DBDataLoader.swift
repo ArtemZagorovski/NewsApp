@@ -9,9 +9,9 @@
 import Foundation
 import RealmSwift
 
-final class DBDataLoader: DataLoader, LocalDataChanger {
+final class DBDataLoader: LocalNewsService {
     
-    weak var delegate: DataLoaderDelegate?
+    weak var delegate: NewsServiceDelegate?
 
     func getData(date: String) {
         delegate?.didLoadData(Array(realm.objects(News.self)))

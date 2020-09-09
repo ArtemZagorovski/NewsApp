@@ -18,5 +18,6 @@ protocol LocalNewsService: NewsServiceCoordinator {
 
 protocol NewsServiceDelegate: class {
     func didLoadData(_ news: [News])
+    func didGetTotalNews(total: Int)
     func didGetAnError(error: Error)
 }

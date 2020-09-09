@@ -35,29 +35,6 @@ protocol NewsManagerDelegate: class {
     func modelDidGetAnError(error: Error)
 }
 
-protocol DataLoader {
-    func getData(date: String)
-}
-
-protocol DataManager {
-    func getData(date: String)
-}
-
-protocol ServiceManagerDelegate: class {
-    func dataManagerDidLoadData(_ news: [News])
-    func dataManagerDidGetAnError(error: Error)
-}
-
-protocol LocalDataChanger {
-    func saveData(_ news: [News])
-    func removeData()
-}
-
-protocol DataLoaderDelegate: class {
-    func didLoadData(_ news: [News])
-    func didGetAnError(error: Error)
-}
-
 protocol ViewModel {
     var newsTitle: String { get set }
     var newsDescription: String { get set }

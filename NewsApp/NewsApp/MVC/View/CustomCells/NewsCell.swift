@@ -32,7 +32,9 @@ class NewsCell: UITableViewCell {
     }
     
     private let newsImage : UIImageView = {
-        let imageView = UIImageView()
+        let imageName = Constants.SystemWords.defaultImageName
+        let image = UIImage(named: imageName)
+        let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

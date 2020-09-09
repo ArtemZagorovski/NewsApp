@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol JSONDecodable {
+    init?(JSON: [String: AnyObject])
+}
+
 final class APIService: RemoteNewsService {
     
     weak var delegate: NewsServiceDelegate?

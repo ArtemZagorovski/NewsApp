@@ -26,15 +26,17 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func filter(for text: String) {
+        guard let news = news else { return }
         if !text.isEmpty {
-            news = news?.filter { news in
+            delegate?.modelDidLoadNews (news.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
-            }
+            })
+        } else {
+            delegate?.modelDidLoadNews(news)
         }
-        guard let news = news else { return }
-        delegate?.modelDidLoadNews(news)
+        
     }
     
     func refresh() {

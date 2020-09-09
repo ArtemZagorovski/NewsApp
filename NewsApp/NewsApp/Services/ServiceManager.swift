@@ -8,20 +8,25 @@
 
 import Foundation
 
-final class ServiceManager {
+protocol NewsServiceCoordinator {
+    func getData(date: String)
+}
+
+protocol NewsServiceCoordinatorDelegate: class {
+    func dataManagerDidLoadData(_ news: [News])
+    func dataManagerDidGetAnError(error: Error)
+}
+
+final class ServiceManager: NewsServiceCoordinator {
     
-    weak var delegate: ServiceManagerDelegate?
-    private var apiService: DataLoader?
-    private var dbService: LocalDataChanger?
+    weak var delegate: NewsServiceCoordinatorDelegate?
+    private var apiService: RemoteNewsService?
+    private var dbService: LocalNewsService?
     
-    init(apiService: DataLoader, dbService: LocalDataChanger) {
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
         self.apiService = apiService
         self.dbService = dbService
     }
-    
-}
-
-extension ServiceManager: DataManager {
     
     func getData(date: String) {
         if Constants.Logic.countOfDays > 0 {
@@ -34,7 +39,7 @@ extension ServiceManager: DataManager {
     
 }
 
-extension ServiceManager: DataLoaderDelegate {
+extension ServiceManager: NewsServiceDelegate {
     
     func didLoadData(_ news: [News]) {
         delegate?.dataManagerDidLoadData(news)

@@ -29,12 +29,7 @@ final class ServiceManager: NewsServiceCoordinator {
     }
     
     func getData(date: String) {
-        if Constants.Logic.countOfDays > 0 {
-            apiService?.getData(date: date)
-        } else {
-            dbService?.removeData()
-            apiService?.getData(date: date)
-        }
+        apiService?.getData(date: date)
     }
     
 }

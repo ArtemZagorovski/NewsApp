@@ -35,7 +35,7 @@ protocol NewsManagerDelegate: class {
     func modelDidGetAnError(error: Error)
 }
 
-protocol ViewModel {
+protocol NewsViewModel {
     var newsTitle: String { get set }
     var newsDescription: String { get set }
     var image: UIImage? { get set }

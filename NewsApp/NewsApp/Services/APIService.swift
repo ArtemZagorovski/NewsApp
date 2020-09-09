@@ -17,15 +17,20 @@ enum APIResult<T, Int> {
     case Failure(Error)
 }
 
-class APIService {
+protocol NewsServiceDelegate: class {
+    func didLoadData(_ news: [News])
+    func didGetAnError(error: Error)
+    func didGetTotalNews(total: Int)
+}
 
-    func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>) -> Void){
-        Constants.Api.currentDateString = dateString
+final class APIService {
+    
+    weak var delegate: NewsServiceDelegate?
+
+    func getData(page: Int) {
         guard let url = URL(string: Constants.Api.urlbase
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.toDate
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.sortAndApiKey)
+                                    + String(page)
+                                    + Constants.Api.apiKey)
         else { return }
         var news = [News]()
         let request = URLRequest(url: url)
@@ -47,7 +52,7 @@ class APIService {
                         } else {
                             return
                         }
-                    completionHandler(.Success(news, totalNews))
+                    self.delegate?.didLoadData(news)
                 } catch let error as NSError {
                     print(error)
                 }
@@ -56,9 +61,42 @@ class APIService {
             }
             
             if let error = error {
-                completionHandler(.Failure(error))
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
             }
             
+        }
+        dataTask.resume()
+    }
+    
+    func getNewsTotalNumber(){
+        
+        guard let url = URL(string: Constants.Api.urlbase
+                                    + String(1)
+                                    + Constants.Api.apiKey)
+        else { return }
+        let request = URLRequest(url: url)
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        let dataTask = session.dataTask(with: request) { (data, response, error) in
+            guard let HTTPResponse = response as? HTTPURLResponse else { return }
+            
+            switch HTTPResponse.statusCode {
+            case 200:
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: AnyObject]
+                    guard let totalNews = json!["totalResults"] as? Int else { return }
+                    self.delegate?.didGetTotalNews(total: totalNews)
+                } catch let error as NSError {
+                    print(error)
+                }
+            default:
+                print("We have got response status \(HTTPResponse.statusCode)")
+            }
+            
+            if let error = error {
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
+            }
         }
         dataTask.resume()
     }

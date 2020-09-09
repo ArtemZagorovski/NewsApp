@@ -79,9 +79,7 @@ class NewsViewController: UIViewController {
     }
     
     fileprivate func animateActivity() {
-        
         mainPageLoadActivityIndicator.startAnimating()
-        
     }
 }
 

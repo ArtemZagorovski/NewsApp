@@ -8,18 +8,9 @@
 
 import Foundation
 
-protocol JSONDecodable {
-    init?(JSON: [String: AnyObject])
-}
-
-enum APIResult<T, Int> {
-    case Success(T, Int)
-    case Failure(Error)
-}
-
-final class APIService: DataLoader {
+final class APIService: RemoteNewsService {
     
-    weak var delegate: DataLoaderDelegate?
+    weak var delegate: NewsServiceDelegate?
 
     func getData(date: String) {
         guard let url = URL(string: Constants.Api.urlbase

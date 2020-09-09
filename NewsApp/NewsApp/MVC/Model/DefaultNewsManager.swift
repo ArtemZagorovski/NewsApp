@@ -14,15 +14,17 @@ final class DefaultNewsManager: NewsManager {
     weak var delegate: NewsManagerDelegate?
     
     private var news: [News]?
-    private var countOfDays = 0
+    private var pageTotalNumber = 0
+    private var page = 1
     
     init(serviceManager: ServiceManager) {
         self.serviceManager = serviceManager
     }
     
     func loadNews() {
-        serviceManager.getData(date: computeDate())
-        countOfDays += 1
+        serviceManager.getNewsTotalNumber()
+        serviceManager.getData(page: page)
+        page += 1
     }
     
     func filter(for text: String) {
@@ -38,35 +40,35 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func refresh() {
-        countOfDays = 0
-        serviceManager.getData(date: computeDate())
+        serviceManager.getData(page: page)
+        page = 1
     }
     
     func loadMoreNews() {
-        serviceManager.getData(date: computeDate())
-        countOfDays += 1
+        serviceManager.getData(page: page)
+        if pageTotalNumber > page {
+            page += 1
+        }
     }
     
     func updateFavourite() {
         print("New favourite")
     }
     
-    func computeDate() -> String {
-        let date = Date().rewindDays(-countOfDays)
-        return Formatter.getStringWithWeekDay(date: date)
-    }
-    
-    
 }
 
 extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
     
-    func dataManagerDidLoadData(_ news: [News]) {
+    func serviceManagerDidLoadData(_ news: [News]) {
         self.news = news
         delegate?.modelDidLoadNews(news)
     }
     
-    func dataManagerDidGetAnError(error: Error) {
+    func serviceManagerDidGetTotalNews(total: Int) {
+        pageTotalNumber = total / 20
+    }
+    
+    func serviceManagerDidGetAnError(error: Error) {
         delegate?.modelDidGetAnError(error: error)
     }
     

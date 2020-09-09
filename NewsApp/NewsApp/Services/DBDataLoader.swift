@@ -13,6 +13,7 @@ final class DBDataLoader: LocalNewsService {
     
     weak var delegate: NewsServiceDelegate?
 
+
     func getData(date: String) {
         delegate?.didLoadData(Array(realm.objects(News.self)))
     }

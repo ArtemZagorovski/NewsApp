@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+protocol RemoteNewsService: NewsServiceCoordinator {
+}
+
+protocol LocalNewsService: NewsServiceCoordinator {
+    func saveData(_ news: [News])
+    func removeData()
+}
+
+protocol NewsServiceDelegate: class {
+    func didLoadData(_ news: [News])
+    func didGetAnError(error: Error)
+}

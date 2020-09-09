@@ -56,7 +56,6 @@ final class DefaultNewsManager: NewsManager {
         return Formatter.getStringWithWeekDay(date: date)
     }
     
-    
 }
 
 extension DefaultNewsManager: NewsServiceCoordinatorDelegate {

@@ -9,6 +9,10 @@
 import Foundation
 import RealmSwift
 
+protocol JSONDecodable {
+    init?(JSON: [String: AnyObject])
+}
+
 final class News: Object {
     
     @objc dynamic var newsTitle: String = ""

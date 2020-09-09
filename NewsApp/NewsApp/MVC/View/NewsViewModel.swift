@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct NewsViewModel: NewsViewModel {
+struct NewsViewModel: ViewModel {
     var newsTitle: String
     var newsDescription: String
     var image: UIImage?
@@ -19,11 +19,18 @@ struct NewsViewModel: NewsViewModel {
 extension NewsViewModel {
     
     init (news: News) {
-        self.image = news.imageData.map { UIImage(data: $0) } ?? nil
+        
+        if let imageData = news.imageData {
+            self.image = UIImage(data: imageData)
+        } else {
+            self.image = nil
+        }
+        
         self.newsTitle = news.newsTitle
         self.newsDescription = news.newsDescription
         self.publishedAt = news.publishedAt
         self.isFavourite = news.isFavourite
+        
     }
     
 }

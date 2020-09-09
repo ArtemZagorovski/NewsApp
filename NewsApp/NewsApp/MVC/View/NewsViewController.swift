@@ -34,6 +34,7 @@ class NewsViewController: UIViewController {
 
     var viewModel: [NewsViewModel] = []
     var delegate: NewsViewDelegate?
+
     
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
@@ -96,7 +97,6 @@ extension NewsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
-        
         let news = viewModel[indexPath.row]
         cell.news = news
         return cell
@@ -153,7 +153,6 @@ extension NewsViewController: UISearchBarDelegate {
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
         delegate?.viewDidPullToRefresh()
-    }
 }
 
 extension NewsViewController: NewsView {

@@ -6,4 +6,19 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class NewsDetailsCoordinator {
+    
+    func createNewsDetailsViewController() -> UIViewController {
+        
+        let view = NewsDetailsViewController()
+        let model = DefaultNewsDetailsManager()
+        let controller = NewsDelaisController(model: model, view: view)
+        
+        model.delegate = controller
+        view.delegate = controller
+        
+        return view
+    }
+}

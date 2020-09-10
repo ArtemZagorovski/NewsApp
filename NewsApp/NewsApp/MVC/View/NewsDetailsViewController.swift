@@ -24,27 +24,25 @@ class NewsDetailsViewController: UIViewController {
         setupView()
         setupLayout()
     }
-    
 }
 
 extension NewsDetailsViewController{
     private func setupView() {
         view.backgroundColor = Constants.AppColors.white
-        
-        newsImage.image = news?.image
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill
-        
-        publishedAt.text = news?.publishedAt
         publishedAt.textAlignment = .right
-        
-        titleLabel.text = news?.newsTitle
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.numberOfLines = 0
-        
-        descriptionLabel.text = news?.newsDescription
         descriptionLabel.numberOfLines = 0
+    }
+    
+    private func refreshView() {
+        newsImage.image = news?.image
+        publishedAt.text = news?.publishedAt
+        titleLabel.text = news?.newsTitle
+        descriptionLabel.text = news?.newsDescription
     }
     
     private func setupLayout() {
@@ -90,5 +88,6 @@ extension NewsDetailsViewController{
 extension NewsDetailsViewController: NewsDetailsView {
     func updateView(_ news: NewsViewModel) {
         self.news = news
+        refreshView()
     }
 }

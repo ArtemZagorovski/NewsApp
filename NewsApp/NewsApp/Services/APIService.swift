@@ -17,7 +17,6 @@ final class APIService: RemoteNewsService {
     weak var delegate: NewsServiceDelegate?
 
     func getData(page: Int) {
-        
         var components = URLComponents()
         components.scheme = Constants.Api.scheme
         components.host = Constants.Api.host

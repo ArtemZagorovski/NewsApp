@@ -15,10 +15,3 @@ protocol NewsDetailsView {
 protocol NewsDetailsViewDelegate: class {
     func viewDidLoad()
 }
-
-protocol NewsDetailsManager {
-}
-
-protocol NewsDetailsManagerDelegate: class {
-    func modelDidGetAnError(error: Error)
-}

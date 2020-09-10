@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NewsDelaisController {
+class NewsDelailsController {
     
     private var model: NewsDetailsManager
     private var view: NewsDetailsView
@@ -20,7 +20,7 @@ class NewsDelaisController {
     
 }
 
-extension NewsDelaisController: NewsDetailsViewDelegate {
+extension NewsDelailsController: NewsDetailsViewDelegate {
     
     func viewDidLoad() {
         print("NewsDescriptionDidLoad")
@@ -32,7 +32,7 @@ extension NewsDelaisController: NewsDetailsViewDelegate {
     
 }
 
-extension NewsDelaisController: NewsDetailsManagerDelegate {
+extension NewsDelailsController: NewsDetailsManagerDelegate {
     
     func modelDidGetAnError(error: Error) {
         view.showAnError(error: error)

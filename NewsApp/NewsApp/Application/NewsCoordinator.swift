@@ -10,14 +10,17 @@ import UIKit
 
 final class NewsCoordinator {
     
+    private var mainView: UIViewController?
+    
     func createNewsViewController() -> UIViewController {
         
         let view = NewsViewController()
+        mainView = view
         let apiService = APIService()
         let dbService = DBDataLoader()
         let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
         let model = DefaultNewsManager(serviceManager: serviceManager)
-        let controller = NewsController(model: model, view: view)
+        let controller = NewsController(model: model, view: view, coordinator: self)
         
         model.delegate = controller
         view.delegate = controller
@@ -26,6 +29,12 @@ final class NewsCoordinator {
         dbService.delegate = serviceManager
         
         return view
+    }
+    
+    func createNewsDetailsCoordinator(with: NewsViewModel) {
+        let newsDetailsCoordinator = NewsDetailsCoordinator()
+        let newsDetailsViewController = newsDetailsCoordinator.createNewsDetailsViewController(with: with)
+        mainView?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
     }
     
 }

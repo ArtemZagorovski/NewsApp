@@ -17,7 +17,7 @@ protocol NewsViewDelegate: class {
     func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
-protocol NewsView {
+protocol NewsView: class {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
 }

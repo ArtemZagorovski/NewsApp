@@ -20,7 +20,6 @@ protocol NewsViewDelegate: class {
 protocol NewsView {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
-    func showAnError(error: Error)
 }
 
 protocol NewsManager {

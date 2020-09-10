@@ -10,8 +10,8 @@ import UIKit
 
 class NewsDetailsViewController: UIViewController {
     
-    private var news: NewsViewModel
-    weak var delegate: NewsDetailsViewDelegate?
+    private var news: NewsViewModel?
+    var delegate: NewsDetailsViewDelegate?
     
     private let newsImage = UIImageView()
     private let titleLabel = UILabel()
@@ -20,39 +20,30 @@ class NewsDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate?.viewDidLoad()
         setupView()
         setupLayout()
-    }
-    
-    init(news: NewsViewModel) {
-        self.news = news
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }
 
 extension NewsDetailsViewController{
-    
     private func setupView() {
         view.backgroundColor = Constants.AppColors.white
         
-        newsImage.image = news.image
+        newsImage.image = news?.image
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill
         
-        publishedAt.text = news.publishedAt
+        publishedAt.text = news?.publishedAt
         publishedAt.textAlignment = .right
         
-        titleLabel.text = news.newsTitle
+        titleLabel.text = news?.newsTitle
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.numberOfLines = 0
         
-        descriptionLabel.text = news.newsDescription
+        descriptionLabel.text = news?.newsDescription
         descriptionLabel.numberOfLines = 0
     }
     
@@ -97,9 +88,7 @@ extension NewsDetailsViewController{
 }
 
 extension NewsDetailsViewController: NewsDetailsView {
-    
     func updateView(_ news: NewsViewModel) {
         self.news = news
     }
-    
 }

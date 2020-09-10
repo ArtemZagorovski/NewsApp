@@ -25,8 +25,8 @@ class NewsDetailsViewController: UIViewController {
     }
     
     init(news: NewsViewModel) {
-        super.init(nibName: nil, bundle: nil)
         self.news = news
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

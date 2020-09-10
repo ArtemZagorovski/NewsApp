@@ -10,7 +10,7 @@ import UIKit
 
 class NewsDetailsViewController: UIViewController {
     
-    private var news: NewsViewModel?
+    private var news: NewsViewModel
     weak var delegate: NewsDetailsViewDelegate?
     
     private let newsImage = UIImageView()
@@ -40,19 +40,19 @@ extension NewsDetailsViewController{
     private func setupView() {
         view.backgroundColor = Constants.AppColors.white
         
-        newsImage.image = news?.image
+        newsImage.image = news.image
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill
         
-        publishedAt.text = news?.publishedAt
+        publishedAt.text = news.publishedAt
         publishedAt.textAlignment = .right
         
-        titleLabel.text = news?.newsTitle
+        titleLabel.text = news.newsTitle
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.numberOfLines = 0
         
-        descriptionLabel.text = news?.newsDescription
+        descriptionLabel.text = news.newsDescription
         descriptionLabel.numberOfLines = 0
     }
     

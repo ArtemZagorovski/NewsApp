@@ -109,8 +109,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let news = viewModel[indexPath.row]
-        let detailViewController = NewsDetailsCoordinator().createNewsDetailsViewController()
-        navigationController?.pushViewController(detailViewController, animated: true)
+        delegate?.viewDidTapCell(for: news)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

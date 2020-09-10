@@ -13,7 +13,7 @@ final class DefaultNewsManager: NewsManager {
     private var serviceManager: ServiceManager
     weak var delegate: NewsManagerDelegate?
     
-    private var news: [News]?
+    private var news: [News] = []
     private var countOfDays = 0
     
     init(serviceManager: ServiceManager) {
@@ -26,7 +26,6 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func filter(for text: String) {
-        guard let news = news else { return }
         if text.isEmpty {
             delegate?.modelDidLoadNews(news)
         } else {

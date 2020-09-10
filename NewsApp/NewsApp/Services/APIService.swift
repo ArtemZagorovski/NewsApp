@@ -21,7 +21,7 @@ final class APIService: RemoteNewsService {
                                     + String(page)
                                     + Constants.Api.apiKey)
         else { return }
-        var news = [News]()
+        var news: [News] = []
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let dataTask = session.dataTask(with: request) { (data, response, error) in

@@ -19,13 +19,11 @@ final class NewsCoordinator {
         let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
         let model = DefaultNewsManager(serviceManager: serviceManager)
         let controller = NewsController(model: model, view: view, coordinator: self)
-        
         model.delegate = controller
         view.delegate = controller
         serviceManager.delegate = model
         apiService.delegate = serviceManager
         dbService.delegate = serviceManager
-
         return view
     }
     
@@ -41,5 +39,4 @@ final class NewsCoordinator {
         alert.addAction(cancelAction)
         view?.present(alert, animated: true)
     }
-    
 }

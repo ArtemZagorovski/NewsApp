@@ -17,10 +17,10 @@ final class NewsCoordinator {
         let dbService = DBDataLoader()
         let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
         let model = DefaultNewsManager(serviceManager: serviceManager)
-        let interpreter = NewsController(model: model, view: view)
+        let controller = NewsController(model: model, view: view)
         
-        model.delegate = interpreter
-        view.delegate = interpreter
+        model.delegate = controller
+        view.delegate = controller
         serviceManager.delegate = model
         apiService.delegate = serviceManager
         dbService.delegate = serviceManager

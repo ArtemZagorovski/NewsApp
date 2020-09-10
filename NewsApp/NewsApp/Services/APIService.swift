@@ -17,10 +17,21 @@ final class APIService: RemoteNewsService {
     weak var delegate: NewsServiceDelegate?
 
     func getData(page: Int) {
-        guard let url = URL(string: Constants.Api.urlbase
-                                    + String(page)
-                                    + Constants.Api.apiKey)
-        else { return }
+        
+        var components = URLComponents()
+        components.scheme = Constants.Api.scheme
+        components.host = Constants.Api.host
+        components.path = Constants.Api.path
+        components.queryItems = [
+            URLQueryItem(name: "q", value: Constants.Api.q),
+            URLQueryItem(name: "sortBy", value: Constants.Api.sortBy),
+            URLQueryItem(name: "language", value: Constants.Api.language),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "apiKey", value: Constants.Api.apiKey)
+        ]
+        
+        guard let url = components.url else { return }
+        print(url)
         var news: [News] = []
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)

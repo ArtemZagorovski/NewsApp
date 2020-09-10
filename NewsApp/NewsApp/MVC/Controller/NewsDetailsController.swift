@@ -34,10 +34,6 @@ extension NewsDelaisController: NewsDetailsViewDelegate {
 
 extension NewsDelaisController: NewsDetailsManagerDelegate {
     
-    func modelDidLoadNews(_ news: News) {
-        view.updateView(NewsModel(news: news))
-    }
-    
     func modelDidGetAnError(error: Error) {
         view.showAnError(error: error)
     }

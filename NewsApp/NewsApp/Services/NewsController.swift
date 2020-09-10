@@ -10,7 +10,7 @@ import UIKit
 
 final class NewsController {
     private var model: NewsManager
-    private var view: NewsView
+    private weak var view: NewsView?
     private var coordinator: NewsCoordinator?
     
     init (model: NewsManager, view: NewsView, coordinator: NewsCoordinator) {
@@ -22,7 +22,7 @@ final class NewsController {
 
 extension NewsController: NewsViewDelegate {
     func viewDidLoad() {
-        view.animateActivity()
+        view?.animateActivity()
         model.loadNews()
     }
     
@@ -50,7 +50,7 @@ extension NewsController: NewsViewDelegate {
 extension NewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
         let viewModels = news.map{ NewsModel(news: $0) }
-        view.updateView(viewModels)
+        view?.updateView(viewModels)
     }
     
     func modelDidGetAnError(error: Error) {

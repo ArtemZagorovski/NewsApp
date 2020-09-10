@@ -10,16 +10,13 @@ import Foundation
 
 protocol NewsDetailsView {
     func updateView(_ news: NewsViewModel)
-    func showAnError(error: Error)
 }
 
 protocol NewsDetailsViewDelegate: class {
     func viewDidLoad()
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel)
 }
 
 protocol NewsDetailsManager {
-    func updateFavourite(for viewModel: NewsViewModel)
 }
 
 protocol NewsDetailsManagerDelegate: class {

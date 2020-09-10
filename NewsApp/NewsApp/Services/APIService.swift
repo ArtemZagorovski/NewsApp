@@ -31,8 +31,8 @@ final class APIService: RemoteNewsService {
             switch HTTPResponse.statusCode {
             case 200:
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: AnyObject]
-                    if let dictionary = json!["articles"] as? [[String: AnyObject]] {
+                    guard let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else { return }
+                    if let dictionary = json["articles"] as? [[String: AnyObject]] {
                             dictionary.forEach { el in
                                 guard let newNews = News(JSON: (el)) else { return }
                                 news.append(newNews)

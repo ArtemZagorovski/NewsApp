@@ -21,7 +21,6 @@
 		0792121524C0EE7400680777 /* DBDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0792121424C0EE7400680777 /* DBDataLoader.swift */; };
 		0792121824C0EE7900680777 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0792121724C0EE7900680777 /* Constants.swift */; };
 		0792122124C1914900680777 /* NewsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0792122024C1914900680777 /* NewsDetailsViewController.swift */; };
-
 		5132034A25026C8000435E23 /* NewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034925026C8000435E23 /* NewsController.swift */; };
 		5132034E250276E700435E23 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034D250276E700435E23 /* ServiceManager.swift */; };
 		5132035025028A9500435E23 /* NewsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034F25028A9500435E23 /* NewsCoordinator.swift */; };
@@ -29,7 +28,6 @@
 		5146DD4F2508B6A60035C594 /* ServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DD4E2508B6A60035C594 /* ServiceProtocols.swift */; };
 		51FFFBD024FFDE0C0021D0BF /* DefaultNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FFFBCF24FFDE0C0021D0BF /* DefaultNewsManager.swift */; };
 		51FFFBD224FFE3500021D0BF /* ContractProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FFFBD124FFE3500021D0BF /* ContractProtocols.swift */; };
-
 		CE492D8E24BF322F00019971 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE492D8D24BF322F00019971 /* RealmManager.swift */; };
 		D44C710F418BCBCD999F162C /* Pods_NewsApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD3ABE0DC702B6D9C722954 /* Pods_NewsApp.framework */; };
 /* End PBXBuildFile section */
@@ -247,6 +245,7 @@
 				076643A224BC6DED003EB706 /* AppDelegate.swift */,
 				5132034F25028A9500435E23 /* NewsCoordinator.swift */,
 				076643A424BC6DED003EB706 /* SceneDelegate.swift */,
+				51FFFBD124FFE3500021D0BF /* ContractProtocols.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -381,6 +380,7 @@
 				076643B724BC6F1E003EB706 /* NewsViewController.swift in Sources */,
 				5132034E250276E700435E23 /* ServiceManager.swift in Sources */,
 				0792121524C0EE7400680777 /* DBDataLoader.swift in Sources */,
+				51FFFBD224FFE3500021D0BF /* ContractProtocols.swift in Sources */,
 				076643A324BC6DED003EB706 /* AppDelegate.swift in Sources */,
 				513FA006250668C30069B14F /* NewsModel.swift in Sources */,
 				076643BD24BC7541003EB706 /* News.swift in Sources */,

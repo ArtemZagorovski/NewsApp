@@ -9,7 +9,7 @@
 import Foundation
 
 protocol NewsService {
-    func getData(date: String)
+    func getData(page: Int)
 }
 
 protocol RemoteNewsService: NewsService {

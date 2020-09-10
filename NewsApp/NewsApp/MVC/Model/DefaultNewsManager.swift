@@ -22,7 +22,6 @@ final class DefaultNewsManager: NewsManager {
     
     func loadNews() {
         serviceManager.getData(page: page)
-        page += 1
     }
     
     func filter(for text: String) {
@@ -38,14 +37,12 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func refresh() {
-        serviceManager.getData(page: page)
         page = 1
+        serviceManager.getData(page: page)
     }
     
     func loadMoreNews() {
         serviceManager.getData(page: page)
-        page += 1
-        
     }
     
     func updateFavourite() {
@@ -59,6 +56,7 @@ extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
     func serviceManagerDidLoadData(_ news: [News]) {
         self.news = news
         delegate?.modelDidLoadNews(news)
+        page += 1
     }
     
     func serviceManagerDidGetAnError(error: Error) {

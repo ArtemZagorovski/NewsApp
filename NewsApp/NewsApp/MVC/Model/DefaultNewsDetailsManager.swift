@@ -8,12 +8,6 @@
 
 import Foundation
 
-class DefaultNewsDetailsManager: NewsDetailsManager {
-    
+final class DefaultNewsDetailsManager: NewsDetailsManager {
     weak var delegate: NewsDetailsManagerDelegate?
-    
-    func updateFavourite(for viewModel: NewsViewModel) {
-        print("Change on favourite")
-    }
-    
 }

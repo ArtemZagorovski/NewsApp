@@ -9,13 +9,11 @@
 import UIKit
 
 final class NewsCoordinator {
+    private weak var view: UIViewController?
     
-    private var mainView: UIViewController?
-    
-    func createNewsViewController() -> UIViewController {
-        
+    func createViewController() -> UIViewController {
         let view = NewsViewController()
-        mainView = view
+        self.view = view
         let apiService = APIService()
         let dbService = DBDataLoader()
         let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
@@ -27,21 +25,21 @@ final class NewsCoordinator {
         serviceManager.delegate = model
         apiService.delegate = serviceManager
         dbService.delegate = serviceManager
-        
+
         return view
     }
     
     func showDetails(with viewModel: NewsViewModel) {
         let newsDetailsCoordinator = NewsDetailsCoordinator()
-        let newsDetailsViewController = newsDetailsCoordinator.createNewsDetailsViewController(with: viewModel)
-        mainView?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
+        let newsDetailsViewController = newsDetailsCoordinator.createViewController(with: viewModel)
+        view?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
     }
     
     func showAnError(error: Error) {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
-        mainView?.present(alert, animated: true)
+        view?.present(alert, animated: true)
     }
     
 }

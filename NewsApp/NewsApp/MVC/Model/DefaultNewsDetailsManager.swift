@@ -10,7 +10,7 @@ import Foundation
 
 class DefaultNewsDetailsManager: NewsDetailsManager {
     
-    var news: NewsViewModel?
+    weak var delegate: NewsDetailsManagerDelegate?
     
     func updateFavourite(for viewModel: NewsViewModel) {
         print("Change on favourite")

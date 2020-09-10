@@ -31,10 +31,8 @@ struct Constants {
     }
     
     struct Api {
-        static let urlbase = "http://newsapi.org/v2/everything?q=Apple&from="
-        static let toDate = "T00:00:00&to="
-        static let sortAndApiKey = "T23:59:59&sortBy=popular&language=en&apiKey=6a2f2df98b7d4086a3aa0b9877d333a9"
-        static var currentDateString = ""
+        static let urlbase = "http://newsapi.org/v2/everything?q=Apple&sortBy=popular&language=en&page="
+        static let apiKey = "&apiKey=6a2f2df98b7d4086a3aa0b9877d333a9"
     }
     
     struct NotificationNames {

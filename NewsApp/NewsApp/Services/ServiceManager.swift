@@ -9,12 +9,12 @@
 import Foundation
 
 protocol NewsServiceCoordinator {
-    func getData(date: String)
+    func getData(page: Int)
 }
 
 protocol NewsServiceCoordinatorDelegate: class {
-    func dataManagerDidLoadData(_ news: [News])
-    func dataManagerDidGetAnError(error: Error)
+    func serviceManagerDidLoadData(_ news: [News])
+    func serviceManagerDidGetAnError(error: Error)
 }
 
 final class ServiceManager: NewsServiceCoordinator {
@@ -28,8 +28,8 @@ final class ServiceManager: NewsServiceCoordinator {
         self.dbService = dbService
     }
     
-    func getData(date: String) {
-        apiService.getData(date: date)
+    func getData(page: Int) {
+        apiService.getData(page: page)
     }
     
 }
@@ -37,14 +37,14 @@ final class ServiceManager: NewsServiceCoordinator {
 extension ServiceManager: NewsServiceDelegate {
     
     func didLoadData(_ news: [News]) {
-        delegate?.dataManagerDidLoadData(news)
+        delegate?.serviceManagerDidLoadData(news)
         DispatchQueue.main.async {
             self.dbService.saveData(news)
         }
     }
     
     func didGetAnError(error: Error) {
-        delegate?.dataManagerDidGetAnError(error: error)
+        delegate?.serviceManagerDidGetAnError(error: error)
     }
     
 }

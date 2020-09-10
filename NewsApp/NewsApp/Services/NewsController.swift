@@ -12,10 +12,12 @@ final class NewsController {
     
     private var model: NewsManager
     private var view: NewsView
+    private var coordinator: NewsCoordinator
     
-    init (model: NewsManager, view: NewsView) {
+    init (model: NewsManager, view: NewsView, coordinator: NewsCoordinator) {
         self.model = model
         self.view = view
+        self.coordinator = coordinator
     }
     
 }
@@ -41,6 +43,10 @@ extension NewsController: NewsViewDelegate {
     
     func viewDidTapFavouriteButton(for viewModel: [NewsViewModel]) {
         model.updateFavourite()
+    }
+    
+    func viewDidTapCell(for viewModel: NewsViewModel) {
+        coordinator.createNewsDetailsCoordinator(with: viewModel)
     }
     
 }

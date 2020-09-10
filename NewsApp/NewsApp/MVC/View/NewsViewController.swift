@@ -34,7 +34,12 @@ class NewsViewController: UIViewController {
 
     var viewModel: [NewsViewModel] = []
     var delegate: NewsViewDelegate?
-
+    
+    private let apiService = APIService()
+    private var searchNews: [News] = []
+    private var viewNews: [News] = []
+    private var page = 1
+    private var totalPages = 1
     
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
@@ -49,6 +54,15 @@ class NewsViewController: UIViewController {
     fileprivate func setDelegats() {
         tableView.delegate = self
         tableView.dataSource = self
+        apiService.delegate = self
+    }
+    
+    private func loadData() {
+        if page <= totalPages {
+            apiService.getData(page: page)
+            page += 1
+        }
+
     }
     
 }
@@ -175,6 +189,29 @@ extension NewsViewController: NewsView {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
         present(alert, animated: true)
+    }
+    
+}
+
+extension NewsViewController: NewsServiceDelegate {
+    
+    func didLoadData(_ news: [News]) {
+        viewNews += news
+        DispatchQueue.main.async {
+            self.mainPageLoadActivityIndicator.stopAnimating()
+            self.tableView.reloadData()
+        }
+    }
+    
+    func didGetAnError(error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
+    }
+    
+    func didGetTotalNews(total: Int) {
+        totalPages = total / 20
     }
     
 }

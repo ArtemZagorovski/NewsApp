@@ -18,12 +18,12 @@ protocol NewsServiceDelegate: class {
     func didGetTotalNews(total: Int)
 }
 
+
 final class APIService {
     
     weak var delegate: NewsServiceDelegate?
 
     func getData(page: Int) {
-
         guard let url = URL(string: Constants.Api.urlbase
                                     + String(page)
                                     + Constants.Api.apiKey)
@@ -61,6 +61,10 @@ final class APIService {
                 self.delegate?.didGetAnError(error: error)
             }
             
+            if let error = error {
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
+            }
         }
         dataTask.resume()
     }

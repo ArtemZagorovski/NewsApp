@@ -9,11 +9,11 @@
 import UIKit
 
 struct NewsModel: NewsViewModel {
-    var newsTitle: String
-    var newsDescription: String
-    var image: UIImage?
-    var publishedAt: String?
-    var isFavourite: Bool = false
+    let newsTitle: String
+    let newsDescription: String
+    let image: UIImage?
+    let publishedAt: String?
+    let isFavourite: Bool
 }
 
 extension NewsModel {

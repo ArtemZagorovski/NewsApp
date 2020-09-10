@@ -20,8 +20,8 @@ protocol NewsServiceCoordinatorDelegate: class {
 final class ServiceManager: NewsServiceCoordinator {
     
     weak var delegate: NewsServiceCoordinatorDelegate?
-    private var apiService: RemoteNewsService?
-    private var dbService: LocalNewsService?
+    private var apiService: RemoteNewsService
+    private var dbService: LocalNewsService
     
     init(apiService: RemoteNewsService, dbService: LocalNewsService) {
         self.apiService = apiService
@@ -29,7 +29,7 @@ final class ServiceManager: NewsServiceCoordinator {
     }
     
     func getData(date: String) {
-        apiService?.getData(date: date)
+        apiService.getData(date: date)
     }
     
 }
@@ -39,7 +39,7 @@ extension ServiceManager: NewsServiceDelegate {
     func didLoadData(_ news: [News]) {
         delegate?.dataManagerDidLoadData(news)
         DispatchQueue.main.async {
-            self.dbService?.saveData(news)
+            self.dbService.saveData(news)
         }
     }
     

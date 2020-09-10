@@ -9,45 +9,23 @@
 import Foundation
 import RealmSwift
 
-class DBDataLoader {
+final class DBDataLoader: LocalNewsService {
     
-    static var newsFromDB: Results<News>! {
-        didSet {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
-        }
-    }
+    weak var delegate: NewsServiceDelegate?
 
-    static func getDataFromRealm() {
-        DBDataLoader.newsFromDB = realm.objects(News.self)
-        if newsFromDB != nil && newsFromDB.count == 0 {
-            DBDataLoader.getDataFromAPI()
+    func getData(date: String) {
+        delegate?.didLoadData(Array(realm.objects(News.self)))
+    }
+    
+    func saveData(_ news: [News]) {
+        news.forEach { news in
+            RealmManager.saveNews(news)
         }
     }
     
-    static func getDataFromAPI() {
-        let date = Date().rewindDays(-Constants.Logic.countOfDays)
-        let dateString = Formatter.getStringWithWeekDay(date: date)
-        APIService().getNews(dateString: dateString) { result in
-            switch result {
-            case .Success(let news, let totalNews):
-                DispatchQueue.main.async {
-                    news.forEach { news in
-                        RealmManager.saveNews(news)
-                    }
-                    Constants.Logic.countOfDays += 1
-                    DBDataLoader.getDataFromRealm()
-                }
-                Constants.Logic.totalNews = totalNews
-            case .Failure(let error):
-                print(error)
-            }
+    func removeData() {
+        realm.objects(News.self).forEach { object in
+            RealmManager.deleteNews(object)
         }
-    }
-    
-    static func deleteAndGetNewData() {
-        newsFromDB.forEach { (news) in
-            RealmManager.deliteNews(news)
-        }
-        getDataFromRealm()
     }
 }

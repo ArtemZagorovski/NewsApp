@@ -12,15 +12,11 @@ protocol JSONDecodable {
     init?(JSON: [String: AnyObject])
 }
 
-enum APIResult<T, Int> {
-    case Success(T, Int)
-    case Failure(Error)
-}
+final class APIService: RemoteNewsService {
+    
+    weak var delegate: NewsServiceDelegate?
 
-class APIService {
-
-    func getNews(dateString: String, completionHandler: @escaping (APIResult<[News], Int>) -> Void){
-        Constants.Api.currentDateString = dateString
+    func getData(date: String) {
         guard let url = URL(string: Constants.Api.urlbase
                                   + Constants.Api.currentDateString
                                   + Constants.Api.toDate
@@ -47,7 +43,7 @@ class APIService {
                         } else {
                             return
                         }
-                    completionHandler(.Success(news, totalNews))
+                    self.delegate?.didLoadData(news)
                 } catch let error as NSError {
                     print(error)
                 }
@@ -56,7 +52,8 @@ class APIService {
             }
             
             if let error = error {
-                completionHandler(.Failure(error))
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
             }
             
         }

@@ -31,20 +31,15 @@ class NewsViewController: UIViewController {
         s.searchBar.delegate = self
         return s
     }()
-    
-    var searchNews: [News] = [News]()
-    var isSearchBarEmpty: Bool {
-      return searchController.searchBar.text?.isEmpty ?? true
-    }
+
+    var viewModel: [NewsViewModel] = []
+    var delegate: NewsViewDelegate?
     
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
-        DBDataLoader.getDataFromRealm()
-        animateActivity()
-        countOfDays()
-        addObservers()
+        delegate?.viewDidLoad()
         setupView()
         setupLayout()
     }
@@ -55,19 +50,6 @@ class NewsViewController: UIViewController {
         tableView.dataSource = self
     }
     
-    fileprivate func countOfDays() {
-        Constants.Logic.countOfDays = DBDataLoader.newsFromDB != nil ? DBDataLoader.newsFromDB.count / 18 : 0
-    }
-    
-    fileprivate func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdate), name: NSNotification.Name(rawValue: Constants.NotificationNames.newData), object: nil)
-    }
-    
-    fileprivate func animateActivity() {
-        if DBDataLoader.newsFromDB.count == 0 {
-            mainPageLoadActivityIndicator.startAnimating()
-        }
-    }
 }
 
 //MARK: - Setup layout and views
@@ -109,13 +91,13 @@ extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isFiltring() ? searchNews.count : DBDataLoader.newsFromDB.count
+        return viewModel.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
         
-        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
+        let news = viewModel[indexPath.row]
         cell.news = news
         return cell
     }
@@ -126,23 +108,23 @@ extension NewsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let detailViewController = NewsDetailsViewController()
-        let news = isFiltring() ? searchNews[indexPath.row] : DBDataLoader.newsFromDB[indexPath.row]
-        detailViewController.news = news
+        let news = viewModel[indexPath.row]
+        let detailViewController = NewsDetailsViewController(news: news)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        let isNeedToLoadNewData = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex && !isFiltring() && Constants.Logic.countOfDays < 7 && DBDataLoader.newsFromDB.count < Constants.Logic.totalNews
+        let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
+        let isNeedToLoadNewData = isLastSection && !searchController.isActive
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
 
             self.tableView.tableFooterView = newPageLoadActivityIndicator
             self.tableView.tableFooterView?.isHidden = false
-            DBDataLoader.getDataFromAPI()
+            delegate?.viewDidScrollToEnd()
         }
     }
 }
@@ -151,12 +133,7 @@ extension NewsViewController: UITableViewDataSource {
 extension NewsViewController: UISearchResultsUpdating {
     
     func filterContentForSearchText(_ searchText: String)  {
-        searchNews = DBDataLoader.newsFromDB.filter { (news: News?) -> Bool in
-            guard let news = news else { return false }
-            
-            return isSearchBarEmpty ? true : (news.newsTitle.lowercased().contains(searchText.lowercased()) || news.newsDescription.lowercased().contains(searchText.lowercased()))
-        }
-        tableView.reloadData()
+        delegate?.viewDidChangeSearchTerm(searchText)
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -164,10 +141,6 @@ extension NewsViewController: UISearchResultsUpdating {
         filterContentForSearchText(searchBar.text!)
     }
     
-    func isFiltring() -> Bool {
-        let searchbarScopeIsFiltring = searchController.searchBar.selectedScopeButtonIndex != 0
-        return searchController.isActive && (!isSearchBarEmpty || searchbarScopeIsFiltring)
-    }
 }
 
 extension NewsViewController: UISearchBarDelegate {
@@ -179,17 +152,30 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        Constants.Logic.countOfDays = 0
-        DBDataLoader.deleteAndGetNewData()
+        delegate?.viewDidPullToRefresh()
     }
+}
+
+extension NewsViewController: NewsView {
     
-    @objc func didUpdate() {
+    func updateView(_ news: [NewsViewModel]) {
+        viewModel = news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
-            if self.tableView.numberOfRows(inSection: 0) > 1 {
-                self.tableView.refreshControl?.endRefreshing()
-            }
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
+    
+    func animateActivity() {
+        mainPageLoadActivityIndicator.startAnimating()
+    }
+
+    func showAnError(error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
+    }
+    
 }

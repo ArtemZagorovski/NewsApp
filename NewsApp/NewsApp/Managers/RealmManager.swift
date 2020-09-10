@@ -12,15 +12,32 @@ let realm = try! Realm()
 
 class RealmManager {
     static func saveNews(_ news: News) {
-        
-        try! realm.write {
-            realm.add(news)
+        do {
+            try realm.write {
+                realm.add(news)
+            }
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
     
-    static func deliteNews (_ news: News) {
-        try! realm.write {
-            realm.delete(news)
+    static func deleteNews (_ news: News) {
+        do {
+            try realm.write {
+                realm.delete(news)
+            }
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+    
+    static func deleteAll () {
+        do {
+            try realm.write {
+                realm.deleteAll()
+            }
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
     

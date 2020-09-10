@@ -10,17 +10,15 @@ import UIKit
 
 class NewsCell: UITableViewCell {
     
-    var news : News? {
+    var news : NewsViewModel? {
         didSet {
             guard let news = news else {
                 return
             }
             
-            if let imageData = news.imageData, let image = UIImage(data: imageData) {
-                newsImage.image = image
-            }
             titleLabel.text = news.newsTitle
             descriptionLabel.text = news.newsDescription
+            newsImage.image = news.image
             
             DispatchQueue.main.async {
                 if self.descriptionLabel.actualNumberOfLines() > 3 {
@@ -36,7 +34,7 @@ class NewsCell: UITableViewCell {
     private let newsImage : UIImageView = {
         let imageName = Constants.SystemWords.defaultImageName
         let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image!)
+        let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

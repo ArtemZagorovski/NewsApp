@@ -6,42 +6,39 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-protocol ViewDelegate {
+protocol NewsViewDelegate: class {
     func viewDidLoad()
+    func viewDidScrollToEnd()
+    func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: ViewModel)
+    func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
 }
 
-protocol View {
-    func updateView(with: [ViewModel])
+protocol NewsView {
+    func updateView(_ news: [NewsViewModel])
+    func animateActivity()
+    func showAnError(error: Error)
 }
 
 protocol NewsManager {
     func loadNews()
+    func refresh()
+    func loadMoreNews()
     func filter(for text: String)
     func updateFavourite()
 }
 
-protocol ModelDelegate {
+protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
+    func modelDidGetAnError(error: Error)
 }
 
-protocol DataLoader {
-    func getData()
+protocol NewsViewModel {
+    var newsTitle: String { get set }
+    var newsDescription: String { get set }
+    var image: UIImage? { get set }
+    var publishedAt: String? { get set }
+    var isFavourite: Bool { get set }
 }
-
-protocol DataManagerDelegate {
-    func dataManagerDidLoadData(_ news: [News])
-}
-
-protocol LocalDataChanger {
-    func saveData(_ news: [News])
-    func removeData()
-}
-
-protocol DataLoaderDelegate {
-    func didLoadData(_ news: [News])
-}
-

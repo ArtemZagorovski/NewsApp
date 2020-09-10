@@ -10,7 +10,7 @@ import UIKit
 
 class NewsDetailsViewController: UIViewController {
     
-    var news: News!
+    var news: NewsViewModel
     
     private let newsImage = UIImageView()
     private let titleLabel = UILabel()
@@ -23,6 +23,15 @@ class NewsDetailsViewController: UIViewController {
         setupLayout()
     }
     
+    init(news: NewsViewModel) {
+        self.news = news
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
 
 extension NewsDetailsViewController{
@@ -30,12 +39,7 @@ extension NewsDetailsViewController{
     private func setupView() {
         view.backgroundColor = Constants.AppColors.white
         
-        if let newsImageData = news.imageData {
-            guard let image = UIImage(data: newsImageData) else { return }
-            newsImage.image = image
-        } else {
-            newsImage.image = UIImage(named: "news")
-        }
+        newsImage.image = news.image
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill

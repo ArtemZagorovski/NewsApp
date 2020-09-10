@@ -9,21 +9,18 @@
 import UIKit
 
 final class NewsController {
-    
     private var model: NewsManager
     private var view: NewsView
-    private var coordinator: NewsCoordinator
+    private var coordinator: NewsCoordinator?
     
     init (model: NewsManager, view: NewsView, coordinator: NewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator
     }
-    
 }
 
 extension NewsController: NewsViewDelegate {
-    
     func viewDidLoad() {
         view.animateActivity()
         model.loadNews()
@@ -46,19 +43,17 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        coordinator.createNewsDetailsCoordinator(with: viewModel)
+        coordinator?.showDetails(with: viewModel)
     }
-    
 }
 
 extension NewsController: NewsManagerDelegate {
-    
     func modelDidLoadNews(_ news: [News]) {
         let viewModels = news.map{ NewsModel(news: $0) }
         view.updateView(viewModels)
     }
     
     func modelDidGetAnError(error: Error) {
-        view.showAnError(error: error)
+        coordinator?.showAnError(error: error)
     }
 }

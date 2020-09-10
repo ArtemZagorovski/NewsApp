@@ -9,12 +9,9 @@
 import UIKit
 
 final class NewsDetailsCoordinator {
-    
-    func createNewsDetailsViewController(with viewModel: NewsViewModel) -> UIViewController {
+    func createViewController(with viewModel: NewsViewModel) -> UIViewController {
         let view = NewsDetailsViewController()
-        let model = DefaultNewsDetailsManager()
-        let controller = NewsDetailsController(model: model, view: view, viewModel: viewModel)
-        model.delegate = controller
+        let controller = NewsDetailsController(view: view, viewModel: viewModel)
         view.delegate = controller
         return view
     }

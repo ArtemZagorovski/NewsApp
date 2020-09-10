@@ -94,3 +94,11 @@ extension NewsDetailsViewController{
         ])
     }
 }
+
+extension NewsDetailsViewController: NewsDetailsView {
+    
+    func updateView(_ news: NewsViewModel) {
+        self.news = news
+    }
+    
+}

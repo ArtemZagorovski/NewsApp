@@ -14,6 +14,7 @@ protocol NewsViewDelegate: class {
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
     func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
+    func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
 protocol NewsView {

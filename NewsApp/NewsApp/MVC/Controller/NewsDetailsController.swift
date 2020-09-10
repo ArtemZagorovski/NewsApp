@@ -8,34 +8,26 @@
 
 import Foundation
 
-class NewsDelailsController {
-    
+final class NewsDetailsController {
     private var model: NewsDetailsManager
     private var view: NewsDetailsView
+    private var viewModel: NewsViewModel
     
-    init (model: NewsDetailsManager, view: NewsDetailsView) {
+    init (model: NewsDetailsManager, view: NewsDetailsView, viewModel: NewsViewModel) {
         self.model = model
         self.view = view
+        self.viewModel = viewModel
     }
-    
 }
 
-extension NewsDelailsController: NewsDetailsViewDelegate {
-    
+extension NewsDetailsController: NewsDetailsViewDelegate {
     func viewDidLoad() {
-        print("NewsDescriptionDidLoad")
+        view.updateView(viewModel)
     }
-    
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel) {
-        model.updateFavourite(for: viewModel)
-    }
-    
 }
 
-extension NewsDelailsController: NewsDetailsManagerDelegate {
-    
+extension NewsDetailsController: NewsDetailsManagerDelegate {
     func modelDidGetAnError(error: Error) {
-        view.showAnError(error: error)
+        print("error")
     }
-    
 }

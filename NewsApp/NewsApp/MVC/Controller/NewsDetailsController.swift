@@ -9,12 +9,10 @@
 import Foundation
 
 final class NewsDetailsController {
-    private var model: NewsDetailsManager
     private var view: NewsDetailsView
     private var viewModel: NewsViewModel
     
-    init (model: NewsDetailsManager, view: NewsDetailsView, viewModel: NewsViewModel) {
-        self.model = model
+    init (view: NewsDetailsView, viewModel: NewsViewModel) {
         self.view = view
         self.viewModel = viewModel
     }
@@ -23,11 +21,5 @@ final class NewsDetailsController {
 extension NewsDetailsController: NewsDetailsViewDelegate {
     func viewDidLoad() {
         view.updateView(viewModel)
-    }
-}
-
-extension NewsDetailsController: NewsDetailsManagerDelegate {
-    func modelDidGetAnError(error: Error) {
-        print("error")
     }
 }

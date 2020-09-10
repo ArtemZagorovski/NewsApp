@@ -14,8 +14,7 @@ class NewsDetailsCoordinator {
         
         let view = NewsDetailsViewController(news: viewModel)
         let model = DefaultNewsDetailsManager()
-        let controller = NewsDelaisController(model: model, view: view)
-        
+        let controller = NewsDelailsController(model: model, view: view)
         
         model.delegate = controller
         view.delegate = controller

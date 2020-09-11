@@ -17,7 +17,6 @@ protocol RemoteNewsService: NewsService {
 
 protocol LocalNewsService: NewsService {
     func saveData(_ news: [News])
-    func removeData()
 }
 
 protocol NewsServiceDelegate: class {

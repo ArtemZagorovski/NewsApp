@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol NewsDetailsView {
+protocol NewsDetailsView: class {
     func updateView(_ news: NewsViewModel)
 }
 

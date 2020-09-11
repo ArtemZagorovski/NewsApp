@@ -38,13 +38,6 @@ extension NewsDetailsViewController{
         descriptionLabel.numberOfLines = 0
     }
     
-    private func refreshView() {
-        newsImage.image = news?.image
-        publishedAt.text = news?.publishedAt
-        titleLabel.text = news?.newsTitle
-        descriptionLabel.text = news?.newsDescription
-    }
-    
     private func setupLayout() {
         view.addSubview(newsImage)
         newsImage.translatesAutoresizingMaskIntoConstraints = false
@@ -88,6 +81,9 @@ extension NewsDetailsViewController{
 extension NewsDetailsViewController: NewsDetailsView {
     func updateView(_ news: NewsViewModel) {
         self.news = news
-        refreshView()
+        newsImage.image = news.image
+        publishedAt.text = news.publishedAt
+        titleLabel.text = news.newsTitle
+        descriptionLabel.text = news.newsDescription
     }
 }

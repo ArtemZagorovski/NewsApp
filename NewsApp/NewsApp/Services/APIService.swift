@@ -16,7 +16,7 @@ final class APIService: RemoteNewsService {
     weak var delegate: NewsServiceDelegate?
 
     func getData(page: Int) {
-        guard let url = ApiURLCreator(page: page).url else { return }
+        guard let url = NewsApiUrlBuilder(page: page).url else { return }
         var news: [News] = []
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreData
 
 protocol JSONDecodable {
     init?(JSON: [String: AnyObject])

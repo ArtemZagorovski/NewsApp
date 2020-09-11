@@ -10,5 +10,4 @@ import Foundation
 import CoreData
 
 final public class NewsCoreData: NSManagedObject {
-
 }

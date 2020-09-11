@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class ApiURLCreator {
+final class NewsApiUrlBuilder {
     private let scheme = "http"
     private let host = "newsapi.org"
     private let path = "/v2/everything"
@@ -18,7 +18,7 @@ final class ApiURLCreator {
     private var page: String
     private let apiKey = "6a2f2df98b7d4086a3aa0b9877d333a9"
     
-    init (page: Int) {
+    init(page: Int) {
         self.page = String(page)
     }
     

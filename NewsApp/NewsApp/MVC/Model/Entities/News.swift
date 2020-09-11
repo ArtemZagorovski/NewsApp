@@ -10,13 +10,11 @@ import Foundation
 import RealmSwift
 
 final class News {
-    
     var newsTitle: String?
     var newsDescription: String? 
     var imageData: Data?
     var publishedAt: String?
     var isFavourite: Bool = false
-    
 }
 
 extension News {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class NewsApiUrlBuilder {
+struct NewsApiUrlBuilder {
     private let scheme = "http"
     private let host = "newsapi.org"
     private let path = "/v2/everything"

@@ -16,14 +16,12 @@ final class APIService: RemoteNewsService {
     
     weak var delegate: NewsServiceDelegate?
 
-    func getData(date: String) {
+    func getData(page: Int) {
         guard let url = URL(string: Constants.Api.urlbase
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.toDate
-                                  + Constants.Api.currentDateString
-                                  + Constants.Api.sortAndApiKey)
+                                    + String(page)
+                                    + Constants.Api.apiKey)
         else { return }
-        var news = [News]()
+        var news: [News] = []
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
@@ -33,9 +31,8 @@ final class APIService: RemoteNewsService {
             switch HTTPResponse.statusCode {
             case 200:
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: AnyObject]
-                    guard let totalNews = json!["totalResults"] as? Int else { return }
-                    if let dictionary = json!["articles"] as? [[String: AnyObject]] {
+                    guard let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else { return }
+                    if let dictionary = json["articles"] as? [[String: AnyObject]] {
                             dictionary.forEach { el in
                                 guard let newNews = News(JSON: (el)) else { return }
                                 news.append(newNews)
@@ -56,7 +53,12 @@ final class APIService: RemoteNewsService {
                 self.delegate?.didGetAnError(error: error)
             }
             
+            if let error = error {
+                print(error.localizedDescription)
+                self.delegate?.didGetAnError(error: error)
+            }
         }
         dataTask.resume()
     }
+    
 }

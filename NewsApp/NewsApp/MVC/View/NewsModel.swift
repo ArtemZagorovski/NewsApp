@@ -9,8 +9,8 @@
 import UIKit
 
 struct NewsModel: NewsViewModel {
-    var newsTitle: String
-    var newsDescription: String
+    var newsTitle: String?
+    var newsDescription: String?
     var image: UIImage?
     var publishedAt: String?
     var isFavourite: Bool = false

@@ -9,17 +9,17 @@
 import Foundation
 import RealmSwift
 
-final class News: Object {
+final class News {
     
-    @objc dynamic var newsTitle: String = ""
-    @objc dynamic var newsDescription: String = ""
-    @objc dynamic var imageData: Data?
-    @objc dynamic var publishedAt: String?
-    @objc dynamic var isFavourite: Bool = false
+    var newsTitle: String?
+    var newsDescription: String? 
+    var imageData: Data?
+    var publishedAt: String?
+    var isFavourite: Bool = false
     
 }
 
-extension News: JSONDecodable {
+extension News {
     convenience init?(JSON: [String : AnyObject]) {
         guard let title = JSON["title"] as? String,
             let description = JSON["description"] as? String,
@@ -49,5 +49,16 @@ extension News: JSONDecodable {
         self.newsDescription = description
         self.imageData = imageData
         self.publishedAt = publishedAt
+    }
+}
+
+extension News {
+    convenience init(newsCD: NewsCoreData) {
+        self.init()
+        self.newsTitle = newsCD.newsTitle
+        self.newsDescription = newsCD.newsDescription
+        self.imageData = newsCD.imageData
+        self.isFavourite = newsCD.isFavourite
+        self.publishedAt = newsCD.publishedAt
     }
 }

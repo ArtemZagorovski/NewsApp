@@ -14,12 +14,12 @@ protocol NewsViewDelegate: class {
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
     func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
+    func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
-protocol NewsView {
+protocol NewsView: class {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
-    func showAnError(error: Error)
 }
 
 protocol NewsManager {
@@ -36,9 +36,9 @@ protocol NewsManagerDelegate: class {
 }
 
 protocol NewsViewModel {
-    var newsTitle: String { get set }
-    var newsDescription: String { get set }
-    var image: UIImage? { get set }
-    var publishedAt: String? { get set }
-    var isFavourite: Bool { get set }
+    var newsTitle: String { get }
+    var newsDescription: String { get }
+    var image: UIImage? { get }
+    var publishedAt: String? { get }
+    var isFavourite: Bool { get }
 }

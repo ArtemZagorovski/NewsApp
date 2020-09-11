@@ -52,7 +52,6 @@ final class DefaultNewsManager: NewsManager {
 }
 
 extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
-    
     func serviceManagerDidLoadData(_ news: [News]) {
         self.news = news
         delegate?.modelDidLoadNews(news)
@@ -62,5 +61,4 @@ extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
     func serviceManagerDidGetAnError(error: Error) {
         delegate?.modelDidGetAnError(error: error)
     }
-    
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 protocol JSONDecodable {
     init?(JSON: [String: AnyObject])
@@ -21,9 +22,7 @@ final class APIService: RemoteNewsService {
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
-            
             guard let HTTPResponse = response as? HTTPURLResponse else { return }
-            
             switch HTTPResponse.statusCode {
             case 200:
                 do {
@@ -43,12 +42,10 @@ final class APIService: RemoteNewsService {
             default:
                 print("We have got response status \(HTTPResponse.statusCode)")
             }
-            
             if let error = error {
                 print(error.localizedDescription)
                 self.delegate?.didGetAnError(error: error)
             }
-            
             if let error = error {
                 print(error.localizedDescription)
                 self.delegate?.didGetAnError(error: error)

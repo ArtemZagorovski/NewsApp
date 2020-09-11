@@ -11,21 +11,30 @@ import RealmSwift
 
 final class DBDataLoader: LocalNewsService {
     
+    private let context = CoreDataStack().persistentContainer.viewContext
     weak var delegate: NewsServiceDelegate?
 
     func getData(page: Int) {
-        delegate?.didLoadData(Array(realm.objects(News.self)))
+        var news: [News] = []
+        do {
+            guard let newsCD = try context.fetch(NewsCoreData.fetchRequest()) as? [NewsCoreData] else { return }
+            news = newsCD.map{News(newsCD: $0)}
+        }
+        catch let error {
+            delegate?.didGetAnError(error: error)
+        }
+        delegate?.didLoadData(news)
     }
     
     func saveData(_ news: [News]) {
         news.forEach { news in
-            RealmManager.saveNews(news)
+            NewsCoreData(news: news, context: context)
         }
-    }
-    
-    func removeData() {
-        realm.objects(News.self).forEach { object in
-            RealmManager.deleteNews(object)
+        do {
+            try context.save()
+        }
+        catch let error {
+            print(error.localizedDescription)
         }
     }
 }

@@ -30,11 +30,6 @@ struct Constants {
         static let textShowMore = "...show more"
     }
     
-    struct Api {
-        static let urlbase = "http://newsapi.org/v2/everything?q=Apple&sortBy=popular&language=en&page="
-        static let apiKey = "&apiKey=6a2f2df98b7d4086a3aa0b9877d333a9"
-    }
-    
     struct NotificationNames {
         static let newData = "newDataNotification"
     }

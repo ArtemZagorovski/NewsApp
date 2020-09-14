@@ -7,14 +7,21 @@
 //
 
 import Foundation
-import RealmSwift
 
 final class News {
-    var newsTitle: String?
-    var newsDescription: String? 
-    var imageData: Data?
-    var publishedAt: String?
+    let newsTitle: String
+    let newsDescription: String
+    let imageData: Data?
+    let publishedAt: String?
     var isFavourite: Bool = false
+    
+    private init (newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?, isFavourite: Bool) {
+        self.newsTitle = newsTitle
+        self.newsDescription = newsDescription
+        self.imageData = imageData
+        self.publishedAt = publishedAt
+        self.isFavourite = isFavourite
+    }
 }
 
 extension News {
@@ -41,22 +48,13 @@ extension News {
             print("error \(error.localizedDescription)")
         }
 
-        self.init()
-        
-        self.newsTitle = title
-        self.newsDescription = description
-        self.imageData = imageData
-        self.publishedAt = publishedAt
+        self.init(newsTitle: title, newsDescription: description, imageData: imageData, publishedAt: publishedAt, isFavourite: false)
     }
 }
 
 extension News {
-    convenience init(newsCD: NewsCoreData) {
-        self.init()
-        self.newsTitle = newsCD.newsTitle
-        self.newsDescription = newsCD.newsDescription
-        self.imageData = newsCD.imageData
-        self.isFavourite = newsCD.isFavourite
-        self.publishedAt = newsCD.publishedAt
+    convenience init?(newsCD: NewsCoreData) {
+        guard let title = newsCD.newsTitle, let description = newsCD.newsDescription else { return nil }
+        self.init(newsTitle: title, newsDescription: description, imageData: newsCD.imageData, publishedAt: newsCD.publishedAt, isFavourite: newsCD.isFavourite)
     }
 }

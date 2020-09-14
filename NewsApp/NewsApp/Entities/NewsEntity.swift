@@ -1,5 +1,5 @@
 //
-//  NewsCoreData+Properties.swift
+//  NewsCoreData+Class.swift
 //  NewsApp
 //
 //  Created by Zagorovsky, Artem on 9/11/20.
@@ -9,18 +9,18 @@
 import Foundation
 import CoreData
 
-public extension NewsCoreData {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<NewsCoreData> {
-        return NSFetchRequest<NewsCoreData>(entityName: "NewsCoreData")
+final class NewsEntity: NSManagedObject {
+    @nonobjc class func fetchRequest() -> NSFetchRequest<NewsEntity> {
+        return NSFetchRequest<NewsEntity>(entityName: "NewsCoreData")
     }
-    @NSManaged var newsTitle: String?
-    @NSManaged var newsDescription: String?
+    @NSManaged var newsTitle: String
+    @NSManaged var newsDescription: String
     @NSManaged var isFavourite: Bool
     @NSManaged var publishedAt: String?
     @NSManaged var imageData: Data?
 }
 
-extension NewsCoreData {
+extension NewsEntity {
     convenience init(news: News, context: NSManagedObjectContext) {
         self.init(context: context)
         self.newsTitle = news.newsTitle

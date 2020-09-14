@@ -18,7 +18,7 @@ class FavouriteNewsViewController: UIViewController {
         setupLayout()
     }
     
-    func setDelegates() {
+    private func setDelegates() {
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -67,27 +67,5 @@ extension FavouriteNewsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-
-// MARK: - SwiftUI
-import SwiftUI
-
-struct AuthVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        
-        let viewController = FavouriteNewsViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<AuthVCProvider.ContainerView>) -> FavouriteNewsViewController {
-            return viewController
-        }
-        
-        func updateUIViewController(_ uiViewController: AuthVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<AuthVCProvider.ContainerView>) {
-            
-        }
     }
 }

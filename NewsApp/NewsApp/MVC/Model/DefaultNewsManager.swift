@@ -29,7 +29,7 @@ final class DefaultNewsManager: NewsManager {
             delegate?.modelDidLoadNews(news)
         } else {
             delegate?.modelDidLoadNews(news.filter { news in
-                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased()) 
+                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
             })

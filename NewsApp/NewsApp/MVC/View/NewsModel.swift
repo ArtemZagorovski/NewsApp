@@ -9,15 +9,14 @@
 import UIKit
 
 struct NewsModel: NewsViewModel {
-    var newsTitle: String?
-    var newsDescription: String?
+    var newsTitle: String
+    var newsDescription: String
     var image: UIImage?
     var publishedAt: String?
     var isFavourite: Bool = false
 }
 
 extension NewsModel {
-    
     init (news: News) {
         self.image = news.imageData.map { UIImage(data: $0) } ?? nil
         self.newsTitle = news.newsTitle
@@ -25,5 +24,4 @@ extension NewsModel {
         self.publishedAt = news.publishedAt
         self.isFavourite = news.isFavourite
     }
-    
 }

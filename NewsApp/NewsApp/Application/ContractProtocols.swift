@@ -36,8 +36,8 @@ protocol NewsManagerDelegate: class {
 }
 
 protocol NewsViewModel {
-    var newsTitle: String? { get set }
-    var newsDescription: String? { get set }
+    var newsTitle: String { get set }
+    var newsDescription: String { get set }
     var image: UIImage? { get set }
     var publishedAt: String? { get set }
     var isFavourite: Bool { get set }

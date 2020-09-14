@@ -48,13 +48,26 @@ extension News {
             print("error \(error.localizedDescription)")
         }
 
-        self.init(newsTitle: title, newsDescription: description, imageData: imageData, publishedAt: publishedAt, isFavourite: false)
+        self.init(newsTitle: title,
+                  newsDescription: description,
+                  imageData: imageData,
+                  publishedAt: publishedAt,
+                  isFavourite: false)
     }
 }
 
 extension News {
-    convenience init?(newsCD: NewsCoreData) {
-        guard let title = newsCD.newsTitle, let description = newsCD.newsDescription else { return nil }
-        self.init(newsTitle: title, newsDescription: description, imageData: newsCD.imageData, publishedAt: newsCD.publishedAt, isFavourite: newsCD.isFavourite)
+    convenience init?(newsCD: NewsEntity) {
+        self.init(newsTitle: newsCD.newsTitle,
+                  newsDescription: newsCD.newsDescription,
+                  imageData: newsCD.imageData,
+                  publishedAt: newsCD.publishedAt,
+                  isFavourite: newsCD.isFavourite)
+    }
+}
+
+extension News: Equatable {
+    static func == (lhs: News, rhs: News) -> Bool {
+        return lhs.newsTitle == rhs.newsTitle && lhs.newsDescription == rhs.newsDescription
     }
 }

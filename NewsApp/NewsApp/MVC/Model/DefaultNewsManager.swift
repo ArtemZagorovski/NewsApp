@@ -29,8 +29,8 @@ final class DefaultNewsManager: NewsManager {
             delegate?.modelDidLoadNews(news)
         } else {
             delegate?.modelDidLoadNews(news.filter { news in
-                guard let isTitleContainsFilter = news.newsTitle?.lowercased().contains(text.lowercased()) else { return false }
-                guard let isDescriptionContainsFilter = news.newsDescription?.lowercased().contains(text.lowercased()) else { return false }
+                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased()) 
+                let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
             })
         }
@@ -52,7 +52,6 @@ final class DefaultNewsManager: NewsManager {
 }
 
 extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
-    
     func serviceManagerDidLoadData(_ news: [News]) {
         self.news = news
         delegate?.modelDidLoadNews(news)
@@ -62,5 +61,4 @@ extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
     func serviceManagerDidGetAnError(error: Error) {
         delegate?.modelDidGetAnError(error: error)
     }
-    
 }

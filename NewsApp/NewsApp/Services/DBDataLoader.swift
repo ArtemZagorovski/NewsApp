@@ -10,13 +10,16 @@ import Foundation
 import CoreData
 
 final class DBDataLoader: LocalNewsService {
-    private let context = CoreDataStack().persistentContainer.viewContext
-    private let getContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    private let coreDataStack = CoreDataStack()
+    private let context: NSManagedObjectContext
+    private let getContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     private let saveContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     weak var delegate: NewsServiceDelegate?
     private var newsFromBD: [News] = []
     
     init() {
+        context = coreDataStack.persistentContainer.viewContext
+        coreDataStack.delegate = self
         getContext.parent = context
         saveContext.parent = context
     }
@@ -45,5 +48,11 @@ final class DBDataLoader: LocalNewsService {
         catch let error {
             delegate?.didGetAnError(error: error)
         }
+    }
+}
+
+extension DBDataLoader: CoreDataStackDelegate {
+    func didGetAnError(error: Error) {
+        delegate?.didGetAnError(error: error)
     }
 }

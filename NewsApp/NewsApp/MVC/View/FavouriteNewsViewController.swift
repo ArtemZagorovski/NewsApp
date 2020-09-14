@@ -6,4 +6,88 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class FavouriteNewsViewController: UIViewController {
+    private let tableView = UITableView()
+    private var viewModels: [NewsViewModel] = []
+    
+    override func viewDidLoad() {
+        setDelegates()
+        setupView()
+        setupLayout()
+    }
+    
+    func setDelegates() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+}
+    
+//MARK: - Setup view and layout
+extension FavouriteNewsViewController {
+    private func setupView() {
+        tableView.tableFooterView = UIView()
+        tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.favouriteNewsCellID)
+        tableView.backgroundColor = Constants.AppColors.white
+        view.backgroundColor = Constants.AppColors.white
+    }
+    
+    private func setupLayout() {
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        ])
+    }
+}
+
+//MARK: - UITableView delegate and datasource
+extension FavouriteNewsViewController: UITableViewDelegate {}
+
+extension FavouriteNewsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModels.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.favouriteNewsCellID, for: indexPath) as? NewsCell else { return UITableViewCell()}
+        let news = viewModels[indexPath.row]
+        cell.news = news
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 110
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - SwiftUI
+import SwiftUI
+
+struct AuthVCProvider: PreviewProvider {
+    static var previews: some View {
+        ContainerView().edgesIgnoringSafeArea(.all)
+    }
+    
+    struct ContainerView: UIViewControllerRepresentable {
+        
+        let viewController = FavouriteNewsViewController()
+        
+        func makeUIViewController(context: UIViewControllerRepresentableContext<AuthVCProvider.ContainerView>) -> FavouriteNewsViewController {
+            return viewController
+        }
+        
+        func updateUIViewController(_ uiViewController: AuthVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<AuthVCProvider.ContainerView>) {
+            
+        }
+    }
+}

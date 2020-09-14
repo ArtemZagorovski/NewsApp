@@ -9,18 +9,12 @@
 import Foundation
 import CoreData
 
-protocol CoreDataStackDelegate: class {
-    func didGetAnError(error: Error)
-}
-
 final class CoreDataStack {
-    weak var delegate: CoreDataStackDelegate?
-    
-    var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "News")
         container.loadPersistentStores { storeDescription, error in
             if let error = error {
-                delegate?.didGetAnError(error: error)
+                print(error.localizedDescription)
             }
         }
         return container

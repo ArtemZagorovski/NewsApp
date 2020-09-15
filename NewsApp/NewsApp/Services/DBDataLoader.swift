@@ -33,6 +33,7 @@ final class DBDataLoader: LocalNewsService {
     }
     
     func saveData(_ news: [News]) {
+        
         news.forEach { news in
             if !newsFromBD.contains(news) {
                 NewsEntity(news: news, context: saveContext)

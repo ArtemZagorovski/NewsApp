@@ -108,8 +108,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let news = viewModel[indexPath.row]
-        let detailViewController = NewsDetailsViewController(news: news)
-        navigationController?.pushViewController(detailViewController, animated: true)
+        delegate?.viewDidTapCell(for: news)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -168,13 +167,6 @@ extension NewsViewController: NewsView {
     
     func animateActivity() {
         mainPageLoadActivityIndicator.startAnimating()
-    }
-
-    func showAnError(error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        alert.addAction(cancelAction)
-        present(alert, animated: true)
     }
     
 }

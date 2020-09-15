@@ -12,7 +12,6 @@ struct Constants {
 
     struct NewsTable {
         static let newsCellID = "newsCellID"
-        static let favouriteNewsCellID = "FavouriteNewsCellID"
     }
     
     struct AppColors {

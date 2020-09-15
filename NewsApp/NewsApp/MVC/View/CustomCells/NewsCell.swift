@@ -8,18 +8,25 @@
 
 import UIKit
 
+protocol NewsCellDelegate: class {
+    func didTapFavouriteButton(viewModel: NewsViewModel)
+}
+
 class NewsCell: UITableViewCell {
+    
+    weak var delegate: NewsCellDelegate?
     
     var news : NewsViewModel? {
         didSet {
             guard let news = news else {
                 return
             }
-            
             titleLabel.text = news.newsTitle
             descriptionLabel.text = news.newsDescription
             newsImage.image = news.image
-            
+            if news.isFavourite {
+                favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+            }
             DispatchQueue.main.async {
                 if self.descriptionLabel.actualNumberOfLines() > 3 {
                     self.showMoreLabel.isHidden = false
@@ -28,8 +35,16 @@ class NewsCell: UITableViewCell {
                 }
             }
         }
-        
     }
+    
+    private let favouriteButton: UIButton = {
+        let button = UIButton()
+        let notFillImage = Constants.SystemWords.flameImageName
+        let image = UIImage(systemName: notFillImage)
+        image?.withTintColor(.black)
+        button.setImage(image, for: .normal)
+        return button
+    }()
     
     private let newsImage : UIImageView = {
         let imageName = Constants.SystemWords.defaultImageName
@@ -95,7 +110,7 @@ class NewsCell: UITableViewCell {
         NSLayoutConstraint.activate([
             textStack.leadingAnchor.constraint(equalTo: newsImage.trailingAnchor, constant: 10),
             textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-            textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+            textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -50),
             textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10)
         ])
         
@@ -107,10 +122,25 @@ class NewsCell: UITableViewCell {
             showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 1)
         ])
         
+        addSubview(favouriteButton)
+        favouriteButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 5),
+            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
+            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
+            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -30)
+        ])
+        
+        favouriteButton.addTarget(self, action: #selector(didTapFavouriteButton), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    @objc private func didTapFavouriteButton() {
+        guard let news = news else { return }
+        delegate?.didTapFavouriteButton(viewModel: news)
+    }
 }
-

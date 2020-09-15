@@ -13,7 +13,7 @@ protocol NewsViewDelegate: class {
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel)
     func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
@@ -27,7 +27,7 @@ protocol NewsManager {
     func refresh()
     func loadMoreNews()
     func filter(for text: String)
-    func updateFavourite()
+    func updateFavourite(with news: News)
 }
 
 protocol NewsManagerDelegate: class {

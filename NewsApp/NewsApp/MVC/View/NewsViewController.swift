@@ -155,7 +155,6 @@ extension NewsViewController {
 }
 
 extension NewsViewController: NewsView {
-    
     func updateView(_ news: [NewsViewModel]) {
         viewModel = news
         DispatchQueue.main.async {
@@ -168,5 +167,10 @@ extension NewsViewController: NewsView {
     func animateActivity() {
         mainPageLoadActivityIndicator.startAnimating()
     }
-    
+}
+
+extension NewsViewController: NewsCellDelegate {
+    func didTapFavouriteButton(viewModel: NewsViewModel) {
+        delegate?.viewDidTapFavouriteButton(for: viewModel)
+    }
 }

@@ -30,6 +30,8 @@ protocol NewsManager {
     func updateFavourite(with news: News)
 }
 
+
+
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
     func modelDidGetAnError(error: Error)

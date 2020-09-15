@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+extension News {
+    convenience init?(newsCD: NewsEntity) {
+        self.init(newsTitle: newsCD.newsTitle,
+                  newsDescription: newsCD.newsDescription,
+                  imageData: newsCD.imageData,
+                  publishedAt: newsCD.publishedAt,
+                  isFavourite: newsCD.isFavourite)
+    }
+}

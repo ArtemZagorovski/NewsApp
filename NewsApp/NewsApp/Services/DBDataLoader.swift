@@ -10,21 +10,21 @@ import Foundation
 import CoreData
 
 final class DBDataLoader: LocalNewsService {
-    private let context = CoreDataStack().persistentContainer.viewContext
-    private let getContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-    private let saveContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    private let persistentContainer = CoreDataStack().persistentContainer
+    private let getContext: NSManagedObjectContext
+    private let saveContext: NSManagedObjectContext
     weak var delegate: NewsServiceDelegate?
     private var newsFromBD: [News] = []
     
     init() {
-        getContext.parent = context
-        saveContext.parent = context
+        getContext = persistentContainer.viewContext
+        saveContext = persistentContainer.newBackgroundContext()
     }
     
     func getData(page: Int) {
         do {
             guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            newsFromBD = newsCD.compactMap{News(newsCD: $0)}
+            newsFromBD = newsCD.compactMap { News(newsCD: $0) }
         }
         catch let error {
             delegate?.didGetAnError(error: error)
@@ -34,7 +34,6 @@ final class DBDataLoader: LocalNewsService {
     
     func saveData(_ news: [News]) {
         news.forEach { news in
-            getData(page: 1)
             if !newsFromBD.contains(news) {
                 NewsEntity(news: news, context: saveContext)
             }

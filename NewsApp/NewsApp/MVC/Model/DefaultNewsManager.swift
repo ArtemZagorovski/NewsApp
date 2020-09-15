@@ -21,7 +21,7 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func loadNews() {
-        serviceManager.getData(page: page)
+        serviceManager.getRemoteData(page: page)
     }
     
     func filter(for text: String) {
@@ -38,11 +38,11 @@ final class DefaultNewsManager: NewsManager {
     
     func refresh() {
         page = 1
-        serviceManager.getData(page: page)
+        serviceManager.getRemoteData(page: page)
     }
     
     func loadMoreNews() {
-        serviceManager.getData(page: page)
+        serviceManager.getRemoteData(page: page)
     }
     
     func updateFavourite() {

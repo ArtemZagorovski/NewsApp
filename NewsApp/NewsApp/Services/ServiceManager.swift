@@ -9,7 +9,8 @@
 import Foundation
 
 protocol NewsServiceCoordinator {
-    func getData(page: Int)
+    func getRemoteData(page: Int)
+    func getLocalData()
 }
 
 protocol NewsServiceCoordinatorDelegate: class {
@@ -18,7 +19,6 @@ protocol NewsServiceCoordinatorDelegate: class {
 }
 
 final class ServiceManager: NewsServiceCoordinator {
-    
     weak var delegate: NewsServiceCoordinatorDelegate?
     private var apiService: RemoteNewsService
     private var dbService: LocalNewsService
@@ -28,9 +28,14 @@ final class ServiceManager: NewsServiceCoordinator {
         self.dbService = dbService
     }
     
-    func getData(page: Int) {
+    func getRemoteData(page: Int) {
         apiService.getData(page: page)
     }
+    
+    func getLocalData() {
+        dbService.getData(page: 1)
+    }
+
 }
 
 extension ServiceManager: NewsServiceDelegate {

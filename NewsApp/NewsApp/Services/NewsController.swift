@@ -38,8 +38,8 @@ extension NewsController: NewsViewDelegate {
         model.filter(for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: [NewsViewModel]) {
-        model.updateFavourite()
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel) {
+        model.updateFavourite(with: <#News#>)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

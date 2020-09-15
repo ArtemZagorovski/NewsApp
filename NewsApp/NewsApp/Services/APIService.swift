@@ -21,10 +21,8 @@ final class APIService: RemoteNewsService {
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
-            
-            guard let HTTPResponse = response as? HTTPURLResponse else { return }
-            
-            switch HTTPResponse.statusCode {
+            guard let httpResponse = response as? HTTPURLResponse else { return }
+            switch httpResponse.statusCode {
             case 200:
                 do {
                     guard let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else { return }
@@ -41,14 +39,12 @@ final class APIService: RemoteNewsService {
                     print(error)
                 }
             default:
-                print("We have got response status \(HTTPResponse.statusCode)")
+                print("We have got response status \(httpResponse.statusCode)")
             }
-            
             if let error = error {
                 print(error.localizedDescription)
                 self.delegate?.didGetAnError(error: error)
             }
-            
             if let error = error {
                 print(error.localizedDescription)
                 self.delegate?.didGetAnError(error: error)

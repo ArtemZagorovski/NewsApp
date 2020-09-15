@@ -17,7 +17,6 @@ struct NewsModel: NewsViewModel {
 }
 
 extension NewsModel {
-    
     init (news: News) {
         self.image = news.imageData.map { UIImage(data: $0) } ?? nil
         self.newsTitle = news.newsTitle
@@ -25,5 +24,4 @@ extension NewsModel {
         self.publishedAt = news.publishedAt
         self.isFavourite = news.isFavourite
     }
-    
 }

@@ -7,25 +7,42 @@
 //
 
 import Foundation
-import RealmSwift
+import CoreData
 
 final class DBDataLoader: LocalNewsService {
-    
+    private let persistentContainer = CoreDataStack().persistentContainer
+    private let getContext: NSManagedObjectContext
+    private let saveContext: NSManagedObjectContext
     weak var delegate: NewsServiceDelegate?
-
+    private var newsFromBD: [News] = []
+    
+    init() {
+        getContext = persistentContainer.viewContext
+        saveContext = persistentContainer.newBackgroundContext()
+    }
+    
     func getData(page: Int) {
-        delegate?.didLoadData(Array(realm.objects(News.self)))
+        do {
+            guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
+            newsFromBD = newsCD.compactMap { News(newsCD: $0) }
+        }
+        catch let error {
+            delegate?.didGetAnError(error: error)
+        }
+        delegate?.didLoadData(newsFromBD)
     }
     
     func saveData(_ news: [News]) {
         news.forEach { news in
-            RealmManager.saveNews(news)
+            if !newsFromBD.contains(news) {
+                NewsEntity(news: news, context: saveContext)
+            }
         }
-    }
-    
-    func removeData() {
-        realm.objects(News.self).forEach { object in
-            RealmManager.deleteNews(object)
+        do {
+            try saveContext.save()
+        }
+        catch let error {
+            delegate?.didGetAnError(error: error)
         }
     }
 }

@@ -31,11 +31,9 @@ final class ServiceManager: NewsServiceCoordinator {
     func getData(page: Int) {
         apiService.getData(page: page)
     }
-    
 }
 
 extension ServiceManager: NewsServiceDelegate {
-    
     func didLoadData(_ news: [News]) {
         delegate?.serviceManagerDidLoadData(news)
         DispatchQueue.main.async {
@@ -46,5 +44,4 @@ extension ServiceManager: NewsServiceDelegate {
     func didGetAnError(error: Error) {
         delegate?.serviceManagerDidGetAnError(error: error)
     }
-    
 }

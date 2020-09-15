@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 final class CoreDataStack {
-    lazy var persistentContainer: NSPersistentContainer = {
+    var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "News")
         container.loadPersistentStores { storeDescription, error in
             if let error = error {

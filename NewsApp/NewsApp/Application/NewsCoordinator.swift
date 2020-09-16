@@ -10,20 +10,21 @@ import UIKit
 
 final class NewsCoordinator {
     private weak var view: UIViewController?
+    private var serviceContainer: ServiceContainer
+    
+    init(serviceContainer: ServiceContainer) {
+        self.serviceContainer = serviceContainer
+    }
     
     func createViewController() -> UIViewController {
         let view = NewsViewController()
         self.view = view
-        let apiService = APIService()
-        let dbService = DBDataLoader()
-        let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
+        let serviceManager = serviceContainer.serviceManager
         let model = DefaultNewsManager(serviceManager: serviceManager)
         let controller = NewsController(model: model, view: view, coordinator: self)
         model.delegate = controller
         view.delegate = controller
-        serviceManager.delegate = model
-        apiService.delegate = serviceManager
-        dbService.delegate = serviceManager
+        serviceManager.defaultDelegate = model
         return view
     }
     

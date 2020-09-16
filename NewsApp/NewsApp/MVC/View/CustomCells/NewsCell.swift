@@ -9,30 +9,26 @@
 import UIKit
 
 protocol NewsCellDelegate: class {
-    func didTapFavouriteButton(viewModel: NewsViewModel)
+    func didTapFavouriteButton(cell: UITableViewCell)
 }
 
 class NewsCell: UITableViewCell {
     
     weak var delegate: NewsCellDelegate?
     
-    var news : NewsViewModel? {
-        didSet {
-            guard let news = news else {
-                return
+    func configure(with viewModel: NewsViewModel) {
+        titleLabel.text = viewModel.newsTitle
+        descriptionLabel.text = viewModel.newsDescription
+        newsImage.image = viewModel.image
+        DispatchQueue.main.async {
+            if viewModel.isFavourite {
+                self.favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
             }
-            titleLabel.text = news.newsTitle
-            descriptionLabel.text = news.newsDescription
-            newsImage.image = news.image
-            if news.isFavourite {
-                favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
-            }
-            DispatchQueue.main.async {
-                if self.descriptionLabel.actualNumberOfLines() > 3 {
-                    self.showMoreLabel.isHidden = false
-                } else {
-                    self.showMoreLabel.isHidden = true
-                }
+            
+            if self.descriptionLabel.actualNumberOfLines() > 3 {
+                self.showMoreLabel.isHidden = false
+            } else {
+                self.showMoreLabel.isHidden = true
             }
         }
     }
@@ -140,7 +136,10 @@ class NewsCell: UITableViewCell {
     }
     
     @objc private func didTapFavouriteButton() {
-        guard let news = news else { return }
-        delegate?.didTapFavouriteButton(viewModel: news)
+        delegate?.didTapFavouriteButton(cell: self)
+    }
+    
+    override func prepareForReuse() {
+        favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
     }
 }

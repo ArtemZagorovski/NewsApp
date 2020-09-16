@@ -13,11 +13,10 @@ protocol JSONDecodable {
 }
 
 final class APIService: RemoteNewsService {
-    weak var delegate: NewsServiceDelegate?
+    weak var delegate: NewsRemoteServiceDelegate?
 
     func getData(page: Int) {
         guard let url = NewsApiUrlBuilder(page: page).url else { return }
-        var news: [News] = []
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
@@ -27,14 +26,10 @@ final class APIService: RemoteNewsService {
                 do {
                     guard let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else { return }
                     if let dictionary = json["articles"] as? [[String: AnyObject]] {
-                            dictionary.forEach { el in
-                                guard let newNews = News(JSON: (el)) else { return }
-                                news.append(newNews)
-                            }
-                        } else {
-                            return
-                        }
-                    self.delegate?.didLoadData(news)
+                        self.delegate?.didLoadData(dictionary)
+                    } else {
+                        return
+                    }
                 } catch let error as NSError {
                     print(error)
                 }

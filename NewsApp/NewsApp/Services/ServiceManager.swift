@@ -11,6 +11,8 @@ import Foundation
 protocol NewsServiceCoordinator {
     func getRemoteData(page: Int)
     func getLocalData()
+    func updateFavorites(with news: News, closure: () -> ())
+    func filter(for text: String)
 }
 
 protocol NewsServiceCoordinatorDelegate: class {
@@ -19,13 +21,15 @@ protocol NewsServiceCoordinatorDelegate: class {
 }
 
 final class ServiceManager: NewsServiceCoordinator {
-    weak var delegate: NewsServiceCoordinatorDelegate?
-    private var apiService: RemoteNewsService
-    private var dbService: LocalNewsService
+    weak var defaultDelegate: NewsServiceCoordinatorDelegate?
+    weak var favouriteDelegate: NewsServiceCoordinatorDelegate?
+    private var apiService = APIService()
+    private var dbService = DBDataLoader()
+    private var newsFromBD: [News] = []
     
-    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
-        self.apiService = apiService
-        self.dbService = dbService
+    init() {
+        apiService.delegate = self
+        dbService.delegate = self
     }
     
     func getRemoteData(page: Int) {
@@ -36,17 +40,31 @@ final class ServiceManager: NewsServiceCoordinator {
         dbService.getData(page: 1)
     }
 
+    func updateFavorites(with news: News, closure: () -> ()) {
+        dbService.saveData(news, closure: closure)
+    }
+    
+    func filter(for text: String) {
+        dbService.filter(for: text)
+    }
 }
 
-extension ServiceManager: NewsServiceDelegate {
-    func didLoadData(_ news: [News]) {
-        delegate?.serviceManagerDidLoadData(news)
-        DispatchQueue.main.async {
-            self.dbService.saveData(news)
-        }
+extension ServiceManager: NewsRemoteServiceDelegate {
+    func didLoadData(_ news: [[String : AnyObject]]) {
+        getLocalData()
+        let newsFromAPI = news.compactMap { News(JSON: $0) }
+        newsFromAPI.filter { newsFromBD.contains($0) }.map { $0.isFavourite = true }
+        defaultDelegate?.serviceManagerDidLoadData(newsFromAPI)
     }
     
     func didGetAnError(error: Error) {
-        delegate?.serviceManagerDidGetAnError(error: error)
+        defaultDelegate?.serviceManagerDidGetAnError(error: error)
+    }
+}
+
+extension ServiceManager: NewsLocalServiceDelegate {
+    func didLoadData(_ news: [NewsEntity]) {
+        newsFromBD = news.compactMap { News(newsCD: $0) }
+        favouriteDelegate?.serviceManagerDidLoadData(newsFromBD)
     }
 }

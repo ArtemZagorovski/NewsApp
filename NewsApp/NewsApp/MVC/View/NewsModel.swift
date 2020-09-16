@@ -9,16 +9,18 @@
 import UIKit
 
 struct NewsModel: NewsViewModel {
+    let id: String
     let newsTitle: String
     let newsDescription: String
     let image: UIImage?
     let publishedAt: String?
-    let isFavourite: Bool
+    var isFavourite: Bool
 }
 
 extension NewsModel {
     init (news: News) {
         self.image = news.imageData.map { UIImage(data: $0) } ?? nil
+        self.id = news.id
         self.newsTitle = news.newsTitle
         self.newsDescription = news.newsDescription
         self.publishedAt = news.publishedAt

@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+struct ServiceContainer {
+    let serviceManager = ServiceManager()
+}

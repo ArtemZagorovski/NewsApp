@@ -11,6 +11,7 @@ import CoreData
 
 final class FavouriteNewsManager: NewsManager {
     private var serviceManager: ServiceManager
+    weak var delegate: NewsManagerDelegate?
     private var news: [News] = []
     
     init(serviceManager: ServiceManager) {
@@ -22,7 +23,7 @@ final class FavouriteNewsManager: NewsManager {
     }
     
     func filter(for text: String) {
-        
+        serviceManager.filter(for: text)
     }
     
     func refresh() {
@@ -33,7 +34,17 @@ final class FavouriteNewsManager: NewsManager {
         
     }
     
-    func updateFavourite() {
-        
+    func updateFavourite(with news: News, closure: () -> ()) {
+        serviceManager.updateFavorites(with: news, closure: closure)
+    }
+}
+
+extension FavouriteNewsManager: NewsServiceCoordinatorDelegate {
+    func serviceManagerDidLoadData(_ news: [News]) {
+        delegate?.modelDidLoadNews(news)
+    }
+    
+    func serviceManagerDidGetAnError(error: Error) {
+        delegate?.modelDidGetAnError(error: error)
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 import RealmSwift
 
 class NewsViewController: UIViewController {
-    
 //MARK: - Variables and constatns
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
@@ -32,29 +31,27 @@ class NewsViewController: UIViewController {
         return s
     }()
 
-    var viewModel: [NewsViewModel] = []
+    var viewModels: [NewsViewModel] = []
     var delegate: NewsViewDelegate?
     
 //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
-        delegate?.viewDidLoad()
         setupView()
         setupLayout()
+        delegate?.viewDidLoad()
     }
-    
+
 //MARK: - Private Methods
     fileprivate func setDelegats() {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
 }
 
 //MARK: - Setup layout and views
 extension NewsViewController{
-    
     private func setupView() {
         self.title = Constants.SystemWords.news
         navigationItem.searchController = searchController
@@ -83,7 +80,6 @@ extension NewsViewController{
             mainPageLoadActivityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
     }
-    
 }
 
 //MARK: - TableView Delegate and Datasource
@@ -91,13 +87,14 @@ extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.count
+        return viewModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
-        let news = viewModel[indexPath.row]
-        cell.news = news
+        let news = viewModels[indexPath.row]
+        cell.configure(with: news)
+        cell.delegate = self
         return cell
     }
     
@@ -107,7 +104,7 @@ extension NewsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let news = viewModel[indexPath.row]
+        let news = viewModels[indexPath.row]
         delegate?.viewDidTapCell(for: news)
     }
     
@@ -129,7 +126,6 @@ extension NewsViewController: UITableViewDataSource {
 
 //MARK: - SearchController Extension
 extension NewsViewController: UISearchResultsUpdating {
-    
     func filterContentForSearchText(_ searchText: String)  {
         delegate?.viewDidChangeSearchTerm(searchText)
     }
@@ -138,7 +134,6 @@ extension NewsViewController: UISearchResultsUpdating {
         let searchBar = searchController.searchBar
         filterContentForSearchText(searchBar.text!)
     }
-    
 }
 
 extension NewsViewController: UISearchBarDelegate {
@@ -156,7 +151,7 @@ extension NewsViewController {
 
 extension NewsViewController: NewsView {
     func updateView(_ news: [NewsViewModel]) {
-        viewModel = news
+        viewModels = news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
@@ -170,7 +165,11 @@ extension NewsViewController: NewsView {
 }
 
 extension NewsViewController: NewsCellDelegate {
-    func didTapFavouriteButton(viewModel: NewsViewModel) {
-        delegate?.viewDidTapFavouriteButton(for: viewModel)
+    func didTapFavouriteButton(cell: UITableViewCell) {
+        guard let indexOfCell = tableView.indexPath(for: cell) else { return }
+        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) {
+            viewModels[indexOfCell.row].isFavourite = !viewModels[indexOfCell.row].isFavourite
+            tableView.reloadRows(at: [indexOfCell], with: .none)
+        }
     }
 }

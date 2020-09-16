@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 final class CoreDataStack {
-    var persistentContainer: NSPersistentContainer = {
+    static var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "News")
         container.loadPersistentStores { storeDescription, error in
             if let error = error {

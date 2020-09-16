@@ -13,7 +13,7 @@ protocol NewsViewDelegate: class {
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: () -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
@@ -27,10 +27,8 @@ protocol NewsManager {
     func refresh()
     func loadMoreNews()
     func filter(for text: String)
-    func updateFavourite(with news: News)
+    func updateFavourite(with news: News, closure: () -> ())
 }
-
-
 
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
@@ -38,9 +36,10 @@ protocol NewsManagerDelegate: class {
 }
 
 protocol NewsViewModel {
+    var id: String { get }
     var newsTitle: String { get }
     var newsDescription: String { get }
     var image: UIImage? { get }
     var publishedAt: String? { get }
-    var isFavourite: Bool { get }
+    var isFavourite: Bool { get set }
 }

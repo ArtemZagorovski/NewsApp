@@ -10,20 +10,21 @@ import UIKit
 
 final class FavouriteNewsCoordinator {
     private weak var view: UIViewController?
+    private let serviceContainer: ServiceContainer
+    
+    init(serviceContainer: ServiceContainer) {
+        self.serviceContainer = serviceContainer
+    }
     
     func createViewController() -> UIViewController {
         let view = NewsViewController()
         self.view = view
-        let apiService = APIService()
-        let dbService = DBDataLoader()
-        let serviceManager = ServiceManager(apiService: apiService, dbService: dbService)
+        let serviceManager = serviceContainer.serviceManager
         let model = FavouriteNewsManager(serviceManager: serviceManager)
         let controller = FavouriteNewsController(model: model, view: view, coordinator: self)
         model.delegate = controller
         view.delegate = controller
         serviceManager.favouriteDelegate = model
-        apiService.delegate = serviceManager
-        dbService.delegate = serviceManager
         return view
     }
     

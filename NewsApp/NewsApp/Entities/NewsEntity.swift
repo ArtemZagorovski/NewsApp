@@ -11,8 +11,9 @@ import CoreData
 
 final class NewsEntity: NSManagedObject {
     @nonobjc class func fetchRequest() -> NSFetchRequest<NewsEntity> {
-        return NSFetchRequest<NewsEntity>(entityName: "NewsCoreData")
+        return NSFetchRequest<NewsEntity>(entityName: "NewsEntity")
     }
+    @NSManaged var id: String
     @NSManaged var newsTitle: String
     @NSManaged var newsDescription: String
     @NSManaged var isFavourite: Bool
@@ -23,6 +24,7 @@ final class NewsEntity: NSManagedObject {
 extension NewsEntity {
     convenience init(news: News, context: NSManagedObjectContext) {
         self.init(context: context)
+        self.id = news.id
         self.newsTitle = news.newsTitle
         self.newsDescription = news.newsDescription
         self.isFavourite = news.isFavourite

@@ -6,4 +6,12 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+final class AppCoordinator {
+    private let serviceContainer = ServiceContainer()
+    
+    func lounch() -> UITabBarController {
+        return TabBarCoordinator(serviceContainer: serviceContainer).createViewController()
+    }
+}

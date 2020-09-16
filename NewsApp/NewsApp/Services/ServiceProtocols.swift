@@ -16,10 +16,15 @@ protocol RemoteNewsService: NewsService {
 }
 
 protocol LocalNewsService: NewsService {
-    func saveData(_ news: [News])
+    func saveData(_ news: News, closure: () -> ())
+    func filter(for text: String)
 }
 
-protocol NewsServiceDelegate: class {
-    func didLoadData(_ news: [News])
+protocol NewsRemoteServiceDelegate: class {
+    func didLoadData(_ news: [[String : AnyObject]])
     func didGetAnError(error: Error)
+}
+
+protocol NewsLocalServiceDelegate: class {
+    func didLoadData(_ news: [NewsEntity])
 }

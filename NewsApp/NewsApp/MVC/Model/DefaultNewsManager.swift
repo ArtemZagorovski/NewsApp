@@ -9,7 +9,6 @@
 import Foundation
 
 final class DefaultNewsManager: NewsManager {
-    
     private var serviceManager: ServiceManager
     weak var delegate: NewsManagerDelegate?
     
@@ -45,10 +44,9 @@ final class DefaultNewsManager: NewsManager {
         serviceManager.getRemoteData(page: page)
     }
     
-    func updateFavourite() {
-        print("New favourite")
+    func updateFavourite(with news: News, closure: () -> ()) {
+        serviceManager.updateFavorites(with: news, closure: closure)
     }
-    
 }
 
 extension DefaultNewsManager: NewsServiceCoordinatorDelegate {

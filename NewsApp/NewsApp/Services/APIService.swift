@@ -15,7 +15,7 @@ protocol JSONDecodable {
 final class APIService: RemoteNewsService {
     weak var delegate: NewsRemoteServiceDelegate?
 
-    func getData(page: Int) {
+    func loadNews(page: Int) {
         guard let url = NewsApiUrlBuilder(page: page).url else { return }
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)

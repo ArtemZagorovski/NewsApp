@@ -156,7 +156,7 @@ extension NewsViewController {
 
 extension NewsViewController: NewsView {
     func updateView(_ news: [NewsViewModel]) {
-        viewModels += news
+        viewModels = news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
@@ -175,7 +175,11 @@ extension NewsViewController: NewsView {
     }
     
     func showAnEmptyState() {
-        emptyStateLabel.isHidden = false
+        if viewModels.isEmpty {
+            emptyStateLabel.isHidden = false
+        } else {
+            emptyStateLabel.isHidden = true
+        }
     }
 }
 
@@ -183,14 +187,18 @@ extension NewsViewController: NewsCellDelegate {
     func didTapFavouriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
         delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) { [weak self] in
-            DispatchQueue.main.async {
-                if self?.viewModels.filter({ $0.isFavourite == true }).count == self?.viewModels.count {
-                    self?.viewModels.remove(at: indexOfCell.row)
-                    self?.tableView.deleteRows(at: [indexOfCell], with: .top)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                if self.viewModels.filter({ $0.isFavourite == true }).count == self.viewModels.count {
+                    self.viewModels.remove(at: indexOfCell.row)
+                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
+                    if self.viewModels.isEmpty {
+                        self.emptyStateLabel.isHidden = false
+                    }
                 }
                 else {
-                    self?.viewModels[indexOfCell.row].isFavourite = !(self?.viewModels[indexOfCell.row].isFavourite ?? false)
-                    self?.tableView.reloadRows(at: [indexOfCell], with: .none)
+                    self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)
+                    self.tableView.reloadRows(at: [indexOfCell], with: .none)
                 }
             }
         }

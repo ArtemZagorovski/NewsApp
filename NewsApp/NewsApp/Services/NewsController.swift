@@ -38,12 +38,12 @@ extension NewsController: NewsViewDelegate {
         model.filter(for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: () -> ()) {
-        model.updateFavourite(with: News(viewModel: viewModel), closure: closure)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ()) {
+        model.addToFavorite(News(viewModel: viewModel), closure: closure)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        coordinator?.showDetails(with: viewModel)
+        coordinator?.showDetails(with: viewModel, view: view)
     }
 }
 
@@ -54,6 +54,6 @@ extension NewsController: NewsManagerDelegate {
     }
     
     func modelDidGetAnError(error: Error) {
-        coordinator?.showAnError(error: error)
+        coordinator?.showAnError(error: error, view: view)
     }
 }

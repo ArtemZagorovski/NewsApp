@@ -11,7 +11,7 @@ import UIKit
 final class AppCoordinator {
     private let serviceContainer = ServiceContainer()
     
-    func lounch() -> UITabBarController {
-        return TabBarCoordinator(serviceContainer: serviceContainer).createViewController()
+    func launch() -> UITabBarController {
+        return TabBarCoordinator(serviceManager: serviceContainer.serviceManager).createViewController()
     }
 }

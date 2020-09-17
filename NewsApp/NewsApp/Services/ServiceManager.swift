@@ -9,9 +9,9 @@
 import Foundation
 
 protocol NewsServiceCoordinator {
-    func getRemoteData(page: Int)
-    func getLocalData()
-    func updateFavorites(with news: News, closure: () -> ())
+    func loadNews(page: Int)
+    func loadNews()
+    func updateFavorites(with news: News, closure: @escaping () -> ())
     func filter(for text: String)
 }
 
@@ -21,6 +21,7 @@ protocol NewsServiceCoordinatorDelegate: class {
 }
 
 final class ServiceManager: NewsServiceCoordinator {
+    
     weak var defaultDelegate: NewsServiceCoordinatorDelegate?
     weak var favouriteDelegate: NewsServiceCoordinatorDelegate?
     private var apiService = APIService()
@@ -32,15 +33,15 @@ final class ServiceManager: NewsServiceCoordinator {
         dbService.delegate = self
     }
     
-    func getRemoteData(page: Int) {
-        apiService.getData(page: page)
+    func loadNews(page: Int) {
+        apiService.loadNews(page: page)
     }
     
-    func getLocalData() {
-        dbService.getData(page: 1)
+    func loadNews() {
+        dbService.loadNews(page: 1)
     }
 
-    func updateFavorites(with news: News, closure: () -> ()) {
+    func updateFavorites(with news: News, closure: @escaping () -> ()) {
         dbService.saveData(news, closure: closure)
     }
     
@@ -51,7 +52,7 @@ final class ServiceManager: NewsServiceCoordinator {
 
 extension ServiceManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String : AnyObject]]) {
-        getLocalData()
+        loadNews()
         let newsFromAPI = news.compactMap { News(JSON: $0) }
         newsFromAPI.filter { newsFromBD.contains($0) }.map { $0.isFavourite = true }
         defaultDelegate?.serviceManagerDidLoadData(newsFromAPI)
@@ -65,6 +66,7 @@ extension ServiceManager: NewsRemoteServiceDelegate {
 extension ServiceManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
         newsFromBD = news.compactMap { News(newsCD: $0) }
+        newsFromBD.map {$0.isFavourite = true}
         favouriteDelegate?.serviceManagerDidLoadData(newsFromBD)
     }
 }

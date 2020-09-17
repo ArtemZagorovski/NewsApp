@@ -30,7 +30,7 @@ final class FavouriteNewsManager: NewsManager {
     }
     
     func loadMoreNews() {
-        
+        serviceManager.loadNews()
     }
     
     func addToFavorite(_ news: News, closure: @escaping () -> ()) {

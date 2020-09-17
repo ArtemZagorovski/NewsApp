@@ -11,12 +11,12 @@ import UIKit
 final class TabBarCoordinator {
     private let newsViewController: UIViewController
     private let favouriteNewsController: UIViewController
-    private let serviceContainer: ServiceContainer?
+    private let serviceManager: ServiceManager?
     
-    init(serviceContainer: ServiceContainer) {
-        self.serviceContainer = serviceContainer
-        self.newsViewController = NewsCoordinator(serviceContainer: serviceContainer).createViewController()
-        self.favouriteNewsController = FavouriteNewsCoordinator(serviceContainer: serviceContainer).createViewController()
+    init(serviceManager: ServiceManager) {
+        self.serviceManager = serviceManager
+        self.newsViewController = NewsCoordinator(serviceManager: serviceManager).createViewController()
+        self.favouriteNewsController = FavouriteNewsCoordinator(serviceManager: serviceManager).createViewController()
     }
     
     func createViewController() -> UITabBarController {

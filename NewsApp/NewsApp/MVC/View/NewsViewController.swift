@@ -14,6 +14,7 @@ class NewsViewController: UIViewController {
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
+    private let emptyStateLabel = UILabel()
     private var refreshControl: UIRefreshControl {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
@@ -60,24 +61,27 @@ extension NewsViewController{
         tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID)
         tableView.backgroundColor = Constants.AppColors.white
         view.backgroundColor = Constants.AppColors.white
+        emptyStateLabel.text = "There are no news"
+        emptyStateLabel.isHidden = true
     }
     
     private func setupLayout() {
         view.addSubview(tableView)
         view.insertSubview(mainPageLoadActivityIndicator, aboveSubview: tableView)
+        view.insertSubview(emptyStateLabel, aboveSubview: tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         mainPageLoadActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-        ])
-        
-        NSLayoutConstraint.activate([
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             mainPageLoadActivityIndicator.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
-            mainPageLoadActivityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
+            mainPageLoadActivityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
+            emptyStateLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
     }
 }
@@ -93,8 +97,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
         let news = viewModels[indexPath.row]
-        cell.configure(with: news)
-        cell.delegate = self
+        cell.configure(with: news, delegate: self)
         return cell
     }
     
@@ -145,13 +148,15 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
+        viewModels = []
         delegate?.viewDidPullToRefresh()
+        tableView.reloadData()
     }
 }
 
 extension NewsViewController: NewsView {
     func updateView(_ news: [NewsViewModel]) {
-        viewModels = news
+        viewModels += news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()
@@ -162,14 +167,32 @@ extension NewsViewController: NewsView {
     func animateActivity() {
         mainPageLoadActivityIndicator.startAnimating()
     }
+    
+    func stopAnimateActivity() {
+        self.mainPageLoadActivityIndicator.stopAnimating()
+        self.tableView.refreshControl?.endRefreshing()
+        self.tableView.tableFooterView?.isHidden = true
+    }
+    
+    func showAnEmptyState() {
+        emptyStateLabel.isHidden = false
+    }
 }
 
 extension NewsViewController: NewsCellDelegate {
     func didTapFavouriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
-        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) {
-            viewModels[indexOfCell.row].isFavourite = !viewModels[indexOfCell.row].isFavourite
-            tableView.reloadRows(at: [indexOfCell], with: .none)
+        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) { [weak self] in
+            DispatchQueue.main.async {
+                if self?.viewModels.filter({ $0.isFavourite == true }).count == self?.viewModels.count {
+                    self?.viewModels.remove(at: indexOfCell.row)
+                    self?.tableView.deleteRows(at: [indexOfCell], with: .top)
+                }
+                else {
+                    self?.viewModels[indexOfCell.row].isFavourite = !(self?.viewModels[indexOfCell.row].isFavourite ?? false)
+                    self?.tableView.reloadRows(at: [indexOfCell], with: .none)
+                }
+            }
         }
     }
 }

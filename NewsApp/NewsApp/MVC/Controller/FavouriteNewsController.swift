@@ -26,7 +26,7 @@ extension FavouriteNewsController: NewsViewDelegate {
     }
     
     func viewDidScrollToEnd() {
-        
+        view?.stopAnimateActivity()
     }
     
     func viewDidPullToRefresh() {
@@ -37,21 +37,26 @@ extension FavouriteNewsController: NewsViewDelegate {
         model.filter(for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: () -> ()) {
-        model.updateFavourite(with: News(viewModel: viewModel), closure: closure)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ()) {
+        model.addToFavorite(News(viewModel: viewModel), closure: closure)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        coordinator.showDetails(with: viewModel)
+        coordinator.showDetails(with: viewModel, view: view)
     }
 }
 
 extension FavouriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
         view?.updateView(news.map { NewsModel(news: $0) })
+        if news.isEmpty {
+            DispatchQueue.main.async {
+                self.view?.showAnEmptyState()
+            }
+        }
     }
     
     func modelDidGetAnError(error: Error) {
-        
+        coordinator.showAnError(error: error, view: view)
     }
 }

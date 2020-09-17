@@ -12,14 +12,13 @@ import CoreData
 final class FavouriteNewsManager: NewsManager {
     private var serviceManager: ServiceManager
     weak var delegate: NewsManagerDelegate?
-    private var news: [News] = []
     
     init(serviceManager: ServiceManager) {
         self.serviceManager = serviceManager
     }
     
     func loadNews() {
-        serviceManager.getLocalData()
+        serviceManager.loadNews()
     }
     
     func filter(for text: String) {
@@ -27,14 +26,14 @@ final class FavouriteNewsManager: NewsManager {
     }
     
     func refresh() {
-        serviceManager.getLocalData()
+        serviceManager.loadNews()
     }
     
     func loadMoreNews() {
         
     }
     
-    func updateFavourite(with news: News, closure: () -> ()) {
+    func addToFavorite(_ news: News, closure: @escaping () -> ()) {
         serviceManager.updateFavorites(with: news, closure: closure)
     }
 }

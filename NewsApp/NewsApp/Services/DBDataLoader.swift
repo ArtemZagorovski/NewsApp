@@ -10,27 +10,20 @@ import Foundation
 import CoreData
 
 final class DBDataLoader: LocalNewsService {
-    
-    private let persistentContainer = CoreDataStack.persistentContainer
+    private let persistentContainer = CoreDataStack().persistentContainer
     private let getContext: NSManagedObjectContext
     private let saveContext: NSManagedObjectContext
     weak var delegate: NewsLocalServiceDelegate?
-    private var newsFromBD: [NewsEntity] = []
     
     init() {
         getContext = persistentContainer.viewContext
         saveContext = persistentContainer.newBackgroundContext()
     }
     
-    func getData(page: Int) {
-        getCurrentState()
-        delegate?.didLoadData(newsFromBD)
-    }
-    
-    private func getCurrentState() {
+    func loadNews(page: Int) {
         do {
             guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            newsFromBD = newsCD
+            delegate?.didLoadData(newsCD)
         }
         catch let error {
             print(error.localizedDescription)
@@ -46,29 +39,33 @@ final class DBDataLoader: LocalNewsService {
         fetchRequest.predicate = predicate
         do {
             guard let fetchResult = try getContext.fetch(fetchRequest) as? [NewsEntity] else { return }
-            newsFromBD = fetchResult
+            delegate?.didLoadData(fetchResult)
         }
         catch let error {
             print(error.localizedDescription)
         }
-        delegate?.didLoadData(newsFromBD)
     }
     
-    func saveData(_ news: News, closure: () -> ()) {
-        getCurrentState()
-        let equals = newsFromBD.filter { $0.id == news.id }
-        if equals.isEmpty {
-            NewsEntity(news: news, context: saveContext)
-        } else {
-            equals.map { getContext.delete($0) }
-            getData(page: 1)
-        }
+    func saveData(_ news: News, closure: @escaping () -> ()) {
         do {
-            try saveContext.save()
-            closure()
+            guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
+            let equals = newsCD.filter { $0.id == news.id }
+            if equals.isEmpty {
+                NewsEntity(news: news, context: saveContext)
+            } else {
+                equals.map { getContext.delete($0) }
+            }
         }
         catch let error {
             print(error.localizedDescription)
+        }
+        saveContext.perform {
+            do {
+                try self.saveContext.save()
+                closure()
+            }catch let error {
+                print(error.localizedDescription)
+            }
         }
     }
 }

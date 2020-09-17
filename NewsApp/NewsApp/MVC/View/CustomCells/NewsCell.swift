@@ -18,7 +18,7 @@ final class NewsCell: UITableViewCell {
     
     private let favouriteButton: UIButton = {
         let button = UIButton()
-        let notFillImage = Constants.SystemWords.flameImageName
+        let notFillImageName = Constants.SystemWords.flameImageName
         let image = UIImage(systemName: notFillImage)?.withTintColor(.black)
         button.setImage(image, for: .normal)
         return button

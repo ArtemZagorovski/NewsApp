@@ -49,10 +49,8 @@ extension FavouriteNewsController: NewsViewDelegate {
 extension FavouriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
         view?.updateView(news.map { NewsModel(news: $0) })
-        if news.isEmpty {
-            DispatchQueue.main.async {
-                self.view?.showAnEmptyState()
-            }
+        DispatchQueue.main.async {
+            self.view?.showAnEmptyState()
         }
     }
     

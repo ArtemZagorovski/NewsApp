@@ -9,44 +9,22 @@
 import UIKit
 
 protocol NewsCellDelegate: class {
-    func didTapFavouriteButton(viewModel: NewsViewModel)
+    func didTapFavouriteButton(cell: UITableViewCell)
 }
 
-class NewsCell: UITableViewCell {
+final class NewsCell: UITableViewCell {
     
     weak var delegate: NewsCellDelegate?
-    
-    var news : NewsViewModel? {
-        didSet {
-            guard let news = news else {
-                return
-            }
-            titleLabel.text = news.newsTitle
-            descriptionLabel.text = news.newsDescription
-            newsImage.image = news.image
-            if news.isFavourite {
-                favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
-            }
-            DispatchQueue.main.async {
-                if self.descriptionLabel.actualNumberOfLines() > 3 {
-                    self.showMoreLabel.isHidden = false
-                } else {
-                    self.showMoreLabel.isHidden = true
-                }
-            }
-        }
-    }
     
     private let favouriteButton: UIButton = {
         let button = UIButton()
         let notFillImage = Constants.SystemWords.flameImageName
-        let image = UIImage(systemName: notFillImage)
-        image?.withTintColor(.black)
+        let image = UIImage(systemName: notFillImage)?.withTintColor(.black)
         button.setImage(image, for: .normal)
         return button
     }()
     
-    private let newsImage : UIImageView = {
+    private let newsImageView : UIImageView = {
         let imageName = Constants.SystemWords.defaultImageName
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image)
@@ -88,51 +66,38 @@ class NewsCell: UITableViewCell {
         self.layer.cornerRadius = 15
         self.clipsToBounds = true
         
-        addSubview(newsImage)
-        newsImage.translatesAutoresizingMaskIntoConstraints = false
-        
         let textStack = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         textStack.axis = .vertical
         textStack.alignment = .top
         textStack.distribution = .fill
         textStack.spacing = 5
         
+        addSubview(newsImageView)
         addSubview(textStack)
+        insertSubview(showMoreLabel, aboveSubview: textStack)
+        addSubview(favouriteButton)
+        newsImageView.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
+        showMoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        favouriteButton.translatesAutoresizingMaskIntoConstraints = false
+        favouriteButton.addTarget(self, action: #selector(didTapFavouriteButton), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            newsImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            newsImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            newsImage.heightAnchor.constraint(equalToConstant: 80),
-            newsImage.widthAnchor.constraint(equalToConstant: 80),
-        ])
-        
-        NSLayoutConstraint.activate([
-            textStack.leadingAnchor.constraint(equalTo: newsImage.trailingAnchor, constant: 10),
+            newsImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            newsImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            newsImageView.heightAnchor.constraint(equalToConstant: 80),
+            newsImageView.widthAnchor.constraint(equalToConstant: 80),
+            textStack.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: 10),
             textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
             textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -50),
-            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10)
-        ])
-        
-        insertSubview(showMoreLabel, aboveSubview: textStack)
-        showMoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
+            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10),
             showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 0),
-            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 1)
-        ])
-        
-        addSubview(favouriteButton)
-        favouriteButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
+            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 1),
             favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 5),
             favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
             favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
             favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -30)
         ])
-        
-        favouriteButton.addTarget(self, action: #selector(didTapFavouriteButton), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -140,7 +105,30 @@ class NewsCell: UITableViewCell {
     }
     
     @objc private func didTapFavouriteButton() {
-        guard let news = news else { return }
-        delegate?.didTapFavouriteButton(viewModel: news)
+        delegate?.didTapFavouriteButton(cell: self)
+    }
+    
+    func configure(with viewModel: NewsViewModel, delegate: NewsCellDelegate) {
+        self.delegate = delegate
+        titleLabel.text = viewModel.newsTitle
+        descriptionLabel.text = viewModel.newsDescription
+        newsImageView.image = viewModel.image
+        
+        if viewModel.isFavourite {
+            self.favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+        }
+        DispatchQueue.main.async {
+            if self.descriptionLabel.actualNumberOfLines() > 3 {
+                self.showMoreLabel.isHidden = false
+            } else {
+                self.showMoreLabel.isHidden = true
+            }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        showMoreLabel.isHidden = true
+        favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
     }
 }

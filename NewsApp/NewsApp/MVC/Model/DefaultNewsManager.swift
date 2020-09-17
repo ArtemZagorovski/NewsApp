@@ -20,7 +20,7 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func loadNews() {
-        serviceManager.getRemoteData(page: page)
+        serviceManager.loadNews(page: page)
     }
     
     func filter(for text: String) {
@@ -37,14 +37,14 @@ final class DefaultNewsManager: NewsManager {
     
     func refresh() {
         page = 1
-        serviceManager.getRemoteData(page: page)
+        serviceManager.loadNews(page: page)
     }
     
     func loadMoreNews() {
-        serviceManager.getRemoteData(page: page)
+        serviceManager.loadNews(page: page)
     }
     
-    func updateFavourite(with news: News, closure: () -> ()) {
+    func addToFavorite(_ news: News, closure: @escaping () -> ()) {
         serviceManager.updateFavorites(with: news, closure: closure)
     }
 }

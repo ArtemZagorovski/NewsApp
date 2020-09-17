@@ -8,19 +8,25 @@
 
 import Foundation
 
-protocol FavouriteNewsViewDelegate: class {
-    func viewDidLoad()
-    func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel)
-    func viewDidTapCell(for viewModel: NewsViewModel)
+protocol FavoriteNewsViewDelegate: class {
+    func favoriteViewDidLoad()
+    func favoriteViewDidPullToRefresh()
+    func favoriteViewDidChangeSearchTerm(_ term: String)
+    func favoriteViewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ())
+    func favoriteViewDidTapCell(for viewModel: NewsViewModel)
 }
 
-protocol FavouriteNewsView: class {
-    func updateView(_ news: [NewsViewModel])
+protocol FavoriteNewsView: class {
+    func updateFavoriteView(_ news: [NewsViewModel])
 }
 
-protocol FavouriteNewsManager {
-    func loadNews()
-    func filter(for text: String)
-    func updateFavoutire()
+protocol FavoriteNewsManager {
+    func loadFavoriteNews()
+    func filterFavorite(for text: String)
+    func addToFavorite(_ news: News, closure: @escaping () -> ())
+}
+
+protocol FavoriteNewsManagerDelegate: class {
+    func favoriteModelDidLoadNews(_ news: [News])
+    func favoriteModelDidGetAnError(error: Error)
 }

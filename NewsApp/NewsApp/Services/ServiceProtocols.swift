@@ -9,14 +9,14 @@
 import Foundation
 
 protocol NewsService {
-    func getData(page: Int)
+    func loadNews(page: Int)
 }
 
 protocol RemoteNewsService: NewsService {
 }
 
 protocol LocalNewsService: NewsService {
-    func saveData(_ news: News, closure: () -> ())
+    func saveData(_ news: News, closure: @escaping () -> ())
     func filter(for text: String)
 }
 

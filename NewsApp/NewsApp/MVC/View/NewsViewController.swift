@@ -41,6 +41,10 @@ class NewsViewController: UIViewController {
         setDelegats()
         setupView()
         setupLayout()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         delegate?.viewDidLoad()
     }
 

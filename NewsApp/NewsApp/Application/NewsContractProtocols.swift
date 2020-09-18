@@ -9,11 +9,12 @@
 import UIKit
 
 protocol NewsViewDelegate: class {
-    func viewDidLoad()
+    func viewWillAppear()
+    func viewWillDisappear()
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ())
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
 }
 
@@ -21,19 +22,30 @@ protocol NewsView: class {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
     func stopAnimateActivity()
-    func showAnEmptyState()
+    func changeVisibilityOfAnEmptyState()
 }
 
 protocol NewsManager {
+    var delegate: NewsManagerDelegate? { get set }
     func loadNews()
     func refresh()
     func loadMoreNews()
-    func filter(for text: String)
-    func addToFavorite(_ news: News, closure: @escaping () -> ())
+    func filterAllNews(for text: String)
+    func updateFavorites(with news: News, refreshCell: @escaping () -> ())
+    func saveData()
+}
+
+protocol FavoriteNewsManager {
+    var delegate: NewsManagerDelegate? { get set }
+    func loadFavoriteNews()
+    func saveData()
+    func filterFavoriteNews(for text: String)
+    func updateFavorites(with news: News, refreshCell: @escaping () -> ())
 }
 
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
+    func modelDidLoadFavoriteNews(_ news: [News])
     func modelDidGetAnError(error: Error)
 }
 

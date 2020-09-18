@@ -13,10 +13,12 @@ protocol NewsService {
 }
 
 protocol RemoteNewsService: NewsService {
+    var delegate: NewsRemoteServiceDelegate? { get set }
 }
 
 protocol LocalNewsService: NewsService {
-    func saveData(_ news: News, closure: @escaping () -> ())
+    var delegate: NewsLocalServiceDelegate? { get set }
+    func saveData(_ news: [News])
     func filter(for text: String)
 }
 

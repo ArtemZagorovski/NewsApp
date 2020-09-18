@@ -9,22 +9,23 @@
 import UIKit
 
 final class TabBarCoordinator {
-    private let newsViewController: UIViewController
-    private let favouriteNewsController: UIViewController
-    private let serviceManager: ServiceManager?
+    private let apiService: RemoteNewsService
+    private let dbService: LocalNewsService
     
-    init(serviceManager: ServiceManager) {
-        self.serviceManager = serviceManager
-        self.newsViewController = NewsCoordinator(serviceManager: serviceManager).createViewController()
-        self.favouriteNewsController = FavouriteNewsCoordinator(serviceManager: serviceManager).createViewController()
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
     }
     
     func createViewController() -> UITabBarController {
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.tintColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
+        tabBarController.tabBar.tintColor = .blue
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)
         guard let listImage = UIImage(systemName: "list.bullet", withConfiguration: boldConfig),
         let favouriteImage = UIImage(systemName: "star", withConfiguration: boldConfig) else { return UITabBarController() }
+        let model = DefaultNewsManager(apiService: apiService, dbService: dbService)
+        let newsViewController = NewsCoordinator(apiService: apiService, dbService: dbService).createViewController(model: model)
+        let favouriteNewsController = FavouriteNewsCoordinator(dbService: dbService).createViewController(model: model)
         
         tabBarController.viewControllers = [
             generateNavigationController(rootViewController: newsViewController, title: "News", image: listImage),

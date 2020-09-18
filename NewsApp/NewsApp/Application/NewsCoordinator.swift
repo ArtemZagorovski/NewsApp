@@ -8,23 +8,24 @@
 
 import UIKit
 
-final class NewsCoordinator: DetailsManager, ErrorManager {
+final class NewsCoordinator: DetailsShowable, ErrorShowable {
     private weak var view: UIViewController?
-    private var serviceManager: ServiceManager
+    private var apiService: RemoteNewsService
+    private var dbService: LocalNewsService
     
-    init(serviceManager: ServiceManager) {
-        self.serviceManager = serviceManager
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
     }
     
-    func createViewController() -> UIViewController {
+    func createViewController(model: NewsManager) -> UIViewController {
         let view = NewsViewController()
         self.view = view
-        let serviceManager = self.serviceManager
-        let model = DefaultNewsManager(serviceManager: serviceManager)
         let controller = NewsController(model: model, view: view, coordinator: self)
-        model.delegate = controller
+        guard let model = model as? DefaultNewsManager else { return UIViewController() }
         view.delegate = controller
-        serviceManager.defaultDelegate = model
+        apiService.delegate = model
+        dbService.delegate = model
         return view
     }
 }

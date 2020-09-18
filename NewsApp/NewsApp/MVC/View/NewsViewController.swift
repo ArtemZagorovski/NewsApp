@@ -45,7 +45,12 @@ class NewsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        delegate?.viewDidLoad()
+        delegate?.viewWillAppear()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.viewWillDisappear()
     }
 
 //MARK: - Private Methods
@@ -152,9 +157,7 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        viewModels = []
         delegate?.viewDidPullToRefresh()
-        tableView.reloadData()
     }
 }
 
@@ -178,12 +181,8 @@ extension NewsViewController: NewsView {
         self.tableView.tableFooterView?.isHidden = true
     }
     
-    func showAnEmptyState() {
-        if viewModels.isEmpty {
-            emptyStateLabel.isHidden = false
-        } else {
-            emptyStateLabel.isHidden = true
-        }
+    func changeVisibilityOfAnEmptyState() {
+        emptyStateLabel.isHidden = !viewModels.isEmpty
     }
 }
 
@@ -193,12 +192,10 @@ extension NewsViewController: NewsCellDelegate {
         delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                if self.viewModels.filter({ $0.isFavourite == true }).count == self.viewModels.count {
+                if self.delegate is FavouriteNewsController {
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
-                    if self.viewModels.isEmpty {
-                        self.emptyStateLabel.isHidden = false
-                    }
+                    self.changeVisibilityOfAnEmptyState()
                 }
                 else {
                     self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)

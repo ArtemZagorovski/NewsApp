@@ -46,15 +46,11 @@ final class DBDataLoader: LocalNewsService {
         }
     }
     
-    func saveData(_ news: News, closure: @escaping () -> ()) {
+    func saveData(_ news: [News]) {
         do {
             guard let newsCD = try saveContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            let equals = newsCD.filter { $0.id == news.id }
-            if equals.isEmpty {
-                NewsEntity(news: news, context: saveContext)
-            } else {
-                equals.map { saveContext.delete($0) }
-            }
+            newsCD.map { saveContext.delete($0) }
+            news.map { NewsEntity(news: $0, context: saveContext) }
         }
         catch let error {
             print(error.localizedDescription)
@@ -62,7 +58,6 @@ final class DBDataLoader: LocalNewsService {
         saveContext.perform {
             do {
                 try self.saveContext.save()
-                closure()
             }
             catch let error {
                 print(error.localizedDescription)

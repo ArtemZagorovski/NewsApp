@@ -6,14 +6,14 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 final class FavouriteNewsController {
     private weak var view: NewsView?
-    private let model: NewsManager
+    private var model: FavoriteNewsManager
     private let coordinator: FavouriteNewsCoordinator
     
-    init(model: NewsManager, view: NewsView, coordinator: FavouriteNewsCoordinator) {
+    init(model: FavoriteNewsManager, view: NewsView, coordinator: FavouriteNewsCoordinator) {
         self.view = view
         self.model = model
         self.coordinator = coordinator
@@ -21,8 +21,13 @@ final class FavouriteNewsController {
 }
 
 extension FavouriteNewsController: NewsViewDelegate {
-    func viewDidLoad() {
-        model.loadNews()
+    func viewWillAppear() {
+        model.delegate = self
+        model.loadFavoriteNews()
+    }
+    
+    func viewWillDisappear() {
+        model.saveData()
     }
     
     func viewDidScrollToEnd() {
@@ -30,31 +35,35 @@ extension FavouriteNewsController: NewsViewDelegate {
     }
     
     func viewDidPullToRefresh() {
-        model.loadNews()
+        view?.stopAnimateActivity()
     }
     
     func viewDidChangeSearchTerm(_ term: String) {
-        model.filter(for: term)
+        model.filterFavoriteNews(for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ()) {
-        model.addToFavorite(News(viewModel: viewModel), closure: closure)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
+        guard let view = view as? UIViewController else { return }
         coordinator.showDetails(with: viewModel, view: view)
     }
 }
 
 extension FavouriteNewsController: NewsManagerDelegate {
-    func modelDidLoadNews(_ news: [News]) {
+    func modelDidLoadFavoriteNews(_ news: [News]) {
         view?.updateView(news.map { NewsModel(news: $0) })
-        DispatchQueue.main.async {
-            self.view?.showAnEmptyState()
-        }
+        self.view?.changeVisibilityOfAnEmptyState()
+    }
+    
+    func modelDidLoadNews(_ news: [News]) {
+
     }
     
     func modelDidGetAnError(error: Error) {
+        guard let view = view as? UIViewController else { return }
         coordinator.showAnError(error: error, view: view)
     }
 }

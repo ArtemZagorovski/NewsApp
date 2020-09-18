@@ -21,9 +21,14 @@ final class NewsController {
 }
 
 extension NewsController: NewsViewDelegate {
-    func viewDidLoad() {
+    func viewWillAppear() {
         view?.animateActivity()
+        model.delegate = self
         model.loadNews()
+    }
+    
+    func viewWillDisappear() {
+        model.saveData()
     }
     
     func viewDidScrollToEnd() {
@@ -35,25 +40,31 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidChangeSearchTerm(_ term: String) {
-        model.filter(for: term)
+        model.filterAllNews(for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, closure: @escaping () -> ()) {
-        model.addToFavorite(News(viewModel: viewModel), closure: closure)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
+        guard let view = view as? UIViewController else { return }
         coordinator?.showDetails(with: viewModel, view: view)
     }
 }
 
 extension NewsController: NewsManagerDelegate {
+    func modelDidLoadFavoriteNews(_ news: [News]) {
+        
+    }
+    
     func modelDidLoadNews(_ news: [News]) {
         let viewModels = news.map{ NewsModel(news: $0) }
         view?.updateView(viewModels)
     }
     
     func modelDidGetAnError(error: Error) {
+        guard let view = view as? UIViewController else { return }
         coordinator?.showAnError(error: error, view: view)
     }
 }

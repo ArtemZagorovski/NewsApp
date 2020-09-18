@@ -9,5 +9,6 @@
 import Foundation
 
 struct ServiceContainer {
-    let serviceManager = ServiceManager()
+    let apiService = APIService()
+    let dbService = DBDataLoader()
 }

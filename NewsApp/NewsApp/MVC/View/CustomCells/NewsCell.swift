@@ -117,13 +117,8 @@ final class NewsCell: UITableViewCell {
         if viewModel.isFavourite {
             self.favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
         }
-        DispatchQueue.main.async {
-            if self.descriptionLabel.actualNumberOfLines() > 3 {
-                self.showMoreLabel.isHidden = false
-            } else {
-                self.showMoreLabel.isHidden = true
-            }
-        }
+        let hasMoreText = self.descriptionLabel.actualNumberOfLines() > 3
+        showMoreLabel.isHidden = !hasMoreText
     }
     
     override func prepareForReuse() {

@@ -9,25 +9,29 @@
 import Foundation
 
 final class DefaultNewsManager: NewsManager {
-    private var serviceManager: ServiceManager
-    weak var delegate: NewsManagerDelegate?
-    
-    private var news: [News] = []
+    private let apiService: RemoteNewsService
+    private var dbService: LocalNewsService
+    private var newsFromApi: [News] = []
+    private var newsFromBD: [News] = []
     private var page = 1
     
-    init(serviceManager: ServiceManager) {
-        self.serviceManager = serviceManager
+    weak var delegate: NewsManagerDelegate?
+    
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
+        dbService.loadNews(page: 1)
     }
     
     func loadNews() {
-        serviceManager.loadNews(page: page)
+        apiService.loadNews(page: page)
     }
     
-    func filter(for text: String) {
+    func filterAllNews(for text: String) {
         if text.isEmpty {
-            delegate?.modelDidLoadNews(news)
+            delegate?.modelDidLoadNews(newsFromApi)
         } else {
-            delegate?.modelDidLoadNews(news.filter { news in
+            delegate?.modelDidLoadNews(newsFromApi.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
@@ -37,26 +41,66 @@ final class DefaultNewsManager: NewsManager {
     
     func refresh() {
         page = 1
-        serviceManager.loadNews(page: page)
+        apiService.loadNews(page: page)
     }
     
     func loadMoreNews() {
-        serviceManager.loadNews(page: page)
+        page += 1
+        apiService.loadNews(page: page)
     }
     
-    func addToFavorite(_ news: News, closure: @escaping () -> ()) {
-        serviceManager.updateFavorites(with: news, closure: closure)
+    func saveData() {
+        print(newsFromBD)
+        dbService.saveData(newsFromBD)
+    }
+    
+    func updateFavorites(with news: News, refreshCell: @escaping () -> ()) {
+        let equals = newsFromBD.filter { $0.id == news.id }
+        if equals.isEmpty {
+            newsFromBD.append(news)
+        }
+        else {
+            guard let indexOfEqual = newsFromBD.firstIndex(of: equals[0]) else { return }
+            newsFromBD.remove(at: indexOfEqual)
+        }
+        refreshCell()
     }
 }
 
-extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
-    func serviceManagerDidLoadData(_ news: [News]) {
-        self.news = news
-        delegate?.modelDidLoadNews(news)
-        page += 1
+extension DefaultNewsManager: FavoriteNewsManager {
+    func loadFavoriteNews() {
+        dbService.loadNews(page: 1)
     }
     
-    func serviceManagerDidGetAnError(error: Error) {
+    func filterFavoriteNews(for text: String) {
+        if text.isEmpty {
+            delegate?.modelDidLoadNews(newsFromBD)
+        } else {
+            delegate?.modelDidLoadNews(newsFromBD.filter { news in
+                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
+                let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
+                return isTitleContainsFilter || isDescriptionContainsFilter
+            })
+        }
+    }
+}
+
+extension DefaultNewsManager: NewsRemoteServiceDelegate {
+    func didLoadData(_ news: [[String : AnyObject]]) {
+        newsFromApi = news.compactMap { News(JSON: $0) }
+        newsFromApi.filter { newsFromBD.contains($0) }.map { $0.isFavourite = true }
+        delegate?.modelDidLoadNews(newsFromApi)
+    }
+    
+    func didGetAnError(error: Error) {
         delegate?.modelDidGetAnError(error: error)
+    }
+}
+
+extension DefaultNewsManager: NewsLocalServiceDelegate {
+    func didLoadData(_ news: [NewsEntity]) {
+        newsFromBD = news.compactMap { News(newsCD: $0) }
+        newsFromBD.map {$0.isFavourite = true}
+        delegate?.modelDidLoadFavoriteNews(newsFromBD)
     }
 }

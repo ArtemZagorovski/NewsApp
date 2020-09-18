@@ -9,7 +9,7 @@
 import Foundation
 
 struct NewsApiUrlBuilder {
-    private let scheme = "https"
+    private let scheme = "http"
     private let host = "newsapi.org"
     private let path = "/v2/everything"
     private let q = "Apple"

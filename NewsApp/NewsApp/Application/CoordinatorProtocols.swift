@@ -8,29 +8,27 @@
 
 import UIKit
 
-protocol DetailsManager {
-    func showDetails(with viewModel: NewsViewModel, view: NewsView?)
+protocol DetailsShowable {
+    func showDetails(with viewModel: NewsViewModel, view: UIViewController?)
 }
 
-extension DetailsManager {
-    func showDetails(with viewModel: NewsViewModel, view: NewsView?) {
+extension DetailsShowable {
+    func showDetails(with viewModel: NewsViewModel, view: UIViewController?) {
         let newsDetailsCoordinator = NewsDetailsCoordinator()
         let newsDetailsViewController = newsDetailsCoordinator.createViewController(with: viewModel)
-        guard let view = view as? UIViewController else { return }
-        view.navigationController?.pushViewController(newsDetailsViewController, animated: true)
+        view?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
     }
 }
 
-protocol ErrorManager {
-    func showAnError(error: Error, view: NewsView?)
+protocol ErrorShowable {
+    func showAnError(error: Error, view: UIViewController?)
 }
 
-extension ErrorManager {
-    func showAnError(error: Error, view: NewsView?) {
+extension ErrorShowable {
+    func showAnError(error: Error, view: UIViewController?) {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
-        guard let view = view as? UIViewController else { return }
-        view.present(alert, animated: true)
+        view?.present(alert, animated: true)
     }
 }

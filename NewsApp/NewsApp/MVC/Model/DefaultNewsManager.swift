@@ -69,7 +69,7 @@ final class DefaultNewsManager: NewsManager {
 
 extension DefaultNewsManager: FavoriteNewsManager {
     func loadFavoriteNews() {
-        delegate?.modelDidLoadFavoriteNews(newsFromBD)
+        delegate?.modelDidLoadNews(newsFromBD)
     }
     
     func filterFavoriteNews(for text: String) {

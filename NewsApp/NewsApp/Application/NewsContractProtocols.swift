@@ -44,7 +44,6 @@ protocol FavoriteNewsManager {
 
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
-    func modelDidLoadFavoriteNews(_ news: [News])
     func modelDidGetAnError(error: Error)
 }
 

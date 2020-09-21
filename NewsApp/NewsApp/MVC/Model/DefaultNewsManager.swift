@@ -50,13 +50,13 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func saveData() {
-        print(newsFromBD)
         dbService.saveData(newsFromBD)
     }
     
     func updateFavorites(with news: News, refreshCell: @escaping () -> ()) {
         let equals = newsFromBD.filter { $0.id == news.id }
         if equals.isEmpty {
+            news.isFavourite = !news.isFavourite
             newsFromBD.append(news)
         }
         else {
@@ -69,7 +69,7 @@ final class DefaultNewsManager: NewsManager {
 
 extension DefaultNewsManager: FavoriteNewsManager {
     func loadFavoriteNews() {
-        dbService.loadNews(page: 1)
+        delegate?.modelDidLoadFavoriteNews(newsFromBD)
     }
     
     func filterFavoriteNews(for text: String) {

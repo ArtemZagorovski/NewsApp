@@ -27,10 +27,6 @@ extension NewsController: NewsViewDelegate {
         model.loadNews()
     }
     
-    func viewWillDisappear() {
-        model.saveData()
-    }
-    
     func viewDidScrollToEnd() {
         model.loadMoreNews()
     }

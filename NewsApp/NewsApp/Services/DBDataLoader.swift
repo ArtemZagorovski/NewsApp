@@ -30,27 +30,11 @@ final class DBDataLoader: LocalNewsService {
         }
     }
     
-    func filter(for text: String) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsEntity")
-        if text.isEmpty {
-            return
-        }
-        let predicate = NSPredicate(format: "newsTitle CONTAINS[c] %@", text)
-        fetchRequest.predicate = predicate
-        do {
-            guard let fetchResult = try getContext.fetch(fetchRequest) as? [NewsEntity] else { return }
-            delegate?.didLoadData(fetchResult)
-        }
-        catch let error {
-            print(error.localizedDescription)
-        }
-    }
-    
     func saveData(_ news: [News]) {
         do {
             guard let newsCD = try saveContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            newsCD.map { saveContext.delete($0) }
-            news.map { NewsEntity(news: $0, context: saveContext) }
+            newsCD.forEach { saveContext.delete($0) }
+            news.forEach { NewsEntity(news: $0, context: saveContext) }
         }
         catch let error {
             print(error.localizedDescription)

@@ -21,41 +21,42 @@ final class FavouriteNewsController {
 }
 
 extension FavouriteNewsController: NewsViewDelegate {
+    var isFavoriteViewController: Bool {
+        return true
+    }
+    
     func viewWillAppear() {
         model.delegate = self
         model.loadFavoriteNews()
     }
     
     func viewDidScrollToEnd() {
-        view?.stopAnimateActivity()
+        
     }
     
     func viewDidPullToRefresh() {
-        view?.stopAnimateActivity()
+        
     }
     
     func viewDidChangeSearchTerm(_ term: String) {
-        model.filterFavoriteNews(for: term)
+        model.filter(favorite: true, for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), refreshCell: refreshCell)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, isFavorite: Bool, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), isFavorite: isFavorite, refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        guard let view = view as? UIViewController else { return }
-        coordinator.showDetails(with: viewModel, view: view)
+        coordinator.showDetails(with: viewModel)
     }
 }
 
 extension FavouriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
         view?.updateView(news.map { NewsModel(news: $0) })
-        self.view?.changeVisibilityOfAnEmptyState()
     }
     
     func modelDidGetAnError(error: Error) {
-        guard let view = view as? UIViewController else { return }
-        coordinator.showAnError(error: error, view: view)
+        coordinator.showAnError(error: error)
     }
 }

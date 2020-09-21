@@ -19,7 +19,6 @@ protocol RemoteNewsService: NewsService {
 protocol LocalNewsService: NewsService {
     var delegate: NewsLocalServiceDelegate? { get set }
     func saveData(_ news: [News])
-    func filter(for text: String)
 }
 
 protocol NewsRemoteServiceDelegate: class {

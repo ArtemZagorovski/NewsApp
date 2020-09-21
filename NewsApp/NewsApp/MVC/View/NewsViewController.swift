@@ -32,7 +32,13 @@ class NewsViewController: UIViewController {
         return s
     }()
 
-    var viewModels: [NewsViewModel] = []
+    var viewModels: [NewsViewModel] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.emptyStateLabel.isHidden = !self.viewModels.isEmpty
+            }
+        }
+    }
     var delegate: NewsViewDelegate?
     
 //MARK: - ViewController lifecycle methods
@@ -119,7 +125,8 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        let isNeedToLoadNewData = isLastSection && !searchController.isActive
+        let isNewsViewController = !(delegate?.isFavoriteViewController ?? false)
+        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isNewsViewController
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
@@ -152,6 +159,9 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
+        if self.delegate?.isFavoriteViewController ?? false {
+            sender.endRefreshing()
+        }
         delegate?.viewDidPullToRefresh()
     }
 }
@@ -169,28 +179,17 @@ extension NewsViewController: NewsView {
     func animateActivity() {
         mainPageLoadActivityIndicator.startAnimating()
     }
-    
-    func stopAnimateActivity() {
-        self.mainPageLoadActivityIndicator.stopAnimating()
-        self.tableView.refreshControl?.endRefreshing()
-        self.tableView.tableFooterView?.isHidden = true
-    }
-    
-    func changeVisibilityOfAnEmptyState() {
-        emptyStateLabel.isHidden = !viewModels.isEmpty
-    }
 }
 
 extension NewsViewController: NewsCellDelegate {
     func didTapFavouriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
-        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row]) { [weak self] in
+        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row], isFavorite: viewModels[indexOfCell.row].isFavourite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                if self.delegate is FavouriteNewsController {
+                if self.delegate?.isFavoriteViewController ?? false {
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
-                    self.changeVisibilityOfAnEmptyState()
                 }
                 else {
                     self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)

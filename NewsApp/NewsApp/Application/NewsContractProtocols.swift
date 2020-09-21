@@ -13,15 +13,14 @@ protocol NewsViewDelegate: class {
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ())
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, isFavorite: Bool, refreshCell: @escaping () -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
+    var isFavoriteViewController: Bool { get }
 }
 
 protocol NewsView: class {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
-    func stopAnimateActivity()
-    func changeVisibilityOfAnEmptyState()
 }
 
 protocol NewsManager {
@@ -29,8 +28,8 @@ protocol NewsManager {
     func loadNews()
     func refresh()
     func loadMoreNews()
-    func filterAllNews(for text: String)
-    func updateFavorites(with news: News, refreshCell: @escaping () -> ())
+    func filter(favorite: Bool, for text: String)
+    func updateFavorites(with news: News, isFavorite: Bool, refreshCell: @escaping () -> ())
     func saveData()
 }
 
@@ -38,8 +37,8 @@ protocol FavoriteNewsManager {
     var delegate: NewsManagerDelegate? { get set }
     func loadFavoriteNews()
     func saveData()
-    func filterFavoriteNews(for text: String)
-    func updateFavorites(with news: News, refreshCell: @escaping () -> ())
+    func filter(favorite: Bool, for text: String)
+    func updateFavorites(with news: News, isFavorite: Bool, refreshCell: @escaping () -> ())
 }
 
 protocol NewsManagerDelegate: class {

@@ -21,6 +21,10 @@ final class NewsController {
 }
 
 extension NewsController: NewsViewDelegate {
+    var isFavoriteViewController: Bool {
+        return false
+    }
+    
     func viewWillAppear() {
         view?.animateActivity()
         model.delegate = self
@@ -36,16 +40,15 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidChangeSearchTerm(_ term: String) {
-        model.filterAllNews(for: term)
+        model.filter(favorite: false, for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), refreshCell: refreshCell)
+    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, isFavorite: Bool, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), isFavorite: isFavorite, refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        guard let view = view as? UIViewController else { return }
-        coordinator?.showDetails(with: viewModel, view: view)
+        coordinator?.showDetails(with: viewModel)
     }
 }
 
@@ -56,7 +59,6 @@ extension NewsController: NewsManagerDelegate {
     }
     
     func modelDidGetAnError(error: Error) {
-        guard let view = view as? UIViewController else { return }
-        coordinator?.showAnError(error: error, view: view)
+        coordinator?.showAnError(error: error)
     }
 }

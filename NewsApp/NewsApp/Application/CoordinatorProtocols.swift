@@ -9,26 +9,28 @@
 import UIKit
 
 protocol DetailsShowable {
-    func showDetails(with viewModel: NewsViewModel, view: UIViewController?)
+    var viewController: UIViewController? { get }
+    func showDetails(with viewModel: NewsViewModel)
 }
 
 extension DetailsShowable {
-    func showDetails(with viewModel: NewsViewModel, view: UIViewController?) {
+    func showDetails(with viewModel: NewsViewModel) {
         let newsDetailsCoordinator = NewsDetailsCoordinator()
         let newsDetailsViewController = newsDetailsCoordinator.createViewController(with: viewModel)
-        view?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
+        viewController?.navigationController?.pushViewController(newsDetailsViewController, animated: true)
     }
 }
 
 protocol ErrorShowable {
-    func showAnError(error: Error, view: UIViewController?)
+    var viewController: UIViewController? { get }
+    func showAnError(error: Error)
 }
 
 extension ErrorShowable {
-    func showAnError(error: Error, view: UIViewController?) {
+    func showAnError(error: Error) {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
-        view?.present(alert, animated: true)
+        viewController?.present(alert, animated: true)
     }
 }

@@ -101,6 +101,5 @@ extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
         newsFromBD = news.compactMap { News(newsCD: $0) }
         newsFromBD.map {$0.isFavourite = true}
-        delegate?.modelDidLoadFavoriteNews(newsFromBD)
     }
 }

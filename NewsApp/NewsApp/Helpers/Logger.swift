@@ -15,9 +15,14 @@ final class Logger {
     
     func logError(error: Error) {
         loggedInfo.append("\n" + error.localizedDescription)
+        print(error.localizedDescription)
     }
     
     func getLog() -> String {
         return loggedInfo
+    }
+    
+    func printLog() {
+        print(loggedInfo)
     }
 }

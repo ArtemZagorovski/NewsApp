@@ -30,6 +30,14 @@ protocol NewsManager {
     func updateFavourite()
 }
 
+protocol FavoriteNewsManager {
+    var delegate: NewsManagerDelegate? { get set }
+    func loadFavoriteNews()
+    func saveData()
+    func filterFavoriteNews(for text: String)
+    func updateFavorites(with news: News, refreshCell: @escaping () -> ())
+}
+
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
     func modelDidGetAnError(error: Error)

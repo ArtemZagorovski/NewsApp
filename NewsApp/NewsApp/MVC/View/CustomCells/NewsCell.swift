@@ -67,6 +67,33 @@ final class NewsCell: UITableViewCell {
         self.clipsToBounds = true
         
         let textStack = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
+        let inset: CGFloat = 10
+        let squareImageSide: CGFloat = 80
+        let stackTopInset: CGFloat = 8
+        let stackTrailingInset: CGFloat = 50
+        let buttonHorizontalInsets: CGFloat = 5
+        let buttonVerticalInsets: CGFloat = 30
+        let zero: CGFloat = 0
+        let one: CGFloat = 1
+        let newsImangeViewConstraints = [
+            newsImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: inset),
+            newsImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: inset),
+            newsImageView.heightAnchor.constraint(equalToConstant: squareImageSide),
+            newsImageView.widthAnchor.constraint(equalToConstant: squareImageSide)]
+        let textStackConstraints = [
+            textStack.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: inset),
+            textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: stackTopInset),
+            textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -stackTrailingInset),
+            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -inset)]
+        let showMoreLabelConstraints = [
+            showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: zero),
+            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: one)]
+        let favoriteButtonConstraints = [
+            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
+            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
+            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
+            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)]
+ 
         textStack.axis = .vertical
         textStack.alignment = .top
         textStack.distribution = .fill
@@ -81,23 +108,8 @@ final class NewsCell: UITableViewCell {
         showMoreLabel.translatesAutoresizingMaskIntoConstraints = false
         favouriteButton.translatesAutoresizingMaskIntoConstraints = false
         favouriteButton.addTarget(self, action: #selector(didTapFavouriteButton), for: .touchUpInside)
-        
-        NSLayoutConstraint.activate([
-            newsImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            newsImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            newsImageView.heightAnchor.constraint(equalToConstant: 80),
-            newsImageView.widthAnchor.constraint(equalToConstant: 80),
-            textStack.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: 10),
-            textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-            textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -50),
-            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10),
-            showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 0),
-            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 1),
-            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: 5),
-            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
-            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
-            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -30)
-        ])
+
+        NSLayoutConstraint.activate(newsImangeViewConstraints + textStackConstraints + showMoreLabelConstraints + favoriteButtonConstraints)
     }
     
     required init?(coder aDecoder: NSCoder) {

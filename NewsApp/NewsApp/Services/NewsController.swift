@@ -50,10 +50,6 @@ extension NewsController: NewsViewDelegate {
 }
 
 extension NewsController: NewsManagerDelegate {
-    func modelDidLoadFavoriteNews(_ news: [News]) {
-        
-    }
-    
     func modelDidLoadNews(_ news: [News]) {
         let viewModels = news.map{ NewsModel(news: $0) }
         view?.updateView(viewModels)

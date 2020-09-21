@@ -10,7 +10,6 @@ import UIKit
 
 protocol NewsViewDelegate: class {
     func viewWillAppear()
-    func viewWillDisappear()
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)

@@ -14,8 +14,8 @@ final class FavouriteNewsController {
     private let coordinator: FavouriteNewsCoordinator
     
     init(model: FavoriteNewsManager, view: NewsView, coordinator: FavouriteNewsCoordinator) {
-        self.view = view
         self.model = model
+        self.view = view
         self.coordinator = coordinator
     }
 }
@@ -24,10 +24,6 @@ extension FavouriteNewsController: NewsViewDelegate {
     func viewWillAppear() {
         model.delegate = self
         model.loadFavoriteNews()
-    }
-    
-    func viewWillDisappear() {
-        model.saveData()
     }
     
     func viewDidScrollToEnd() {

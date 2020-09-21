@@ -47,11 +47,6 @@ class NewsViewController: UIViewController {
         super.viewWillAppear(animated)
         delegate?.viewWillAppear()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        delegate?.viewWillDisappear()
-    }
 
 //MARK: - Private Methods
     fileprivate func setDelegats() {

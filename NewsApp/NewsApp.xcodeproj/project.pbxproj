@@ -37,7 +37,6 @@
 		5146DDC72510C24E0035C594 /* News+initFromNewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDC62510C24E0035C594 /* News+initFromNewsModel.swift */; };
 		5146DDC92510D2A10035C594 /* FavouriteNewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDC82510D2A10035C594 /* FavouriteNewsController.swift */; };
 		5146DDCB2510F3E40035C594 /* FavouriteNewsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDCA2510F3E40035C594 /* FavouriteNewsCoordinator.swift */; };
-		5146DDCF2512139D0035C594 /* ServiceContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDCE2512139D0035C594 /* ServiceContainer.swift */; };
 		5146DDD1251214680035C594 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDD0251214680035C594 /* AppCoordinator.swift */; };
 		5146DDD3251215510035C594 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDD2251215510035C594 /* TabBarCoordinator.swift */; };
 		5146DDD52512614F0035C594 /* CoordinatorProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDD42512614F0035C594 /* CoordinatorProtocols.swift */; };
@@ -81,7 +80,6 @@
 		5146DDC62510C24E0035C594 /* News+initFromNewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "News+initFromNewsModel.swift"; sourceTree = "<group>"; };
 		5146DDC82510D2A10035C594 /* FavouriteNewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNewsController.swift; sourceTree = "<group>"; };
 		5146DDCA2510F3E40035C594 /* FavouriteNewsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNewsCoordinator.swift; sourceTree = "<group>"; };
-		5146DDCE2512139D0035C594 /* ServiceContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceContainer.swift; sourceTree = "<group>"; };
 		5146DDD0251214680035C594 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		5146DDD2251215510035C594 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
 		5146DDD42512614F0035C594 /* CoordinatorProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorProtocols.swift; sourceTree = "<group>"; };
@@ -220,7 +218,6 @@
 				5146DD68250A927F0035C594 /* NewsApiUrlBuilder.swift */,
 				5146DDC025109D7C0035C594 /* News+initFromAPI.swift */,
 				5146DDC225109DF80035C594 /* News+initFromBD.swift */,
-				5146DDCE2512139D0035C594 /* ServiceContainer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -439,7 +436,6 @@
 				5146DD69250A927F0035C594 /* NewsApiUrlBuilder.swift in Sources */,
 				5146DDC125109D7C0035C594 /* News+initFromAPI.swift in Sources */,
 				5146DDCB2510F3E40035C594 /* FavouriteNewsCoordinator.swift in Sources */,
-				5146DDCF2512139D0035C594 /* ServiceContainer.swift in Sources */,
 				076643BD24BC7541003EB706 /* News.swift in Sources */,
 				076643A524BC6DED003EB706 /* SceneDelegate.swift in Sources */,
 				0792122124C1914900680777 /* NewsDetailsViewController.swift in Sources */,

@@ -14,15 +14,15 @@ final class News {
     let newsDescription: String
     let imageData: Data?
     let publishedAt: String?
-    var isFavourite: Bool
+    var isFavorite: Bool
     
-    init (id: String, newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?, isFavourite: Bool) {
+    init (id: String, newsTitle: String, newsDescription: String, imageData: Data?, publishedAt: String?, isFavorite: Bool) {
         self.id = id
         self.newsTitle = newsTitle
         self.newsDescription = newsDescription
         self.imageData = imageData
         self.publishedAt = publishedAt
-        self.isFavourite = isFavourite
+        self.isFavorite = isFavorite
     }
 }
 

@@ -165,7 +165,6 @@ extension NewsViewController {
         } else {
             sender.endRefreshing()
         }
-        
     }
 }
 

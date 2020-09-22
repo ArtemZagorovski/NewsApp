@@ -9,14 +9,14 @@
 import UIKit
 
 protocol NewsCellDelegate: class {
-    func didTapFavouriteButton(cell: UITableViewCell)
+    func didTapFavoriteButton(cell: UITableViewCell)
 }
 
 final class NewsCell: UITableViewCell {
     
     weak var delegate: NewsCellDelegate?
     
-    private let favouriteButton: UIButton = {
+    private let favoriteButton: UIButton = {
         let button = UIButton()
         let notFillImage = Constants.SystemWords.flameImageName
         let image = UIImage(systemName: notFillImage)?.withTintColor(.black)
@@ -89,10 +89,10 @@ final class NewsCell: UITableViewCell {
             showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: zero),
             showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: one)]
         let favoriteButtonConstraints = [
-            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
-            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
-            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
-            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)]
+            favoriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
+            favoriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
+            favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
+            favoriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)]
  
         textStack.axis = .vertical
         textStack.alignment = .top
@@ -102,12 +102,12 @@ final class NewsCell: UITableViewCell {
         addSubview(newsImageView)
         addSubview(textStack)
         insertSubview(showMoreLabel, aboveSubview: textStack)
-        addSubview(favouriteButton)
+        addSubview(favoriteButton)
         newsImageView.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
         showMoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        favouriteButton.translatesAutoresizingMaskIntoConstraints = false
-        favouriteButton.addTarget(self, action: #selector(didTapFavouriteButton), for: .touchUpInside)
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+        favoriteButton.addTarget(self, action: #selector(didTapFavoriteButton), for: .touchUpInside)
 
         NSLayoutConstraint.activate(newsImangeViewConstraints + textStackConstraints + showMoreLabelConstraints + favoriteButtonConstraints)
     }
@@ -116,8 +116,8 @@ final class NewsCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    @objc private func didTapFavouriteButton() {
-        delegate?.didTapFavouriteButton(cell: self)
+    @objc private func didTapFavoriteButton() {
+        delegate?.didTapFavoriteButton(cell: self)
     }
     
     func configure(with viewModel: NewsViewModel, delegate: NewsCellDelegate) {
@@ -126,8 +126,8 @@ final class NewsCell: UITableViewCell {
         descriptionLabel.text = viewModel.newsDescription
         newsImageView.image = viewModel.image
         
-        if viewModel.isFavourite {
-            self.favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+        if viewModel.isFavorite {
+            self.favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
         }
         let hasMoreText = self.descriptionLabel.actualNumberOfLines() > 3
         showMoreLabel.isHidden = !hasMoreText
@@ -136,6 +136,6 @@ final class NewsCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         showMoreLabel.isHidden = true
-        favouriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
+        favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
     }
 }

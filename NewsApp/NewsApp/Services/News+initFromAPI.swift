@@ -38,6 +38,6 @@ extension News {
                   newsDescription: description,
                   imageData: imageData,
                   publishedAt: publishedAt,
-                  isFavourite: false)
+                  isFavorite: false)
     }
 }

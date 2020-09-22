@@ -73,8 +73,8 @@ final class NewsCell: UITableViewCell {
         let stackTrailingInset: CGFloat = 50
         let buttonHorizontalInsets: CGFloat = 5
         let buttonVerticalInsets: CGFloat = 30
-        let zero: CGFloat = 0
-        let one: CGFloat = 1
+        let rightInsetOfShowMore: CGFloat = 0
+        let minimumButtonInset: CGFloat = 1
         let newsImangeViewConstraints = [
             newsImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: inset),
             newsImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: inset),
@@ -88,8 +88,8 @@ final class NewsCell: UITableViewCell {
             textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -inset)
         ]
         let showMoreLabelConstraints = [
-            showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: zero),
-            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: one)
+            showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: rightInsetOfShowMore),
+            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: minimumButtonInset)
         ]
         let favoriteButtonConstraints = [
             favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),

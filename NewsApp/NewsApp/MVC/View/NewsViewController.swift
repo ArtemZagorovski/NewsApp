@@ -125,8 +125,8 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        let isFavoriteNewsViewController = delegate?.isFavoriteViewController ?? false
-        let isNeedToLoadNewData = isLastSection && !searchController.isActive && !isFavoriteNewsViewController
+        let isNewsViewController = !(delegate?.isFavoriteViewController ?? false)
+        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isNewsViewController
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))

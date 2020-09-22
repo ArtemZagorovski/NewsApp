@@ -54,13 +54,13 @@ final class DefaultNewsManager: NewsManager {
         dbService.saveData(newsFromBD)
     }
     
-    func updateFavorites(with news: News, isFavorite: Bool, refreshCell: @escaping () -> ()) {
-        if isFavorite {
+    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
+        if currentFavoriteState {
             guard let indexOfEqual = newsFromBD.firstIndex(of: news) else { return }
             newsFromBD.remove(at: indexOfEqual)
         }
         else {
-            news.isFavourite = !news.isFavourite
+            news.isFavorite = !news.isFavorite
             newsFromBD.append(news)
         }
         refreshCell()
@@ -76,7 +76,7 @@ extension DefaultNewsManager: FavoriteNewsManager {
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String : AnyObject]]) {
         newsFromApi = news.compactMap { News(JSON: $0) }
-        newsFromApi.forEach { $0.isFavourite = newsFromBD.contains($0) }
+        newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
         delegate?.modelDidLoadNews(newsFromApi)
     }
     
@@ -88,6 +88,6 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
 extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
         newsFromBD = news.compactMap { News(newsCD: $0) }
-        newsFromBD.forEach {$0.isFavourite = true}
+        newsFromBD.forEach {$0.isFavorite = true}
     }
 }

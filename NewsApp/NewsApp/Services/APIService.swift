@@ -28,17 +28,15 @@ final class APIService: RemoteNewsService {
                     if let dictionary = json["articles"] as? [[String: AnyObject]] {
                         self.delegate?.didLoadData(dictionary)
                     } else {
+                        print("can't get data from api")
+                        self.delegate?.didLoadData([])
                         return
                     }
                 } catch let error as NSError {
-                    print(error)
+                    self.delegate?.didGetAnError(error: error)
                 }
             default:
                 print("We have got response status \(httpResponse.statusCode)")
-            }
-            if let error = error {
-                print(error.localizedDescription)
-                self.delegate?.didGetAnError(error: error)
             }
             if let error = error {
                 print(error.localizedDescription)

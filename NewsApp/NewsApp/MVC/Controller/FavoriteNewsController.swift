@@ -8,19 +8,19 @@
 
 import UIKit
 
-final class FavouriteNewsController {
+final class FavoriteNewsController {
     private weak var view: NewsView?
     private var model: FavoriteNewsManager
-    private let coordinator: FavouriteNewsCoordinator
+    private let coordinator: FavoriteNewsCoordinator
     
-    init(model: FavoriteNewsManager, view: NewsView, coordinator: FavouriteNewsCoordinator) {
+    init(model: FavoriteNewsManager, view: NewsView, coordinator: FavoriteNewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator
     }
 }
 
-extension FavouriteNewsController: NewsViewDelegate {
+extension FavoriteNewsController: NewsViewDelegate {
     var isFavoriteViewController: Bool {
         return true
     }
@@ -38,8 +38,8 @@ extension FavouriteNewsController: NewsViewDelegate {
         model.filter(favorite: true, for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, isFavorite: Bool, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), isFavorite: isFavorite, refreshCell: refreshCell)
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
@@ -47,7 +47,7 @@ extension FavouriteNewsController: NewsViewDelegate {
     }
 }
 
-extension FavouriteNewsController: NewsManagerDelegate {
+extension FavoriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
         view?.updateView(news.map { NewsModel(news: $0) })
     }

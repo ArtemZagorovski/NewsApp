@@ -79,20 +79,24 @@ final class NewsCell: UITableViewCell {
             newsImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: inset),
             newsImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: inset),
             newsImageView.heightAnchor.constraint(equalToConstant: squareImageSide),
-            newsImageView.widthAnchor.constraint(equalToConstant: squareImageSide)]
+            newsImageView.widthAnchor.constraint(equalToConstant: squareImageSide)
+        ]
         let textStackConstraints = [
             textStack.leadingAnchor.constraint(equalTo: newsImageView.trailingAnchor, constant: inset),
             textStack.topAnchor.constraint(equalTo: self.topAnchor, constant: stackTopInset),
             textStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -stackTrailingInset),
-            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -inset)]
+            textStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -inset)
+        ]
         let showMoreLabelConstraints = [
             showMoreLabel.trailingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: zero),
-            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: one)]
+            showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: one)
+        ]
         let favoriteButtonConstraints = [
-            favoriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
-            favoriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
-            favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
-            favoriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)]
+            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
+            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
+            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
+            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)
+        ]
  
         textStack.axis = .vertical
         textStack.alignment = .top

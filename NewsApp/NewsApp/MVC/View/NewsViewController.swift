@@ -17,7 +17,7 @@ class NewsViewController: UIViewController {
     private let emptyStateLabel = UILabel()
     private var refreshControl: UIRefreshControl {
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         return refreshControl
     }
     
@@ -125,8 +125,8 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        let isNewsViewController = !(delegate?.isFavoriteViewController ?? false)
-        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isNewsViewController
+        guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable() else { return }
+        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isLoadMoreAvailable
         if isNeedToLoadNewData {
             newPageLoadActivityIndicator.startAnimating()
             newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
@@ -158,11 +158,14 @@ extension NewsViewController: UISearchBarDelegate {
 
 //MARK: - Actions
 extension NewsViewController {
-    @objc private func refreshView(sender: UIRefreshControl) {
-        if self.delegate?.isFavoriteViewController ?? false {
+    @objc private func pullToRefresh(sender: UIRefreshControl) {
+        guard let isPullToRefreshAvailable = delegate?.isPullToRefreshAvaliable() else { return }
+        if isPullToRefreshAvailable {
+            delegate?.viewDidPullToRefresh()
+        } else {
             sender.endRefreshing()
         }
-        delegate?.viewDidPullToRefresh()
+        
     }
 }
 

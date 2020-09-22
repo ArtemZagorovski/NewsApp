@@ -30,13 +30,9 @@ extension FavouriteNewsController: NewsViewDelegate {
         model.loadFavoriteNews()
     }
     
-    func viewDidScrollToEnd() {
-        
-    }
+    func viewDidScrollToEnd() {}
     
-    func viewDidPullToRefresh() {
-        
-    }
+    func viewDidPullToRefresh() {}
     
     func viewDidChangeSearchTerm(_ term: String) {
         model.filter(favorite: true, for: term)

@@ -14,14 +14,14 @@ final class TabBarCoordinator {
         tabBarController.tabBar.tintColor = .blue
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)
         guard let listImage = UIImage(systemName: "list.bullet", withConfiguration: boldConfig),
-        let favouriteImage = UIImage(systemName: "star", withConfiguration: boldConfig) else { return UITabBarController() }
+        let favoriteImage = UIImage(systemName: "star", withConfiguration: boldConfig) else { return UITabBarController() }
         let model = DefaultNewsManager()
         let newsViewController = NewsCoordinator().createViewController(model: model)
-        let favouriteNewsController = FavouriteNewsCoordinator().createViewController(model: model)
+        let favoriteNewsController = FavoriteNewsCoordinator().createViewController(model: model)
         
         tabBarController.viewControllers = [
             makeNavigationController(rootViewController: newsViewController, title: "News", image: listImage),
-            makeNavigationController(rootViewController: favouriteNewsController, title: "Favourite", image: favouriteImage)
+            makeNavigationController(rootViewController: favoriteNewsController, title: "Favorite", image: favoriteImage)
         ]
         
         return tabBarController

@@ -182,9 +182,9 @@ extension NewsViewController: NewsView {
 }
 
 extension NewsViewController: NewsCellDelegate {
-    func didTapFavouriteButton(cell: UITableViewCell) {
+    func didTapFavoriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
-        delegate?.viewDidTapFavouriteButton(for: viewModels[indexOfCell.row], isFavorite: viewModels[indexOfCell.row].isFavourite) { [weak self] in
+        delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 if self.delegate?.isFavoriteViewController ?? false {
@@ -192,7 +192,7 @@ extension NewsViewController: NewsCellDelegate {
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }
                 else {
-                    self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)
+                    self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
                 }
             }

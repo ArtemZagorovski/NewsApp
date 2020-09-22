@@ -3,7 +3,7 @@
     <entity name="NewsEntity" representedClassName=".NewsEntity" syncable="YES">
         <attribute name="id" attributeType="String"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
-        <attribute name="isFavourite" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFavorite" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="newsDescription" attributeType="String"/>
         <attribute name="newsTitle" attributeType="String"/>
         <attribute name="publishedAt" optional="YES" attributeType="String"/>

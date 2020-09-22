@@ -17,7 +17,7 @@ class NewsViewController: UIViewController {
     private let emptyStateLabel = UILabel()
     private var refreshControl: UIRefreshControl {
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
         return refreshControl
     }
     
@@ -158,7 +158,7 @@ extension NewsViewController: UISearchBarDelegate {
 
 //MARK: - Actions
 extension NewsViewController {
-    @objc private func pullToRefresh(sender: UIRefreshControl) {
+    @objc private func refreshView(sender: UIRefreshControl) {
         if self.delegate?.isFavoriteViewController ?? false {
             sender.endRefreshing()
         }

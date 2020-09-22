@@ -8,13 +8,13 @@
 
 import UIKit
 
-final class FavouriteNewsCoordinator: DetailsShowable, ErrorShowable {
+final class FavoriteNewsCoordinator: DetailsShowable, ErrorShowable {
     weak var viewController: UIViewController?
     
     func createViewController(model: FavoriteNewsManager) -> UIViewController {
         let viewController = NewsViewController()
         self.viewController = viewController
-        let controller = FavouriteNewsController(model: model, view: viewController, coordinator: self)
+        let controller = FavoriteNewsController(model: model, view: viewController, coordinator: self)
         viewController.delegate = controller
         return viewController
     }

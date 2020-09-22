@@ -15,6 +15,6 @@ extension News {
                   newsDescription: newsCD.newsDescription,
                   imageData: newsCD.imageData,
                   publishedAt: newsCD.publishedAt,
-                  isFavourite: newsCD.isFavourite)
+                  isFavorite: newsCD.isFavorite)
     }
 }

@@ -15,6 +15,6 @@ extension News {
                   newsDescription: viewModel.newsDescription,
                   imageData: viewModel.image?.pngData(),
                   publishedAt: viewModel.publishedAt,
-                  isFavourite: viewModel.isFavourite)
+                  isFavorite: viewModel.isFavorite)
     }
 }

@@ -14,7 +14,7 @@ struct NewsModel: NewsViewModel {
     let newsDescription: String
     let image: UIImage?
     let publishedAt: String?
-    var isFavourite: Bool
+    var isFavorite: Bool
 }
 
 extension NewsModel {
@@ -24,6 +24,6 @@ extension NewsModel {
         self.newsTitle = news.newsTitle
         self.newsDescription = news.newsDescription
         self.publishedAt = news.publishedAt
-        self.isFavourite = news.isFavourite
+        self.isFavorite = news.isFavorite
     }
 }

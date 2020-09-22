@@ -43,8 +43,8 @@ extension NewsController: NewsViewDelegate {
         model.filter(favorite: false, for: term)
     }
     
-    func viewDidTapFavouriteButton(for viewModel: NewsViewModel, isFavorite: Bool, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), isFavorite: isFavorite, refreshCell: refreshCell)
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, refreshCell: refreshCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

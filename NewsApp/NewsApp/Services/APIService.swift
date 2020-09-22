@@ -42,6 +42,7 @@ final class APIService: RemoteNewsService {
                 print("We have got response status \(httpResponse.statusCode)")
             }
             if let error = error {
+                Logger.shared.logError(error: error)
                 self.delegate?.didGetAnError(error: error)
             }
         }

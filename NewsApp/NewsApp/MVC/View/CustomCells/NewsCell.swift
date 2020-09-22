@@ -92,10 +92,10 @@ final class NewsCell: UITableViewCell {
             showMoreLabel.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: minimumButtonInset)
         ]
         let favoriteButtonConstraints = [
-            favouriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
-            favouriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
-            favouriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
-            favouriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)
+            favoriteButton.leadingAnchor.constraint(equalTo: textStack.trailingAnchor, constant: buttonHorizontalInsets),
+            favoriteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: buttonVerticalInsets),
+            favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -buttonHorizontalInsets),
+            favoriteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -buttonVerticalInsets)
         ]
  
         textStack.axis = .vertical

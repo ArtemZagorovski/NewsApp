@@ -29,6 +29,7 @@ final class APIService: RemoteNewsService {
                         self.delegate?.didLoadData(dictionary)
                     } else {
                         print("can't get data from api")
+                        self.delegate?.didLoadData([])
                         return
                     }
                 } catch let error as NSError {

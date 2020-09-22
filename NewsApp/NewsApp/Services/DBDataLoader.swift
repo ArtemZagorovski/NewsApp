@@ -27,6 +27,7 @@ final class DBDataLoader: LocalNewsService {
         }
         catch let error {
             print(error.localizedDescription)
+            delegate?.didLoadData([])
         }
     }
     

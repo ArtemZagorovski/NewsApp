@@ -179,6 +179,12 @@ extension NewsViewController: NewsView {
     func animateActivity() {
         mainPageLoadActivityIndicator.startAnimating()
     }
+    
+    func removeViewModel(for id: String) {
+        guard let indexOfViewModelToRemove = viewModels.firstIndex(where: { $0.id == id }) else { return }
+        viewModels.remove(at: indexOfViewModelToRemove)
+        tableView.deleteRows(at: [[0, indexOfViewModelToRemove]], with: .top)
+    }
 }
 
 extension NewsViewController: NewsCellDelegate {
@@ -187,12 +193,9 @@ extension NewsViewController: NewsCellDelegate {
         delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                if self.delegate?.isFavoriteViewController ?? false {
-                    self.viewModels.remove(at: indexOfCell.row)
-                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
-                }
-                else {
-                    self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
+                guard let isNeedToRefreshCell = self.delegate?.isNeedToRefreshCell() else { return }
+                if isNeedToRefreshCell {
+                    self.viewModels[indexOfCell.row].isFavorite.toggle()
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
                 }
             }

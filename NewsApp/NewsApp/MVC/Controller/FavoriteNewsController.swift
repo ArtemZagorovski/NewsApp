@@ -25,6 +25,10 @@ extension FavoriteNewsController: NewsViewDelegate {
         return true
     }
     
+    func isNeedToRefreshCell() -> Bool {
+        return false
+    }
+    
     func viewWillAppear() {
         model.delegate = self
         model.loadFavoriteNews()
@@ -39,7 +43,11 @@ extension FavoriteNewsController: NewsViewDelegate {
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, refreshCell: refreshCell)
+        if currentFavoriteState {
+            model.removeFromFavorites(news: News(viewModel: viewModel), isFavoriteView: true, refreshCell: refreshCell)
+        } else {
+            model.addToFavorites(news: News(viewModel: viewModel), refreshCell: refreshCell)
+        }
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
@@ -54,5 +62,9 @@ extension FavoriteNewsController: NewsManagerDelegate {
     
     func modelDidGetAnError(error: Error) {
         coordinator.showAnError(error: error)
+    }
+    
+    func modelDidDeleteNewsFromDB(for id: String) {
+        view?.removeViewModel(for: id)
     }
 }

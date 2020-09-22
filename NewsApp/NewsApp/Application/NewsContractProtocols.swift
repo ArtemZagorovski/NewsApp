@@ -16,11 +16,13 @@ protocol NewsViewDelegate: class {
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
     var isFavoriteViewController: Bool { get }
+    func isNeedToRefreshCell() -> Bool
 }
 
 protocol NewsView: class {
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
+    func removeViewModel(for id: String)
 }
 
 protocol NewsManager {
@@ -29,7 +31,8 @@ protocol NewsManager {
     func refresh()
     func loadMoreNews()
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
+    func addToFavorites(news: News, refreshCell: @escaping () -> ())
+    func removeFromFavorites(news: News, isFavoriteView: Bool, refreshCell: @escaping () -> ())
     func saveData()
 }
 
@@ -38,12 +41,14 @@ protocol FavoriteNewsManager {
     func loadFavoriteNews()
     func saveData()
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
+    func addToFavorites(news: News, refreshCell: @escaping () -> ())
+    func removeFromFavorites(news: News, isFavoriteView: Bool, refreshCell: @escaping () -> ())
 }
 
 protocol NewsManagerDelegate: class {
     func modelDidLoadNews(_ news: [News])
     func modelDidGetAnError(error: Error)
+    func modelDidDeleteNewsFromDB(for id: String)
 }
 
 protocol NewsViewModel {

@@ -29,7 +29,7 @@ extension News {
                 }
             }
         } catch let error {
-            print("error \(error.localizedDescription)")
+            Logger.shared.logError(error: error)
         }
 
         self.init(newsTitle: title,

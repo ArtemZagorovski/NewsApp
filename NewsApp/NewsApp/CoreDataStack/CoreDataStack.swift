@@ -14,7 +14,7 @@ final class CoreDataStack {
         let container = NSPersistentContainer(name: "News")
         container.loadPersistentStores { storeDescription, error in
             if let error = error {
-                print(error.localizedDescription)
+                Logger.shared.logError(error: error)
             }
         }
         return container

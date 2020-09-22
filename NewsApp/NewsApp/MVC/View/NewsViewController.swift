@@ -77,8 +77,8 @@ extension NewsViewController{
     
     private func setupLayout() {
         view.addSubview(tableView)
-        view.insertSubview(mainPageLoadActivityIndicator, aboveSubview: tableView)
-        view.insertSubview(emptyStateLabel, aboveSubview: tableView)
+        view.addSubview(mainPageLoadActivityIndicator)
+        view.addSubview(emptyStateLabel)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         mainPageLoadActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false

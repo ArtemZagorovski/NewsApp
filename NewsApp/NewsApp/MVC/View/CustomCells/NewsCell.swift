@@ -113,7 +113,10 @@ final class NewsCell: UITableViewCell {
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(didTapFavoriteButton), for: .touchUpInside)
 
-        NSLayoutConstraint.activate(newsImangeViewConstraints + textStackConstraints + showMoreLabelConstraints + favoriteButtonConstraints)
+        NSLayoutConstraint.activate(newsImangeViewConstraints
+                                    + textStackConstraints
+                                    + showMoreLabelConstraints
+                                    + favoriteButtonConstraints)
     }
     
     required init?(coder aDecoder: NSCoder) {

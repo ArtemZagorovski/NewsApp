@@ -60,7 +60,7 @@ final class DefaultNewsManager: NewsManager {
             newsFromBD.remove(at: indexOfEqual)
         }
         else {
-            news.isFavorite = !news.isFavorite
+            news.isFavorite = !currentFavoriteState
             newsFromBD.append(news)
         }
         refreshCell()

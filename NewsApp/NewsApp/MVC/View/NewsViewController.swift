@@ -10,16 +10,12 @@ import UIKit
 import RealmSwift
 
 class NewsViewController: UIViewController {
-//MARK: - Variables and constatns
+    //MARK: - Variables and constatns
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
     private let emptyStateLabel = UILabel()
-    private var refreshControl: UIRefreshControl {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
-        return refreshControl
-    }
+    private var refreshControl: UIRefreshControl?
     
     lazy var searchController: UISearchController = {
         let s = UISearchController(searchResultsController: nil)
@@ -31,7 +27,7 @@ class NewsViewController: UIViewController {
         s.searchBar.delegate = self
         return s
     }()
-
+    
     var viewModels: [NewsViewModel] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -41,7 +37,7 @@ class NewsViewController: UIViewController {
     }
     var delegate: NewsViewDelegate?
     
-//MARK: - ViewController lifecycle methods
+    //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
@@ -53,8 +49,8 @@ class NewsViewController: UIViewController {
         super.viewWillAppear(animated)
         delegate?.viewWillAppear()
     }
-
-//MARK: - Private Methods
+    
+    //MARK: - Private Methods
     fileprivate func setDelegats() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -73,6 +69,11 @@ extension NewsViewController{
         view.backgroundColor = Constants.AppColors.white
         emptyStateLabel.text = "There are no news"
         emptyStateLabel.isHidden = true
+        guard let isPullToRefreshAvailable =  delegate?.isPullToRefreshAvailable() else { return }
+        guard isPullToRefreshAvailable else { return }
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+        
     }
     
     private func setupLayout() {
@@ -125,16 +126,17 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        let isNewsViewController = !(delegate?.isFavoriteViewController ?? false)
-        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isNewsViewController
-        if isNeedToLoadNewData {
-            newPageLoadActivityIndicator.startAnimating()
-            newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
-
-            self.tableView.tableFooterView = newPageLoadActivityIndicator
-            self.tableView.tableFooterView?.isHidden = false
-            delegate?.viewDidScrollToEnd()
+        guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable(),
+            isLastSection,
+            !searchController.isActive,
+            isLoadMoreAvailable else {
+                return
         }
+        newPageLoadActivityIndicator.startAnimating()
+        newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
+        self.tableView.tableFooterView = newPageLoadActivityIndicator
+        self.tableView.tableFooterView?.isHidden = false
+        delegate?.viewDidScrollToEnd()
     }
 }
 
@@ -159,9 +161,6 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        if self.delegate?.isFavoriteViewController ?? false {
-            sender.endRefreshing()
-        }
         delegate?.viewDidPullToRefresh()
     }
 }

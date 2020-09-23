@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class DefaultNewsManager: NewsManager {
+final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService = APIService()
     private let dbService = DBDataLoader()
     private var newsFromApi: [News] = []
@@ -54,20 +54,21 @@ final class DefaultNewsManager: NewsManager {
         dbService.saveData(newsFromBD)
     }
     
-    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ()) {
         if currentFavoriteState {
             guard let indexOfEqual = newsFromBD.firstIndex(of: news) else { return }
             newsFromBD.remove(at: indexOfEqual)
+            completion(.delete)
         }
         else {
             news.isFavorite = !currentFavoriteState
             newsFromBD.append(news)
+            completion(.refresh)
         }
-        refreshCell()
     }
 }
 
-extension DefaultNewsManager: FavoriteNewsManager {
+extension DefaultNewsManager: FavoriteNewsDataProvider {
     func loadFavoriteNews() {
         delegate?.modelDidLoadNews(newsFromBD)
     }

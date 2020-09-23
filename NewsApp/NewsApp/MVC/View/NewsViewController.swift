@@ -181,9 +181,9 @@ extension NewsViewController: NewsView {
     }
 }
 
-enum CellActions {
+enum Actions {
     case refresh
-    case remove
+    case delete
 }
 
 extension NewsViewController: NewsCellDelegate {
@@ -197,7 +197,7 @@ extension NewsViewController: NewsCellDelegate {
                 case .refresh:
                     self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
-                case .remove:
+                case .delete:
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }

@@ -55,11 +55,9 @@ final class DefaultNewsManager: NewsManager {
     }
     
     func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
-        if currentFavoriteState {
-            guard let indexOfEqual = newsFromBD.firstIndex(of: news) else { return }
+        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
             newsFromBD.remove(at: indexOfEqual)
-        }
-        else {
+        } else {
             news.isFavorite = !currentFavoriteState
             newsFromBD.append(news)
         }
@@ -88,6 +86,6 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
 extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
         newsFromBD = news.compactMap { News(newsCD: $0) }
-        newsFromBD.forEach {$0.isFavorite = true}
+        newsFromBD.forEach { $0.isFavorite = true }
     }
 }

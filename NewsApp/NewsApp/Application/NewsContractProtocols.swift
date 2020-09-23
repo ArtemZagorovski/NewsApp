@@ -13,7 +13,7 @@ protocol NewsViewDelegate: class {
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: @escaping (CellActions) -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
     var isFavoriteViewController: Bool { get }
 }
@@ -29,7 +29,7 @@ protocol NewsManager {
     func refresh()
     func loadMoreNews()
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
+    func updateFavorites(with news: News, currentFavoriteState: Bool, updateCell: @escaping (CellActions) -> ())
     func saveData()
 }
 
@@ -38,7 +38,7 @@ protocol FavoriteNewsManager {
     func loadFavoriteNews()
     func saveData()
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
+    func updateFavorites(with news: News, currentFavoriteState: Bool, updateCell: @escaping (CellActions) -> ())
 }
 
 protocol NewsManagerDelegate: class {

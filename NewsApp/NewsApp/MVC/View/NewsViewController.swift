@@ -181,19 +181,25 @@ extension NewsViewController: NewsView {
     }
 }
 
+enum CellActions {
+    case refresh
+    case remove
+}
+
 extension NewsViewController: NewsCellDelegate {
     func didTapFavoriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
-        delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
+        delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row],
+                                           currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] cellAction in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                if self.delegate?.isFavoriteViewController ?? false {
-                    self.viewModels.remove(at: indexOfCell.row)
-                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
-                }
-                else {
+                switch cellAction {
+                case .refresh:
                     self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
+                case .remove:
+                    self.viewModels.remove(at: indexOfCell.row)
+                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }
             }
         }

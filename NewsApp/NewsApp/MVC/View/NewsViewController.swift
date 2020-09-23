@@ -9,8 +9,8 @@
 import UIKit
 import RealmSwift
 
-class NewsViewController: UIViewController {
-    //MARK: - Variables and constatns
+final class NewsViewController: UIViewController {
+// MARK: - Variables and constatns
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
@@ -37,7 +37,7 @@ class NewsViewController: UIViewController {
     }
     var delegate: NewsViewDelegate?
     
-    //MARK: - ViewController lifecycle methods
+// MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
@@ -50,14 +50,14 @@ class NewsViewController: UIViewController {
         delegate?.viewWillAppear()
     }
     
-    //MARK: - Private Methods
-    fileprivate func setDelegats() {
+// MARK: - Private Methods
+    private func setDelegats() {
         tableView.delegate = self
         tableView.dataSource = self
     }
 }
 
-//MARK: - Setup layout and views
+// MARK: - Setup layout and views
 extension NewsViewController{
     private func setupView() {
         self.title = Constants.SystemWords.news
@@ -96,7 +96,7 @@ extension NewsViewController{
     }
 }
 
-//MARK: - TableView Delegate and Datasource
+// MARK: - TableView Delegate and Datasource
 extension NewsViewController: UITableViewDelegate {}
 
 extension NewsViewController: UITableViewDataSource {
@@ -139,7 +139,7 @@ extension NewsViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - SearchController Extension
+// MARK: - SearchController Extension
 extension NewsViewController: UISearchResultsUpdating {
     func filterContentForSearchText(_ searchText: String)  {
         delegate?.viewDidChangeSearchTerm(searchText)
@@ -157,7 +157,7 @@ extension NewsViewController: UISearchBarDelegate {
     }
 }
 
-//MARK: - Actions
+// MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
         delegate?.viewDidPullToRefresh()

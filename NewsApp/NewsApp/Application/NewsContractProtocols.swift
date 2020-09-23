@@ -15,7 +15,8 @@ protocol NewsViewDelegate: class {
     func viewDidChangeSearchTerm(_ term: String)
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
-    var isFavoriteViewController: Bool { get }
+    func isPullToRefreshAvailable() -> Bool
+    func isLoadMoreDataAvailable() -> Bool
 }
 
 protocol NewsView: class {

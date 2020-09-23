@@ -21,8 +21,12 @@ final class NewsController {
 }
 
 extension NewsController: NewsViewDelegate {
-    var isFavoriteViewController: Bool {
-        return false
+    func isPullToRefreshAvailable() -> Bool {
+        return true
+    }
+    
+    func isLoadMoreDataAvailable() -> Bool {
+        return true
     }
     
     func viewWillAppear() {

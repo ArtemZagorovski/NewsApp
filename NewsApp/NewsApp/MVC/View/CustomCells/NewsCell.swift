@@ -134,15 +134,16 @@ final class NewsCell: UITableViewCell {
         newsImageView.image = viewModel.image
         
         if viewModel.isFavorite {
-            self.favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+        } else {
+            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
         }
-        let hasMoreText = self.descriptionLabel.actualNumberOfLines() > 3
+        let hasMoreText = descriptionLabel.actualNumberOfLines() > 3
         showMoreLabel.isHidden = !hasMoreText
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         showMoreLabel.isHidden = true
-        favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
     }
 }

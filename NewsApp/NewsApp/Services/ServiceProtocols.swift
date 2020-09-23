@@ -8,15 +8,13 @@
 
 import Foundation
 
-protocol NewsService {
+protocol RemoteNewsService {
     func loadNews(page: Int)
-}
-
-protocol RemoteNewsService: NewsService {
     var delegate: NewsRemoteServiceDelegate? { get set }
 }
 
-protocol LocalNewsService: NewsService {
+protocol LocalNewsService {
+    func loadNews()
     var delegate: NewsLocalServiceDelegate? { get set }
     func saveData(_ news: [News])
 }

@@ -20,7 +20,7 @@ final class DefaultNewsManager: NewsManager {
     init() {
         self.apiService.delegate = self
         self.dbService.delegate = self
-        dbService.loadNews(page: 1)
+        dbService.loadNews()
     }
     
     func loadNews() {

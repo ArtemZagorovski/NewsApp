@@ -20,7 +20,7 @@ final class DBDataLoader: LocalNewsService {
         saveContext = persistentContainer.newBackgroundContext()
     }
     
-    func loadNews(page: Int) {
+    func loadNews() {
         do {
             guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
             delegate?.didLoadData(newsCD)

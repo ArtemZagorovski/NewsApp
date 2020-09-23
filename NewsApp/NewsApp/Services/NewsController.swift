@@ -9,11 +9,11 @@
 import UIKit
 
 final class NewsController {
-    private var model: NewsManager
+    private var model: MainNewsDataProvider
     private weak var view: NewsView?
     private var coordinator: NewsCoordinator?
     
-    init (model: NewsManager, view: NewsView, coordinator: NewsCoordinator) {
+    init (model: MainNewsDataProvider, view: NewsView, coordinator: NewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator

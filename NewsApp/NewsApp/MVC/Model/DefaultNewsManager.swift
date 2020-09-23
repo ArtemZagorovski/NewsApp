@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class DefaultNewsManager: NewsManager {
+final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService = APIService()
     private let dbService = DBDataLoader()
     private var newsFromApi: [News] = []
@@ -68,7 +68,7 @@ final class DefaultNewsManager: NewsManager {
     }
 }
 
-extension DefaultNewsManager: FavoriteNewsManager {
+extension DefaultNewsManager: FavoriteNewsDataProvider {
     func loadFavoriteNews() {
         delegate?.modelDidLoadNews(newsFromBD)
     }

@@ -24,22 +24,21 @@ protocol NewsView: class {
     func animateActivity()
 }
 
-protocol NewsManager {
+protocol NewsDataProvider {
     var delegate: NewsManagerDelegate? { get set }
-    func loadNews()
-    func refresh()
-    func loadMoreNews()
     func filter(favorite: Bool, for text: String)
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ())
     func saveData()
 }
 
-protocol FavoriteNewsManager {
-    var delegate: NewsManagerDelegate? { get set }
+protocol MainNewsDataProvider: NewsDataProvider {
+    func loadNews()
+    func refresh()
+    func loadMoreNews()
+}
+
+protocol FavoriteNewsDataProvider: NewsDataProvider {
     func loadFavoriteNews()
-    func saveData()
-    func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ())
 }
 
 protocol NewsManagerDelegate: class {

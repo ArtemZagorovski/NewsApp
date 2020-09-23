@@ -10,10 +10,10 @@ import UIKit
 
 final class FavoriteNewsController {
     private weak var view: NewsView?
-    private var model: FavoriteNewsManager
+    private var model: FavoriteNewsDataProvider
     private let coordinator: FavoriteNewsCoordinator
     
-    init(model: FavoriteNewsManager, view: NewsView, coordinator: FavoriteNewsCoordinator) {
+    init(model: FavoriteNewsDataProvider, view: NewsView, coordinator: FavoriteNewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator

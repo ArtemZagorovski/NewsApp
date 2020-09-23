@@ -27,7 +27,6 @@ extension FavoriteNewsController: NewsViewDelegate {
     
     func isLoadMoreDataAvailable() -> Bool {
         return false
-
     }
     
     func viewWillAppear() {

@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 class NewsViewController: UIViewController {
-//MARK: - Variables and constatns
+    //MARK: - Variables and constatns
     private let tableView = UITableView()
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
@@ -27,7 +27,7 @@ class NewsViewController: UIViewController {
         s.searchBar.delegate = self
         return s
     }()
-
+    
     var viewModels: [NewsViewModel] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -37,7 +37,7 @@ class NewsViewController: UIViewController {
     }
     var delegate: NewsViewDelegate?
     
-//MARK: - ViewController lifecycle methods
+    //MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegats()
@@ -49,8 +49,8 @@ class NewsViewController: UIViewController {
         super.viewWillAppear(animated)
         delegate?.viewWillAppear()
     }
-
-//MARK: - Private Methods
+    
+    //MARK: - Private Methods
     fileprivate func setDelegats() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -126,9 +126,12 @@ extension NewsViewController: UITableViewDataSource {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable() else { return }
-        let isNeedToLoadNewData = isLastSection && !searchController.isActive && isLoadMoreAvailable
-        guard isNeedToLoadNewData else { return }
+        guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable(),
+            isLastSection,
+            !searchController.isActive,
+            isLoadMoreAvailable else {
+                return
+        }
         newPageLoadActivityIndicator.startAnimating()
         newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
         self.tableView.tableFooterView = newPageLoadActivityIndicator
@@ -183,13 +186,14 @@ extension NewsViewController: NewsCellDelegate {
         delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                if self.delegate?.isFavoriteViewController ?? false {
+                if self.delegate?.isLoadMoreDataAvailable() ?? false {
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }
                 else {
                     self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
+                }
             }
         }
     }

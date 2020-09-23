@@ -183,23 +183,13 @@ extension NewsViewController: NewsCellDelegate {
         delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                
                 if self.delegate?.isFavoriteViewController ?? false {
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }
                 else {
-                    self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
-                    
-                    //                if self.delegate?.isFavoriteViewController ?? false {
-                    //                    self.viewModels.remove(at: indexOfCell.row)
-                    //                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
-                    //                }
-                    //                else {
                     self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
-                    
-                }
             }
         }
     }

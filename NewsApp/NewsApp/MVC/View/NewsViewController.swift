@@ -69,11 +69,10 @@ extension NewsViewController{
         view.backgroundColor = Constants.AppColors.white
         emptyStateLabel.text = "There are no news"
         emptyStateLabel.isHidden = true
-        guard let isPullToRefreshAvailable =  delegate?.isPullToRefreshAvailable() else { return }
-        guard isPullToRefreshAvailable else { return }
+        guard let isPullToRefreshAvailable = delegate?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return }
+        
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
-        
     }
     
     private func setupLayout() {

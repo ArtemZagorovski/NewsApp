@@ -21,7 +21,7 @@ final class NewsController {
 }
 
 extension NewsController: NewsViewDelegate {
-    func isPullToRefreshAvaliable() -> Bool {
+    func isPullToRefreshAvailable() -> Bool {
         return true
     }
     

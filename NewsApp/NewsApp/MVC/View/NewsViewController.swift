@@ -15,11 +15,7 @@ class NewsViewController: UIViewController {
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
     private let emptyStateLabel = UILabel()
-    private var refreshControl: UIRefreshControl {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
-        return refreshControl
-    }
+    private var refreshControl: UIRefreshControl?
     
     lazy var searchController: UISearchController = {
         let s = UISearchController(searchResultsController: nil)
@@ -73,6 +69,11 @@ extension NewsViewController{
         view.backgroundColor = Constants.AppColors.white
         emptyStateLabel.text = "There are no news"
         emptyStateLabel.isHidden = true
+        guard let isPullToRefreshAvailable =  delegate?.isPullToRefreshAvailable() else { return }
+        guard isPullToRefreshAvailable else { return }
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+        
     }
     
     private func setupLayout() {
@@ -127,14 +128,12 @@ extension NewsViewController: UITableViewDataSource {
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
         guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable() else { return }
         let isNeedToLoadNewData = isLastSection && !searchController.isActive && isLoadMoreAvailable
-        if isNeedToLoadNewData {
-            newPageLoadActivityIndicator.startAnimating()
-            newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
-
-            self.tableView.tableFooterView = newPageLoadActivityIndicator
-            self.tableView.tableFooterView?.isHidden = false
-            delegate?.viewDidScrollToEnd()
-        }
+        guard isNeedToLoadNewData else { return }
+        newPageLoadActivityIndicator.startAnimating()
+        newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
+        self.tableView.tableFooterView = newPageLoadActivityIndicator
+        self.tableView.tableFooterView?.isHidden = false
+        delegate?.viewDidScrollToEnd()
     }
 }
 
@@ -159,12 +158,7 @@ extension NewsViewController: UISearchBarDelegate {
 //MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        guard let isPullToRefreshAvailable = delegate?.isPullToRefreshAvaliable() else { return }
-        if isPullToRefreshAvailable {
-            delegate?.viewDidPullToRefresh()
-        } else {
-            sender.endRefreshing()
-        }
+        delegate?.viewDidPullToRefresh()
     }
 }
 
@@ -189,13 +183,22 @@ extension NewsViewController: NewsCellDelegate {
         delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row], currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                
                 if self.delegate?.isFavoriteViewController ?? false {
                     self.viewModels.remove(at: indexOfCell.row)
                     self.tableView.deleteRows(at: [indexOfCell], with: .top)
                 }
                 else {
                     self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
+                    
+                    //                if self.delegate?.isFavoriteViewController ?? false {
+                    //                    self.viewModels.remove(at: indexOfCell.row)
+                    //                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
+                    //                }
+                    //                else {
+                    self.viewModels[indexOfCell.row].isFavourite = !(self.viewModels[indexOfCell.row].isFavourite)
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
+                    
                 }
             }
         }

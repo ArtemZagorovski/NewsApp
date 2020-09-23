@@ -21,7 +21,7 @@ final class FavoriteNewsController {
 }
 
 extension FavoriteNewsController: NewsViewDelegate {
-    func isPullToRefreshAvaliable() -> Bool {
+    func isPullToRefreshAvailable() -> Bool {
         return false
     }
     

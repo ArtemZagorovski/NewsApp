@@ -10,10 +10,10 @@ import UIKit
 
 final class FavoriteNewsController {
     private weak var view: NewsView?
-    private var model: FavoriteNewsManager
+    private var model: FavoriteNewsDataProvider
     private let coordinator: FavoriteNewsCoordinator
     
-    init(model: FavoriteNewsManager, view: NewsView, coordinator: FavoriteNewsCoordinator) {
+    init(model: FavoriteNewsDataProvider, view: NewsView, coordinator: FavoriteNewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator
@@ -42,8 +42,8 @@ extension FavoriteNewsController: NewsViewDelegate {
         model.filter(favorite: true, for: term)
     }
     
-    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, refreshCell: @escaping () -> ()) {
-        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, refreshCell: refreshCell)
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ()) {
+        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, completion: updateCell)
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

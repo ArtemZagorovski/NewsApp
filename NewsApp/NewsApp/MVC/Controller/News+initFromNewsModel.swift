@@ -6,7 +6,7 @@
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 extension News {
     convenience init(viewModel: NewsViewModel) {

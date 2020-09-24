@@ -32,9 +32,9 @@ final class DefaultNewsManager: MainNewsDataProvider {
     func filter(favorite: Bool, for text: String) {
         let news = favorite ? newsFromBD : newsFromApi
         if text.isEmpty {
-            self.delegate?.modelDidLoadNews(news)
+            delegate?.modelDidLoadNews(news)
         } else {
-            self.delegate?.modelDidLoadNews(news.filter { news in
+            delegate?.modelDidLoadNews(news.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter

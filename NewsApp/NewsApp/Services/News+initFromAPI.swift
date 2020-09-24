@@ -26,7 +26,7 @@ extension News {
                 if let imageUrlString = imageUrlString as? String, let imageUrl = URL(string: imageUrlString) {
                     imageData = try Data(contentsOf: imageUrl)
                 } else {
-                    Logger.shared.logError(error: NewsError.notAnImageName)
+                    Logger.shared.logError(error: NewsError.wrongImageName)
                 }
             }
         } catch let error {

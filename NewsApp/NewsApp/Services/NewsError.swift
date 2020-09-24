@@ -10,5 +10,5 @@ import Foundation
 
 enum NewsError: Error {
     case parseDataError
-    case notAnImageName
+    case wrongImageName
 }

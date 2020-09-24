@@ -55,12 +55,10 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ()) {
-        if currentFavoriteState {
-            guard let indexOfEqual = newsFromBD.firstIndex(of: news) else { return }
+        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
             newsFromBD.remove(at: indexOfEqual)
             completion(.delete)
-        }
-        else {
+        } else {
             news.isFavorite = !currentFavoriteState
             newsFromBD.append(news)
             completion(.refresh)

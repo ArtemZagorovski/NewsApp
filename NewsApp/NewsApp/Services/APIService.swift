@@ -28,7 +28,7 @@ final class APIService: RemoteNewsService {
                     if let dictionary = json["articles"] as? [[String: AnyObject]] {
                         self.delegate?.didLoadData(dictionary)
                     } else {
-                        print(NewsError.parseDataError)
+                        Logger.shared.logError(error: NewsError.parseDataError)
                         self.delegate?.didLoadData([])
                         return
                     }

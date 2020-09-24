@@ -26,7 +26,7 @@ final class DBDataLoader: LocalNewsService {
             delegate?.didLoadData(newsCD)
         }
         catch let error {
-            print(error.localizedDescription)
+            Logger.shared.logError(error: error)
             delegate?.didLoadData([])
         }
     }
@@ -38,14 +38,14 @@ final class DBDataLoader: LocalNewsService {
             news.forEach { NewsEntity(news: $0, context: saveContext) }
         }
         catch let error {
-            print(error.localizedDescription)
+            Logger.shared.logError(error: error)
         }
         saveContext.perform {
             do {
                 try self.saveContext.save()
             }
             catch let error {
-                print(error.localizedDescription)
+                Logger.shared.logError(error: error)
             }
         }
     }

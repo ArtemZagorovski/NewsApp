@@ -194,7 +194,6 @@ extension NewsViewController: NewsCellDelegate {
                 switch cellAction {
                 case .refresh:
                     self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
-
                     self.tableView.reloadRows(at: [indexOfCell], with: .none)
                 case .delete:
                     self.viewModels.remove(at: indexOfCell.row)

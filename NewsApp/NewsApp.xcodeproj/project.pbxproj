@@ -24,7 +24,6 @@
 		512F7BCD251B7E8F009764A9 /* NewsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BCC251B7E8F009764A9 /* NewsError.swift */; };
 		512F7BD5251C98AD009764A9 /* NewsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BD4251C98AD009764A9 /* NewsManagerTests.swift */; };
 		512F7BE1251C994C009764A9 /* MockApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BE0251C994C009764A9 /* MockApiService.swift */; };
-		512F7BE3251C9B37009764A9 /* MockDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BE2251C9B37009764A9 /* MockDBService.swift */; };
 		512F7BEC251CB1CE009764A9 /* MockApiServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BEB251CB1CE009764A9 /* MockApiServiceDelegate.swift */; };
 		512F7BED251CC6E4009764A9 /* MockDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BE5251CA85A009764A9 /* MockDelegate.swift */; };
 		5132034A25026C8000435E23 /* NewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034925026C8000435E23 /* NewsController.swift */; };
@@ -87,7 +86,6 @@
 		512F7BD4251C98AD009764A9 /* NewsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsManagerTests.swift; sourceTree = "<group>"; };
 		512F7BD6251C98AD009764A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		512F7BE0251C994C009764A9 /* MockApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockApiService.swift; path = NewsApp/Services/MockApiService.swift; sourceTree = SOURCE_ROOT; };
-		512F7BE2251C9B37009764A9 /* MockDBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockDBService.swift; path = NewsApp/Services/MockDBService.swift; sourceTree = SOURCE_ROOT; };
 		512F7BE5251CA85A009764A9 /* MockDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockDelegate.swift; path = NewsApp/Services/MockDelegate.swift; sourceTree = SOURCE_ROOT; };
 		512F7BEB251CB1CE009764A9 /* MockApiServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockApiServiceDelegate.swift; sourceTree = "<group>"; };
 		5132034925026C8000435E23 /* NewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsController.swift; path = NewsApp/Services/NewsController.swift; sourceTree = SOURCE_ROOT; };
@@ -300,7 +298,6 @@
 			isa = PBXGroup;
 			children = (
 				512F7BE0251C994C009764A9 /* MockApiService.swift */,
-				512F7BE2251C9B37009764A9 /* MockDBService.swift */,
 				512F7BE5251CA85A009764A9 /* MockDelegate.swift */,
 				512F7BEB251CB1CE009764A9 /* MockApiServiceDelegate.swift */,
 			);
@@ -546,7 +543,6 @@
 				0764328924BE21A500302D9B /* UILabel+actualNumberOfLines.swift in Sources */,
 				5146DDAE250BB2510035C594 /* NewsEntity.swift in Sources */,
 				5146DDB7250BC6BC0035C594 /* News.xcdatamodeld in Sources */,
-				512F7BE3251C9B37009764A9 /* MockDBService.swift in Sources */,
 				0792121824C0EE7900680777 /* Constants.swift in Sources */,
 				5146DDC325109DF80035C594 /* News+initFromBD.swift in Sources */,
 			);

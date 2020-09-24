@@ -9,12 +9,13 @@
 import Foundation
 
 extension News {
-    convenience init(newsCD: NewsEntity) {
-        self.init(id: newsCD.id,
-                  newsTitle: newsCD.newsTitle,
-                  newsDescription: newsCD.newsDescription,
-                  imageData: newsCD.imageData,
-                  publishedAt: newsCD.publishedAt,
-                  isFavorite: newsCD.isFavorite)
-    }
+  convenience init(newsCD: NewsEntity) {
+    self.init(
+      id: newsCD.id,
+      newsTitle: newsCD.newsTitle,
+      newsDescription: newsCD.newsDescription,
+      imageData: newsCD.imageData,
+      publishedAt: newsCD.publishedAt,
+      isFavorite: newsCD.isFavorite)
+  }
 }

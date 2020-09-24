@@ -10,43 +10,37 @@ import Foundation
 import CoreData
 
 final class DBDataLoader: LocalNewsService {
-    private let persistentContainer = CoreDataStack().persistentContainer
-    private let getContext: NSManagedObjectContext
-    private let saveContext: NSManagedObjectContext
-    weak var delegate: NewsLocalServiceDelegate?
-    
-    init() {
-        getContext = persistentContainer.viewContext
-        saveContext = persistentContainer.newBackgroundContext()
+  private let persistentContainer = CoreDataStack().persistentContainer
+  private let getContext: NSManagedObjectContext
+  private let saveContext: NSManagedObjectContext
+  weak var delegate: NewsLocalServiceDelegate?
+  init() {
+    getContext = persistentContainer.viewContext
+    saveContext = persistentContainer.newBackgroundContext()
+  }
+  func loadNews() {
+    do {
+      guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
+      delegate?.didLoadData(newsCD)
+    } catch let error {
+      Logger.shared.logError(error: error)
+      delegate?.didLoadData([])
     }
-    
-    func loadNews() {
-        do {
-            guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            delegate?.didLoadData(newsCD)
-        }
-        catch let error {
-            Logger.shared.logError(error: error)
-            delegate?.didLoadData([])
-        }
+  }
+  func saveData(_ news: [News]) {
+    do {
+      guard let newsCD = try saveContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
+      newsCD.forEach { saveContext.delete($0) }
+      news.forEach { NewsEntity(news: $0, context: saveContext) }
+    } catch let error {
+      Logger.shared.logError(error: error)
     }
-    
-    func saveData(_ news: [News]) {
-        do {
-            guard let newsCD = try saveContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            newsCD.forEach { saveContext.delete($0) }
-            news.forEach { NewsEntity(news: $0, context: saveContext) }
-        }
-        catch let error {
-            Logger.shared.logError(error: error)
-        }
-        saveContext.perform {
-            do {
-                try self.saveContext.save()
-            }
-            catch let error {
-                Logger.shared.logError(error: error)
-            }
-        }
+    saveContext.perform {
+      do {
+        try self.saveContext.save()
+      } catch let error {
+        Logger.shared.logError(error: error)
+      }
     }
+  }
 }

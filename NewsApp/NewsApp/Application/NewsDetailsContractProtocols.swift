@@ -9,9 +9,9 @@
 import Foundation
 
 protocol NewsDetailsView: class {
-    func updateView(_ news: NewsViewModel)
+  func updateView(_ news: NewsViewModel)
 }
 
 protocol NewsDetailsViewDelegate: class {
-    func viewDidLoad()
+  func viewDidLoad()
 }

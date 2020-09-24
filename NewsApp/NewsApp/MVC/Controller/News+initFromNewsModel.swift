@@ -9,12 +9,13 @@
 import Foundation
 
 extension News {
-    convenience init(viewModel: NewsViewModel) {
-        self.init(id: viewModel.id,
-                  newsTitle: viewModel.newsTitle,
-                  newsDescription: viewModel.newsDescription,
-                  imageData: viewModel.image?.pngData(),
-                  publishedAt: viewModel.publishedAt,
-                  isFavorite: viewModel.isFavorite)
-    }
+  convenience init(viewModel: NewsViewModel) {
+    self.init(
+      id: viewModel.id,
+      newsTitle: viewModel.newsTitle,
+      newsDescription: viewModel.newsDescription,
+      imageData: viewModel.image?.pngData(),
+      publishedAt: viewModel.publishedAt,
+      isFavorite: viewModel.isFavorite)
+  }
 }

@@ -9,20 +9,17 @@
 import Foundation
 
 final class Logger {
-    static let shared = Logger()
-    private var loggedInfo = String()
-    private init() {}
-    
-    func logError(error: Error) {
-        loggedInfo.append("\n" + error.localizedDescription)
-        print(error.localizedDescription)
-    }
-    
-    func getLog() -> String {
-        return loggedInfo
-    }
-    
-    func printLog() {
-        print(loggedInfo)
-    }
+  static let shared = Logger()
+  private var loggedInfo = String()
+  private init() {}
+  func logError(error: Error) {
+    loggedInfo.append("\n" + error.localizedDescription)
+    print(error.localizedDescription)
+  }
+  func getLog() -> String {
+    return loggedInfo
+  }
+  func printLog() {
+    print(loggedInfo)
+  }
 }

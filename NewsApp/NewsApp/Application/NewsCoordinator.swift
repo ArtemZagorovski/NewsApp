@@ -9,13 +9,12 @@
 import UIKit
 
 final class NewsCoordinator: DetailsShowable, ErrorShowable {
-    weak var viewController: UIViewController?
-    
-    func createViewController(model: MainNewsDataProvider) -> UIViewController {
-        let viewController = NewsViewController()
-        self.viewController = viewController
-        let controller = NewsController(model: model, view: viewController, coordinator: self)
-        viewController.delegate = controller
-        return viewController
-    }
+  weak var viewController: UIViewController?
+  func createViewController(model: MainNewsDataProvider) -> UIViewController {
+    let viewController = NewsViewController()
+    self.viewController = viewController
+    let controller = NewsController(model: model, view: viewController, coordinator: self)
+    viewController.delegate = controller
+    return viewController
+  }
 }

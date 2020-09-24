@@ -9,84 +9,75 @@
 import Foundation
 
 final class DefaultNewsManager: MainNewsDataProvider {
-    private let apiService = APIService()
-    private let dbService = DBDataLoader()
-    private var newsFromApi: [News] = []
-    private var newsFromBD: [News] = []
-    private var page = 1
-    
-    weak var delegate: NewsManagerDelegate?
-    
-    init() {
-        self.apiService.delegate = self
-        self.dbService.delegate = self
-        dbService.loadNews()
+  private let apiService = APIService()
+  private let dbService = DBDataLoader()
+  private var newsFromApi: [News] = []
+  private var newsFromBD: [News] = []
+  private var page = 1
+  weak var delegate: NewsManagerDelegate?
+  init() {
+    self.apiService.delegate = self
+    self.dbService.delegate = self
+    dbService.loadNews()
+  }
+  func loadNews() {
+    apiService.loadNews(page: page)
+  }
+  func filter(favorite: Bool, for text: String) {
+    let news = favorite ? newsFromBD : newsFromApi
+    if text.isEmpty {
+      delegate?.modelDidLoadNews(news)
+    } else {
+      delegate?.modelDidLoadNews(news.filter { news in
+        let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
+        let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
+        return isTitleContainsFilter || isDescriptionContainsFilter
+      })
     }
-    
-    func loadNews() {
-        apiService.loadNews(page: page)
+  }
+  func refresh() {
+    page = 1
+    apiService.loadNews(page: page)
+  }
+  func loadMoreNews() {
+    page += 1
+    apiService.loadNews(page: page)
+  }
+  func saveData() {
+    dbService.saveData(newsFromBD)
+  }
+  func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void) {
+    if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
+      newsFromBD.remove(at: indexOfEqual)
+      completion(.delete)
+    } else {
+      news.isFavorite = !currentFavoriteState
+      newsFromBD.append(news)
+      completion(.refresh)
     }
-    
-    func filter(favorite: Bool, for text: String) {
-        let news = favorite ? newsFromBD : newsFromApi
-        if text.isEmpty {
-            delegate?.modelDidLoadNews(news)
-        } else {
-            delegate?.modelDidLoadNews(news.filter { news in
-                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
-                let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
-                return isTitleContainsFilter || isDescriptionContainsFilter
-            })
-        }
-    }
-    
-    func refresh() {
-        page = 1
-        apiService.loadNews(page: page)
-    }
-    
-    func loadMoreNews() {
-        page += 1
-        apiService.loadNews(page: page)
-    }
-    
-    func saveData() {
-        dbService.saveData(newsFromBD)
-    }
-    
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ()) {
-        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
-            newsFromBD.remove(at: indexOfEqual)
-            completion(.delete)
-        } else {
-            news.isFavorite = !currentFavoriteState
-            newsFromBD.append(news)
-            completion(.refresh)
-        }
-    }
+  }
 }
 
 extension DefaultNewsManager: FavoriteNewsDataProvider {
-    func loadFavoriteNews() {
-        delegate?.modelDidLoadNews(newsFromBD)
-    }
+  func loadFavoriteNews() {
+    delegate?.modelDidLoadNews(newsFromBD)
+  }
 }
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
-    func didLoadData(_ news: [[String : AnyObject]]) {
-        newsFromApi = news.compactMap { News(JSON: $0) }
-        newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
-        delegate?.modelDidLoadNews(newsFromApi)
-    }
-    
-    func didGetAnError(error: Error) {
-        delegate?.modelDidGetAnError(error: error)
-    }
+  func didLoadData(_ news: [[String: AnyObject]]) {
+    newsFromApi = news.compactMap { News(JSON: $0) }
+    newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
+    delegate?.modelDidLoadNews(newsFromApi)
+  }
+  func didGetAnError(error: Error) {
+    delegate?.modelDidGetAnError(error: error)
+  }
 }
 
 extension DefaultNewsManager: NewsLocalServiceDelegate {
-    func didLoadData(_ news: [NewsEntity]) {
-        newsFromBD = news.compactMap { News(newsCD: $0) }
-        newsFromBD.forEach { $0.isFavorite = true }
-    }
+  func didLoadData(_ news: [NewsEntity]) {
+    newsFromBD = news.compactMap { News(newsCD: $0) }
+    newsFromBD.forEach { $0.isFavorite = true }
+  }
 }

@@ -9,17 +9,16 @@
 import Foundation
 
 final class NewsDetailsController {
-    private weak var view: NewsDetailsView?
-    private var viewModel: NewsViewModel
-    
-    init (view: NewsDetailsView, viewModel: NewsViewModel) {
-        self.view = view
-        self.viewModel = viewModel
-    }
+  private weak var view: NewsDetailsView?
+  private var viewModel: NewsViewModel
+  init (view: NewsDetailsView, viewModel: NewsViewModel) {
+    self.view = view
+    self.viewModel = viewModel
+  }
 }
 
 extension NewsDetailsController: NewsDetailsViewDelegate {
-    func viewDidLoad() {
-        view?.updateView(viewModel)
-    }
+  func viewDidLoad() {
+    view?.updateView(viewModel)
+  }
 }

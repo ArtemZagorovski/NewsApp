@@ -9,48 +9,48 @@
 import UIKit
 
 protocol NewsViewDelegate: class {
-    func viewWillAppear()
-    func viewDidScrollToEnd()
-    func viewDidPullToRefresh()
-    func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ())
-    func viewDidTapCell(for viewModel: NewsViewModel)
-    func isPullToRefreshAvailable() -> Bool
-    func isLoadMoreDataAvailable() -> Bool
+  func viewWillAppear()
+  func viewDidScrollToEnd()
+  func viewDidPullToRefresh()
+  func viewDidChangeSearchTerm(_ term: String)
+  func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void)
+  func viewDidTapCell(for viewModel: NewsViewModel)
+  func isPullToRefreshAvailable() -> Bool
+  func isLoadMoreDataAvailable() -> Bool
 }
 
 protocol NewsView: class {
-    func updateView(_ news: [NewsViewModel])
-    func animateActivity()
+  func updateView(_ news: [NewsViewModel])
+  func animateActivity()
 }
 
 protocol NewsDataProvider {
-    var delegate: NewsManagerDelegate? { get set }
-    func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ())
-    func saveData()
+  var delegate: NewsManagerDelegate? { get set }
+  func filter(favorite: Bool, for text: String)
+  func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void)
+  func saveData()
 }
 
 protocol MainNewsDataProvider: NewsDataProvider {
-    func loadNews()
-    func refresh()
-    func loadMoreNews()
+  func loadNews()
+  func refresh()
+  func loadMoreNews()
 }
 
 protocol FavoriteNewsDataProvider: NewsDataProvider {
-    func loadFavoriteNews()
+  func loadFavoriteNews()
 }
 
 protocol NewsManagerDelegate: class {
-    func modelDidLoadNews(_ news: [News])
-    func modelDidGetAnError(error: Error)
+  func modelDidLoadNews(_ news: [News])
+  func modelDidGetAnError(error: Error)
 }
 
 protocol NewsViewModel {
-    var id: String { get }
-    var newsTitle: String { get }
-    var newsDescription: String { get }
-    var image: UIImage? { get }
-    var publishedAt: String? { get }
-    var isFavorite: Bool { get set }
+  var id: String { get }
+  var newsTitle: String { get }
+  var newsDescription: String { get }
+  var image: UIImage? { get }
+  var publishedAt: String? { get }
+  var isFavorite: Bool { get set }
 }

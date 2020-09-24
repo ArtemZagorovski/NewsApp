@@ -9,6 +9,6 @@
 import Foundation
 
 enum NewsError: Error {
-    case parseDataError
-    case wrongImageName
+  case parseDataError
+  case wrongImageName
 }

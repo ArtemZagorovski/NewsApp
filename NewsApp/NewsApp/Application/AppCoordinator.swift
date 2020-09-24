@@ -9,7 +9,7 @@
 import UIKit
 
 final class AppCoordinator {
-    func createMainViewController() -> UITabBarController {
-        return TabBarCoordinator().createViewController()
-    }
+  func createMainViewController() -> UITabBarController {
+    return TabBarCoordinator().createViewController()
+  }
 }

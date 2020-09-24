@@ -8,23 +8,27 @@
 
 import Foundation
 
-final class DefaultNewsManager: NewsManager {
-    
-    private var serviceManager: ServiceManager
-    weak var delegate: NewsManagerDelegate?
-    
-    private var news: [News] = []
+final class DefaultNewsManager: MainNewsDataProvider {
+    private let apiService = APIService()
+    private let dbService = DBDataLoader()
+    private var newsFromApi: [News] = []
+    private var newsFromBD: [News] = []
     private var page = 1
     
-    init(serviceManager: ServiceManager) {
-        self.serviceManager = serviceManager
+    weak var delegate: NewsManagerDelegate?
+    
+    init() {
+        self.apiService.delegate = self
+        self.dbService.delegate = self
+        dbService.loadNews()
     }
     
     func loadNews() {
-        serviceManager.getData(page: page)
+        apiService.loadNews(page: page)
     }
     
-    func filter(for text: String) {
+    func filter(favorite: Bool, for text: String) {
+        let news = favorite ? newsFromBD : newsFromApi
         if text.isEmpty {
             delegate?.modelDidLoadNews(news)
         } else {
@@ -38,27 +42,51 @@ final class DefaultNewsManager: NewsManager {
     
     func refresh() {
         page = 1
-        serviceManager.getData(page: page)
+        apiService.loadNews(page: page)
     }
     
     func loadMoreNews() {
-        serviceManager.getData(page: page)
+        page += 1
+        apiService.loadNews(page: page)
     }
     
-    func updateFavourite() {
-        print("New favourite")
+    func saveData() {
+        dbService.saveData(newsFromBD)
     }
     
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ()) {
+        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
+            newsFromBD.remove(at: indexOfEqual)
+            completion(.delete)
+        } else {
+            news.isFavorite = !currentFavoriteState
+            newsFromBD.append(news)
+            completion(.refresh)
+        }
+    }
 }
 
-extension DefaultNewsManager: NewsServiceCoordinatorDelegate {
-    func serviceManagerDidLoadData(_ news: [News]) {
-        self.news = news
-        delegate?.modelDidLoadNews(news)
-        page += 1
+extension DefaultNewsManager: FavoriteNewsDataProvider {
+    func loadFavoriteNews() {
+        delegate?.modelDidLoadNews(newsFromBD)
+    }
+}
+
+extension DefaultNewsManager: NewsRemoteServiceDelegate {
+    func didLoadData(_ news: [[String : AnyObject]]) {
+        newsFromApi = news.compactMap { News(JSON: $0) }
+        newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
+        delegate?.modelDidLoadNews(newsFromApi)
     }
     
-    func serviceManagerDidGetAnError(error: Error) {
+    func didGetAnError(error: Error) {
         delegate?.modelDidGetAnError(error: error)
+    }
+}
+
+extension DefaultNewsManager: NewsLocalServiceDelegate {
+    func didLoadData(_ news: [NewsEntity]) {
+        newsFromBD = news.compactMap { News(newsCD: $0) }
+        newsFromBD.forEach { $0.isFavorite = true }
     }
 }

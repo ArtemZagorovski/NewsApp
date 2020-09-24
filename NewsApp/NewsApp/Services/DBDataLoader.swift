@@ -13,36 +13,40 @@ final class DBDataLoader: LocalNewsService {
     private let persistentContainer = CoreDataStack().persistentContainer
     private let getContext: NSManagedObjectContext
     private let saveContext: NSManagedObjectContext
-    weak var delegate: NewsServiceDelegate?
-    private var newsFromBD: [News] = []
+    weak var delegate: NewsLocalServiceDelegate?
     
     init() {
         getContext = persistentContainer.viewContext
         saveContext = persistentContainer.newBackgroundContext()
     }
     
-    func getData(page: Int) {
+    func loadNews() {
         do {
             guard let newsCD = try getContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
-            newsFromBD = newsCD.compactMap { News(newsCD: $0) }
+            delegate?.didLoadData(newsCD)
         }
         catch let error {
-            delegate?.didGetAnError(error: error)
+            Logger.shared.logError(error: error)
+            delegate?.didLoadData([])
         }
-        delegate?.didLoadData(newsFromBD)
     }
     
     func saveData(_ news: [News]) {
-        news.forEach { news in
-            if !newsFromBD.contains(news) {
-                NewsEntity(news: news, context: saveContext)
-            }
-        }
         do {
-            try saveContext.save()
+            guard let newsCD = try saveContext.fetch(NewsEntity.fetchRequest()) as? [NewsEntity] else { return }
+            newsCD.forEach { saveContext.delete($0) }
+            news.forEach { NewsEntity(news: $0, context: saveContext) }
         }
         catch let error {
-            delegate?.didGetAnError(error: error)
+            Logger.shared.logError(error: error)
+        }
+        saveContext.perform {
+            do {
+                try self.saveContext.save()
+            }
+            catch let error {
+                Logger.shared.logError(error: error)
+            }
         }
     }
 }

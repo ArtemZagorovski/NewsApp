@@ -9,12 +9,14 @@
 import UIKit
 
 protocol NewsViewDelegate: class {
-    func viewDidLoad()
+    func viewWillAppear()
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavouriteButton(for viewModel: [NewsViewModel])
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ())
     func viewDidTapCell(for viewModel: NewsViewModel)
+    func isPullToRefreshAvailable() -> Bool
+    func isLoadMoreDataAvailable() -> Bool
 }
 
 protocol NewsView: class {
@@ -22,12 +24,21 @@ protocol NewsView: class {
     func animateActivity()
 }
 
-protocol NewsManager {
+protocol NewsDataProvider {
+    var delegate: NewsManagerDelegate? { get set }
+    func filter(favorite: Bool, for text: String)
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ())
+    func saveData()
+}
+
+protocol MainNewsDataProvider: NewsDataProvider {
     func loadNews()
     func refresh()
     func loadMoreNews()
-    func filter(for text: String)
-    func updateFavourite()
+}
+
+protocol FavoriteNewsDataProvider: NewsDataProvider {
+    func loadFavoriteNews()
 }
 
 protocol NewsManagerDelegate: class {
@@ -36,9 +47,10 @@ protocol NewsManagerDelegate: class {
 }
 
 protocol NewsViewModel {
+    var id: String { get }
     var newsTitle: String { get }
     var newsDescription: String { get }
     var image: UIImage? { get }
     var publishedAt: String? { get }
-    var isFavourite: Bool { get }
+    var isFavorite: Bool { get set }
 }

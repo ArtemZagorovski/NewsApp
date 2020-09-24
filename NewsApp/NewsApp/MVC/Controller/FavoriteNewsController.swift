@@ -1,50 +1,45 @@
 //
-//  Interpreter.swift
+//  FavouriteNewsController.swift
 //  NewsApp
 //
-//  Created by Zagorovsky, Artem on 9/4/20.
+//  Created by Zagorovsky, Artem on 9/15/20.
 //  Copyright © 2020 Artem Zagorovski. All rights reserved.
 //
 
 import UIKit
 
-final class NewsController {
-    private var model: MainNewsDataProvider
+final class FavoriteNewsController {
     private weak var view: NewsView?
-    private var coordinator: NewsCoordinator?
+    private var model: FavoriteNewsDataProvider
+    private let coordinator: FavoriteNewsCoordinator
     
-    init (model: MainNewsDataProvider, view: NewsView, coordinator: NewsCoordinator) {
+    init(model: FavoriteNewsDataProvider, view: NewsView, coordinator: FavoriteNewsCoordinator) {
         self.model = model
         self.view = view
         self.coordinator = coordinator
     }
 }
 
-extension NewsController: NewsViewDelegate {
+extension FavoriteNewsController: NewsViewDelegate {
     func isPullToRefreshAvailable() -> Bool {
-        return true
+        return false
     }
     
     func isLoadMoreDataAvailable() -> Bool {
-        return true
+        return false
     }
     
     func viewWillAppear() {
-        view?.animateActivity()
         model.delegate = self
-        model.loadNews()
+        model.loadFavoriteNews()
     }
     
-    func viewDidScrollToEnd() {
-        model.loadMoreNews()
-    }
+    func viewDidScrollToEnd() {}
     
-    func viewDidPullToRefresh() {
-        model.refresh()
-    }
+    func viewDidPullToRefresh() {}
     
     func viewDidChangeSearchTerm(_ term: String) {
-        model.filter(favorite: false, for: term)
+        model.filter(favorite: true, for: term)
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ()) {
@@ -52,17 +47,16 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {
-        coordinator?.showDetails(with: viewModel)
+        coordinator.showDetails(with: viewModel)
     }
 }
 
-extension NewsController: NewsManagerDelegate {
+extension FavoriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
-        let viewModels = news.map{ NewsModel(news: $0) }
-        view?.updateView(viewModels)
+        view?.updateView(news.map { NewsModel(news: $0) })
     }
     
     func modelDidGetAnError(error: Error) {
-        coordinator?.showAnError(error: error)
+        coordinator.showAnError(error: error)
     }
 }

@@ -10,7 +10,8 @@ import Foundation
 
 extension News {
     convenience init?(JSON: [String : AnyObject]) {
-        guard let title = JSON["title"] as? String,
+        guard let id = JSON["url"] as? String,
+            let title = JSON["title"] as? String,
             let description = JSON["description"] as? String,
             let publishedAt = JSON["publishedAt"] as? String else {
                 return nil
@@ -25,17 +26,18 @@ extension News {
                 if let imageUrlString = imageUrlString as? String, let imageUrl = URL(string: imageUrlString) {
                     imageData = try Data(contentsOf: imageUrl)
                 } else {
-                    print("imageUrlString is not an image")
+                    Logger.shared.logError(error: NewsError.wrongImageName)
                 }
             }
         } catch let error {
             Logger.shared.logError(error: error)
         }
-
-        self.init(newsTitle: title,
+        
+        self.init(id: id,
+                  newsTitle: title,
                   newsDescription: description,
                   imageData: imageData,
                   publishedAt: publishedAt,
-                  isFavourite: false)
+                  isFavorite: false)
     }
 }

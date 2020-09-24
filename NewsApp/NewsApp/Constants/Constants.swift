@@ -27,6 +27,8 @@ struct Constants {
         static let news = "News"
         static let searchNews = "Search news"
         static let defaultImageName = "news"
+        static let flameImageName = "flame"
+        static let fillFlameImageName = "flame.fill"
         static let textShowMore = "...show more"
     }
     

@@ -9,7 +9,15 @@
 import UIKit
 
 final class TabBarCoordinator {
-    func createViewController(apiService: RemoteNewsService, dbService: LocalNewsService) -> UITabBarController {
+    private let apiService: RemoteNewsService
+    private let dbService: LocalNewsService
+    
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
+    }
+    
+    func createViewController() -> UITabBarController {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.tintColor = .blue
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)

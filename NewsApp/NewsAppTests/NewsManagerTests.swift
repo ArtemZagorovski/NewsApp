@@ -31,7 +31,7 @@ final class NewsManagerTests: XCTestCase {
         XCTAssertTrue(filterNewsWith(text: "ABC123"))
     }
     
-    func filterNewsWith(text: String) -> Bool {
+    private func filterNewsWith(text: String) -> Bool {
         let filterExpectation = expectation(description: "")
         let mockDelegate = MockDelegate(expectation: filterExpectation)
         model?.loadNews()

@@ -9,8 +9,8 @@
 import Foundation
 
 final class DefaultNewsManager: MainNewsDataProvider {
-    private var apiService: RemoteNewsService
-    private var dbService: LocalNewsService
+    private let apiService: RemoteNewsService
+    private let dbService: LocalNewsService
     private var newsFromApi: [News] = []
     private var newsFromBD: [News] = []
     private var page = 1
@@ -30,7 +30,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func filter(favorite: Bool, for text: String) {
-        let news = favorite ? self.newsFromBD : self.newsFromApi
+        let news = favorite ? newsFromBD : newsFromApi
         if text.isEmpty {
             self.delegate?.modelDidLoadNews(news)
         } else {

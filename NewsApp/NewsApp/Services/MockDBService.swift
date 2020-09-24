@@ -16,7 +16,5 @@ final class MockBDService: LocalNewsService {
         delegate?.didLoadData(store)
     }
     
-    func saveData(_ news: [News]) {
-        print("Save to db")
-    }
+    func saveData(_ news: [News]) {}
 }

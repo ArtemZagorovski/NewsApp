@@ -34,9 +34,11 @@ final class APIService: RemoteNewsService {
                     }
                 } catch let error as NSError {
                     Logger.shared.logError(error: error)
+                    self.delegate?.didLoadData([])
                 }
             default:
                 print("We have got response status \(httpResponse.statusCode)")
+                self.delegate?.didLoadData([])
             }
             if let error = error {
                 Logger.shared.logError(error: error)

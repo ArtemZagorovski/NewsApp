@@ -9,7 +9,7 @@
 import UIKit
 
 final class TabBarCoordinator {
-    func createViewController() -> UITabBarController {
+    func createViewController(apiService: RemoteNewsService, dbService: LocalNewsService) -> UITabBarController {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.tintColor = .blue
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)
@@ -18,7 +18,7 @@ final class TabBarCoordinator {
                 return UITabBarController()
         }
         
-        let model = DefaultNewsManager()
+        let model = DefaultNewsManager(apiService: apiService, dbService: dbService)
         let newsViewController = NewsCoordinator().createViewController(model: model)
         let favoriteNewsController = FavoriteNewsCoordinator().createViewController(model: model)
         

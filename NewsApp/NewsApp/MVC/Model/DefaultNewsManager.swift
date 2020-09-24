@@ -9,15 +9,17 @@
 import Foundation
 
 final class DefaultNewsManager: MainNewsDataProvider {
-    private let apiService = APIService()
-    private let dbService = DBDataLoader()
+    private var apiService: RemoteNewsService
+    private var dbService: LocalNewsService
     private var newsFromApi: [News] = []
     private var newsFromBD: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
     
-    init() {
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
         self.apiService.delegate = self
         self.dbService.delegate = self
         dbService.loadNews()
@@ -28,11 +30,11 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func filter(favorite: Bool, for text: String) {
-        let news = favorite ? newsFromBD : newsFromApi
+        let news = favorite ? self.newsFromBD : self.newsFromApi
         if text.isEmpty {
-            delegate?.modelDidLoadNews(news)
+            self.delegate?.modelDidLoadNews(news)
         } else {
-            delegate?.modelDidLoadNews(news.filter { news in
+            self.delegate?.modelDidLoadNews(news.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter

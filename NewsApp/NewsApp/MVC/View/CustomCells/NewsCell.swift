@@ -53,7 +53,7 @@ final class NewsCell: UITableViewCell {
     
     private let showMoreLabel : UILabel = {
         let lbl = UILabel()
-        lbl.text = Constants.SystemWords.textShowMore
+        lbl.text = NSLocalizedString(Constants.SystemWords.textShowMore, comment: "")
         lbl.textColor = .systemBlue
         lbl.textAlignment = .right
         lbl.font = UIFont.italicSystemFont(ofSize: 12.0)

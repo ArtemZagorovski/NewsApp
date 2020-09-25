@@ -24,7 +24,7 @@ final class TabBarCoordinator {
         
         tabBarController.viewControllers = [
             makeNavigationController(rootViewController: newsViewController, title: "News", image: listImage),
-            makeNavigationController(rootViewController: favoriteNewsController, title: "Favorite", image: favoriteImage)
+            makeNavigationController(rootViewController: favoriteNewsController, title: NSLocalizedString("Favorite", comment: ""), image: favoriteImage)
         ]
         
         return tabBarController

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 final class NewsViewController: UIViewController {
 // MARK: - Variables and constatns
@@ -21,7 +20,7 @@ final class NewsViewController: UIViewController {
         let s = UISearchController(searchResultsController: nil)
         s.searchResultsUpdater = self
         s.obscuresBackgroundDuringPresentation = false
-        s.searchBar.placeholder = Constants.SystemWords.searchNews
+        s.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews, comment: "")
         s.searchBar.sizeToFit()
         s.searchBar.searchBarStyle = .prominent
         s.searchBar.delegate = self

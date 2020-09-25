@@ -23,6 +23,7 @@ final class NewsEntity: NSManagedObject {
 }
 
 extension NewsEntity {
+    @discardableResult
     convenience init(news: News, context: NSManagedObjectContext) {
         self.init(context: context)
         self.id = news.id

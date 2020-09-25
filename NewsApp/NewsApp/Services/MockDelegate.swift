@@ -11,7 +11,7 @@ import XCTest
 @testable import NewsApp
 
 final class MockDelegate: NewsManagerDelegate {
-    var news: [News] = []
+    private(set) news: [News] = []
     private let expectation: XCTestExpectation
     
     init(expectation: XCTestExpectation) {

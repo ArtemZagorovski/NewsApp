@@ -9,8 +9,8 @@
 import Foundation
 
 extension Date {
-
-    func rewindDays (_ days:Int) -> Date{
-        return Calendar.current.date(byAdding: .day, value: days, to: self)!
+    func rewindDays (_ days: Int) -> Date {
+        guard let date = Calendar.current.date(byAdding: .day, value: days, to: self) else { return Date() }
+        return date
     }
 }

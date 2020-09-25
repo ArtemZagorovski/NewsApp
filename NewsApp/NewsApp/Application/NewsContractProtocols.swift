@@ -13,7 +13,7 @@ protocol NewsViewDelegate: class {
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
-    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ())
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void)
     func viewDidTapCell(for viewModel: NewsViewModel)
     func isPullToRefreshAvailable() -> Bool
     func isLoadMoreDataAvailable() -> Bool
@@ -27,7 +27,7 @@ protocol NewsView: class {
 protocol NewsDataProvider {
     var delegate: NewsManagerDelegate? { get set }
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ())
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void)
     func saveData()
 }
 

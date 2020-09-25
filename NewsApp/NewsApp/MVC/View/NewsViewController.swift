@@ -20,7 +20,7 @@ final class NewsViewController: UIViewController {
         let s = UISearchController(searchResultsController: nil)
         s.searchResultsUpdater = self
         s.obscuresBackgroundDuringPresentation = false
-        s.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews, comment: "")
+        s.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews.rawValue, comment: "")
         s.searchBar.sizeToFit()
         s.searchBar.searchBarStyle = .prominent
         s.searchBar.delegate = self
@@ -34,7 +34,7 @@ final class NewsViewController: UIViewController {
             }
         }
     }
-    var delegate: NewsViewDelegate?
+    var controller: NewsViewDelegate?
     
 // MARK: - ViewController lifecycle methods
     override func viewDidLoad() {
@@ -46,7 +46,7 @@ final class NewsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        delegate?.viewWillAppear()
+        controller?.viewWillAppear()
     }
     
 // MARK: - Private Methods
@@ -57,18 +57,18 @@ final class NewsViewController: UIViewController {
 }
 
 // MARK: - Setup layout and views
-extension NewsViewController{
+extension NewsViewController {
     private func setupView() {
-        self.title = NSLocalizedString(Constants.SystemWords.news, comment: "")
+        self.title = NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "")
         navigationItem.searchController = searchController
         tableView.tableFooterView = UIView()
         tableView.refreshControl = refreshControl
-        tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID)
-        tableView.backgroundColor = Constants.AppColors.white
-        view.backgroundColor = Constants.AppColors.white
+        tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID.rawValue)
+        tableView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
+        view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         emptyStateLabel.text = "There are no news"
         emptyStateLabel.isHidden = true
-        guard let isPullToRefreshAvailable = delegate?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return }
+        guard let isPullToRefreshAvailable = controller?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return }
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
@@ -104,7 +104,7 @@ extension NewsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID, for: indexPath) as! NewsCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.NewsTable.newsCellID.rawValue, for: indexPath) as? NewsCell else { return UITableViewCell() }
         let news = viewModels[indexPath.row]
         cell.configure(with: news, delegate: self)
         return cell
@@ -117,14 +117,14 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let news = viewModels[indexPath.row]
-        delegate?.viewDidTapCell(for: news)
+        controller?.viewDidTapCell(for: news)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         let isLastSection = indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex
-        guard let isLoadMoreAvailable = delegate?.isLoadMoreDataAvailable(),
+        guard let isLoadMoreAvailable = controller?.isLoadMoreDataAvailable(),
             isLastSection,
             !searchController.isActive,
             isLoadMoreAvailable else {
@@ -134,32 +134,33 @@ extension NewsViewController: UITableViewDataSource {
         newPageLoadActivityIndicator.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
         self.tableView.tableFooterView = newPageLoadActivityIndicator
         self.tableView.tableFooterView?.isHidden = false
-        delegate?.viewDidScrollToEnd()
+        controller?.viewDidScrollToEnd()
     }
 }
 
 // MARK: - SearchController Extension
 extension NewsViewController: UISearchResultsUpdating {
-    func filterContentForSearchText(_ searchText: String)  {
-        delegate?.viewDidChangeSearchTerm(searchText)
+    func filterContentForSearchText(_ searchText: String) {
+        controller?.viewDidChangeSearchTerm(searchText)
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        let searchBar = searchController.searchBar
-        filterContentForSearchText(searchBar.text!)
+        guard let text = searchController.searchBar.text else { return }
+        filterContentForSearchText(text)
     }
 }
 
 extension NewsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar) {
-        filterContentForSearchText(searchBar.text!)
+        guard let text = searchBar.text else { return }
+        filterContentForSearchText(text)
     }
 }
 
 // MARK: - Actions
 extension NewsViewController {
     @objc private func pullToRefresh(sender: UIRefreshControl) {
-        delegate?.viewDidPullToRefresh()
+        controller?.viewDidPullToRefresh()
     }
 }
 
@@ -186,19 +187,20 @@ enum Actions {
 extension NewsViewController: NewsCellDelegate {
     func didTapFavoriteButton(cell: UITableViewCell) {
         guard let indexOfCell = tableView.indexPath(for: cell) else { return }
-        delegate?.viewDidTapFavoriteButton(for: viewModels[indexOfCell.row],
-                                           currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] cellAction in
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                switch cellAction {
-                case .refresh:
-                    self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
-                    self.tableView.reloadRows(at: [indexOfCell], with: .none)
-                case .delete:
-                    self.viewModels.remove(at: indexOfCell.row)
-                    self.tableView.deleteRows(at: [indexOfCell], with: .top)
+        controller?.viewDidTapFavoriteButton(
+            for: viewModels[indexOfCell.row],
+            currentFavoriteState: viewModels[indexOfCell.row].isFavorite) { [weak self] cellAction in
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    switch cellAction {
+                    case .refresh:
+                        self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
+                        self.tableView.reloadRows(at: [indexOfCell], with: .none)
+                    case .delete:
+                        self.viewModels.remove(at: indexOfCell.row)
+                        self.tableView.deleteRows(at: [indexOfCell], with: .top)
+                    }
                 }
-            }
         }
     }
 }

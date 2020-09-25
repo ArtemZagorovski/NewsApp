@@ -19,7 +19,7 @@ final class APIService: RemoteNewsService {
         guard let url = NewsApiUrlBuilder(page: page).url else { return }
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
-        let dataTask = session.dataTask(with: request) { (data, response, error) in
+        let dataTask = session.dataTask(with: request) { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse else { return }
             switch httpResponse.statusCode {
             case 200:

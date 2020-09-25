@@ -8,31 +8,17 @@
 
 import UIKit
 
-struct Constants {
-
-    struct NewsTable {
-        static let newsCellID = "newsCellID"
+enum Constants {
+    enum NewsTable: String {
+        case newsCellID
     }
     
-    struct AppColors {
-        static let white = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
-    }
-    
-    struct Logic {
-        static var countOfDays = 0
-        static var totalNews = 140
-    }
-    
-    struct SystemWords {
-        static let news = "News"
-        static let searchNews = "Search news"
-        static let defaultImageName = "news"
-        static let flameImageName = "flame"
-        static let fillFlameImageName = "flame.fill"
-        static let textShowMore = "...show more"
-    }
-    
-    struct NotificationNames {
-        static let newData = "newDataNotification"
+    enum SystemWords: String {
+        case news = "News"
+        case searchNews = "Search news"
+        case defaultImageName = "news"
+        case flameImageName = "flame"
+        case fillFlameImageName = "flame.fill"
+        case textShowMore = "...show more"
     }
 }

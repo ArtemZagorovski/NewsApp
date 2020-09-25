@@ -9,15 +9,17 @@
 import Foundation
 
 final class DefaultNewsManager: MainNewsDataProvider {
-    private let apiService = APIService()
-    private let dbService = DBDataLoader()
+    private let apiService: RemoteNewsService
+    private let dbService: LocalNewsService
     private var newsFromApi: [News] = []
     private var newsFromBD: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
     
-    init() {
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
         self.apiService.delegate = self
         self.dbService.delegate = self
         dbService.loadNews()
@@ -54,7 +56,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
         dbService.saveData(newsFromBD)
     }
     
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> ()) {
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void) {
         if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
             newsFromBD.remove(at: indexOfEqual)
             completion(.delete)
@@ -73,7 +75,7 @@ extension DefaultNewsManager: FavoriteNewsDataProvider {
 }
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
-    func didLoadData(_ news: [[String : AnyObject]]) {
+    func didLoadData(_ news: [[String: AnyObject]]) {
         newsFromApi = news.compactMap { News(JSON: $0) }
         newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
         delegate?.modelDidLoadNews(newsFromApi)

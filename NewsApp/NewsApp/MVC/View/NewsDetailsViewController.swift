@@ -9,9 +9,8 @@
 import UIKit
 
 class NewsDetailsViewController: UIViewController {
-    
     private var news: NewsViewModel?
-    var delegate: NewsDetailsViewDelegate?
+    var controller: NewsDetailsViewDelegate?
     
     private let newsImage = UIImageView()
     private let titleLabel = UILabel()
@@ -20,15 +19,15 @@ class NewsDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        delegate?.viewDidLoad()
+        controller?.viewDidLoad()
         setupView()
         setupLayout()
     }
 }
 
-extension NewsDetailsViewController{
+extension NewsDetailsViewController {
     private func setupView() {
-        view.backgroundColor = Constants.AppColors.white
+        view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         newsImage.layer.cornerRadius = 10
         newsImage.clipsToBounds = true
         newsImage.contentMode = .scaleAspectFill

@@ -12,7 +12,7 @@ import CoreData
 final class CoreDataStack {
     var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "News")
-        container.loadPersistentStores { storeDescription, error in
+        container.loadPersistentStores { _, error in
             if let error = error {
                 Logger.shared.logError(error: error)
             }

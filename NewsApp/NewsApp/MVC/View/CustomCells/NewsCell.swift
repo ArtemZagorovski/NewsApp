@@ -13,27 +13,26 @@ protocol NewsCellDelegate: class {
 }
 
 final class NewsCell: UITableViewCell {
-    
     weak var delegate: NewsCellDelegate?
     
     private let favoriteButton: UIButton = {
         let button = UIButton()
         let notFillImage = Constants.SystemWords.flameImageName
-        let image = UIImage(systemName: notFillImage)?.withTintColor(.black)
+        let image = UIImage(systemName: notFillImage.rawValue)?.withTintColor(.black)
         button.setImage(image, for: .normal)
         return button
     }()
     
-    private let newsImageView : UIImageView = {
+    private let newsImageView: UIImageView = {
         let imageName = Constants.SystemWords.defaultImageName
-        let image = UIImage(named: imageName)
+        let image = UIImage(named: imageName.rawValue)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    private let titleLabel : UILabel = {
+    private let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
         lbl.textAlignment = .left
@@ -42,7 +41,7 @@ final class NewsCell: UITableViewCell {
         return lbl
     }()
     
-    private let descriptionLabel : UILabel = {
+    private let descriptionLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
         lbl.textAlignment = .left
@@ -51,9 +50,9 @@ final class NewsCell: UITableViewCell {
         return lbl
     }()
     
-    private let showMoreLabel : UILabel = {
+    private let showMoreLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = NSLocalizedString(Constants.SystemWords.textShowMore, comment: "")
+        lbl.text = NSLocalizedString(Constants.SystemWords.textShowMore.rawValue, comment: "")
         lbl.textColor = .systemBlue
         lbl.textAlignment = .right
         lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
@@ -113,10 +112,11 @@ final class NewsCell: UITableViewCell {
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(didTapFavoriteButton), for: .touchUpInside)
 
-        NSLayoutConstraint.activate(newsImangeViewConstraints
-                                    + textStackConstraints
-                                    + showMoreLabelConstraints
-                                    + favoriteButtonConstraints)
+        NSLayoutConstraint.activate(
+            newsImangeViewConstraints
+                + textStackConstraints
+                + showMoreLabelConstraints
+                + favoriteButtonConstraints)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -134,9 +134,9 @@ final class NewsCell: UITableViewCell {
         newsImageView.image = viewModel.image
         
         if viewModel.isFavorite {
-            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName), for: .normal)
+            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.fillFlameImageName.rawValue), for: .normal)
         } else {
-            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName), for: .normal)
+            favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName.rawValue), for: .normal)
         }
         let hasMoreText = descriptionLabel.actualNumberOfLines() > 3
         showMoreLabel.isHidden = !hasMoreText

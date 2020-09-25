@@ -15,7 +15,12 @@ final class NewsViewController: UIViewController {
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
     private let emptyStateLabel = UILabel()
-    private var refreshControl: UIRefreshControl?
+    private var refreshControl: UIRefreshControl? {
+        guard let isPullToRefreshAvailable = controller?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return nil }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+        return refreshControl
+    }
     
     lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
@@ -69,10 +74,6 @@ extension NewsViewController {
         view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         emptyStateLabel.text = "There are no news"
         emptyStateLabel.isHidden = true
-        guard let isPullToRefreshAvailable = controller?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return }
-        
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
     }
     
     private func setupLayout() {

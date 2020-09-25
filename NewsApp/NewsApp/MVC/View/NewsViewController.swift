@@ -17,14 +17,14 @@ final class NewsViewController: UIViewController {
     private var refreshControl: UIRefreshControl?
     
     lazy var searchController: UISearchController = {
-        let s = UISearchController(searchResultsController: nil)
-        s.searchResultsUpdater = self
-        s.obscuresBackgroundDuringPresentation = false
-        s.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews.rawValue, comment: "")
-        s.searchBar.sizeToFit()
-        s.searchBar.searchBarStyle = .prominent
-        s.searchBar.delegate = self
-        return s
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews.rawValue, comment: "")
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchBar.delegate = self
+        return searchController
     }()
     
     var viewModels: [NewsViewModel] = [] {

@@ -39,7 +39,7 @@
 		5146DDBD250FAA8C0035C594 /* FavouriteNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDBC250FAA8C0035C594 /* FavouriteNewsManager.swift */; };
 		51FFFBD024FFDE0C0021D0BF /* DefaultNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FFFBCF24FFDE0C0021D0BF /* DefaultNewsManager.swift */; };
 		51FFFBD224FFE3500021D0BF /* ContractProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FFFBD124FFE3500021D0BF /* ContractProtocols.swift */; };
-
+		512F7C0A251DFB15009764A9 /* Optional+or.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7C09251DFB15009764A9 /* Optional+or.swift */; };
 
 		5146DDD925137B7E0035C594 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146DDD825137B7E0035C594 /* Logger.swift */; };
 
@@ -106,7 +106,7 @@
 		5146DDD825137B7E0035C594 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 
 		5146DDDA25137EEB0035C594 /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InternetConnectionManager.swift; path = NewsApp/Helpers/InternetConnectionManager.swift; sourceTree = SOURCE_ROOT; };
-
+		512F7C09251DFB15009764A9 /* Optional+or.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+or.swift"; sourceTree = "<group>"; };
 		5146DDBC250FAA8C0035C594 /* FavouriteNewsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNewsManager.swift; sourceTree = "<group>"; };
 
 		5146DDC42510C0F00035C594 /* FavouriteNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouriteNewsManager.swift; sourceTree = "<group>"; };
@@ -238,6 +238,7 @@
 			children = (
 				0792121924C0EE9E00680777 /* Date */,
 				0792121A24C0EEB700680777 /* UILabel */,
+				512F7C09251DFB15009764A9 /* Optional+or.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -361,6 +362,7 @@
 				0766439C24BC6DED003EB706 /* Frameworks */,
 				0766439D24BC6DED003EB706 /* Resources */,
 				158C93696E8C07ABE72E5F15 /* [CP] Embed Pods Frameworks */,
+				512F7C06251DEFB1009764A9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -456,6 +458,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+			512F7C06251DEFB1009764A9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ -f $SRCROOT/com.raywenderlich.swiftlint.yml ]; then\n  if which swiftlint >/dev/null; then\n    swiftlint --config $SRCROOT/com.raywenderlich.swiftlint.yml\n  fi\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -473,7 +492,7 @@
 				5146DDD925137B7E0035C594 /* Logger.swift in Sources */,
 				5132034E250276E700435E23 /* ServiceManager.swift in Sources */,
 
-
+				512F7C0A251DFB15009764A9 /* Optional+or.swift in Sources */,
 				0792121524C0EE7400680777 /* DBDataLoader.swift in Sources */,
 				5146DD65250A2E4C0035C594 /* NewsDetailsCoordinator.swift in Sources */,
 				51FFFBD224FFE3500021D0BF /* NewsContractProtocols.swift in Sources */,

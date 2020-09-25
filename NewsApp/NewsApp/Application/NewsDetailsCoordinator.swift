@@ -12,7 +12,7 @@ final class NewsDetailsCoordinator {
     func createViewController(with viewModel: NewsViewModel) -> UIViewController {
         let view = NewsDetailsViewController()
         let controller = NewsDetailsController(view: view, viewModel: viewModel)
-        view.delegate = controller
+        view.controller = controller
         return view
     }
 }

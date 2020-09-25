@@ -47,7 +47,7 @@ extension NewsController: NewsViewDelegate {
         model.filter(favorite: false, for: term)
     }
     
-    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> ()) {
+    func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void) {
         model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, completion: updateCell)
     }
     
@@ -58,7 +58,7 @@ extension NewsController: NewsViewDelegate {
 
 extension NewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
-        let viewModels = news.map{ NewsModel(news: $0) }
+        let viewModels = news.map { NewsModel(news: $0) }
         view?.updateView(viewModels)
     }
     

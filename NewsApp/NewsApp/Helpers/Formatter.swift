@@ -8,13 +8,11 @@
 
 import UIKit
 
-struct Formatter {
-
+enum Formatter {
     static let dateFormatter = DateFormatter()
     
     static func getStringWithWeekDay(date: Date) -> String {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: date)
     }
-    
 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-				0764328924BE21A500302D9B /* UILabel+actualNumberOfLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0764328824BE21A500302D9B /* UILabel+actualNumberOfLines.swift */; };
+		0764328924BE21A500302D9B /* UILabel+actualNumberOfLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0764328824BE21A500302D9B /* UILabel+actualNumberOfLines.swift */; };
 		076643A324BC6DED003EB706 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076643A224BC6DED003EB706 /* AppDelegate.swift */; };
 		076643A524BC6DED003EB706 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076643A424BC6DED003EB706 /* SceneDelegate.swift */; };
 		076643AC24BC6DEE003EB706 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 076643AB24BC6DEE003EB706 /* Assets.xcassets */; };

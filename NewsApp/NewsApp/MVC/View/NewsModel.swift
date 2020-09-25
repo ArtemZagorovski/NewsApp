@@ -19,7 +19,7 @@ struct NewsModel: NewsViewModel {
 
 extension NewsModel {
     init (news: News) {
-        self.image = news.imageData.map { UIImage(data: $0) } ?? nil
+        self.image = news.imageData.map { UIImage(data: $0) }.or(nil)
         self.id = news.id
         self.newsTitle = news.newsTitle
         self.newsDescription = news.newsDescription

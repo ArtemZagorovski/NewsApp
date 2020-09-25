@@ -20,7 +20,7 @@ protocol LocalNewsService: class {
 }
 
 protocol NewsRemoteServiceDelegate: class {
-    func didLoadData(_ news: [[String : AnyObject]])
+    func didLoadData(_ news: [[String: AnyObject]])
     func didGetAnError(error: Error)
 }
 

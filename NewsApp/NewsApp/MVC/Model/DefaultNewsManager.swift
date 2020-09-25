@@ -9,15 +9,17 @@
 import Foundation
 
 final class DefaultNewsManager: MainNewsDataProvider {
-    private let apiService = APIService()
-    private let dbService = DBDataLoader()
+    private let apiService: RemoteNewsService
+    private let dbService: LocalNewsService
     private var newsFromApi: [News] = []
     private var newsFromBD: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
     
-    init() {
+    init(apiService: RemoteNewsService, dbService: LocalNewsService) {
+        self.apiService = apiService
+        self.dbService = dbService
         self.apiService.delegate = self
         self.dbService.delegate = self
         dbService.loadNews()

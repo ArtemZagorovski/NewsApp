@@ -11,7 +11,7 @@ import XCTest
 
 final class NewsManagerTests: XCTestCase {
     private let mokApiService = MockApiService()
-    private let mokDBService = MockBDService()
+    private let mokDBService = MockDBService()
     private var model: DefaultNewsManager?
     
     override func setUp() {

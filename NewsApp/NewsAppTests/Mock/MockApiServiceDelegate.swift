@@ -11,7 +11,7 @@ import XCTest
 @testable import NewsApp
 
 final class MockApiServiceDelegate: NewsRemoteServiceDelegate {
-    var news: [[String : AnyObject]] = []
+    private(set) var news: [[String : AnyObject]] = []
     private let expectation: XCTestExpectation
     
     init(expectation: XCTestExpectation) {

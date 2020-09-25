@@ -11,11 +11,12 @@ import Foundation
 
 final class MockApiService: RemoteNewsService {
     var delegate: NewsRemoteServiceDelegate?
-    var newsData: [[String: AnyObject]]
+    private let newsData: [[String: AnyObject]]
     
     init(newsArray: [[String: AnyObject]]) {
         newsData = newsArray
     }
+    
     func loadNews(page: Int) {
         delegate?.didLoadData(newsData)
     }

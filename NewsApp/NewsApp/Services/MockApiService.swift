@@ -10,7 +10,7 @@ import Foundation
 @testable import NewsApp
 
 final class MockApiService: RemoteNewsService {
-    var delegate: NewsRemoteServiceDelegate?
+    weak var delegate: NewsRemoteServiceDelegate?
     private let newsData: [[String: AnyObject]]
     
     init(newsArray: [[String: AnyObject]]) {

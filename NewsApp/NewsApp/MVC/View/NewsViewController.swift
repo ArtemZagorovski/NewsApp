@@ -60,7 +60,7 @@ final class NewsViewController: UIViewController {
 // MARK: - Setup layout and views
 extension NewsViewController{
     private func setupView() {
-        self.title = Constants.SystemWords.news
+        self.title = NSLocalizedString(Constants.SystemWords.news, comment: "")
         navigationItem.searchController = searchController
         tableView.tableFooterView = UIView()
         tableView.refreshControl = refreshControl

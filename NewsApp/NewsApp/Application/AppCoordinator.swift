@@ -10,6 +10,6 @@ import UIKit
 
 final class AppCoordinator {
     func createMainViewController() -> UITabBarController {
-        return TabBarCoordinator().createViewController()
+        return TabBarCoordinator(apiService: APIService(), dbService: DBDataLoader()).createViewController()
     }
 }

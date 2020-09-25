@@ -15,7 +15,7 @@ final class FavoriteNewsCoordinator: DetailsShowable, ErrorShowable {
         let viewController = NewsViewController()
         self.viewController = viewController
         let controller = FavoriteNewsController(model: model, view: viewController, coordinator: self)
-        viewController.delegate = controller
+        viewController.controller = controller
         return viewController
     }
 }

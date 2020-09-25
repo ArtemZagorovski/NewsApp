@@ -10,7 +10,8 @@ import Foundation
 import CoreData
 
 final class NewsEntity: NSManagedObject {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<NewsEntity> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<NewsEntity> {
         return NSFetchRequest<NewsEntity>(entityName: "NewsEntity")
     }
     @NSManaged var id: String
@@ -22,6 +23,7 @@ final class NewsEntity: NSManagedObject {
 }
 
 extension NewsEntity {
+    @discardableResult
     convenience init(news: News, context: NSManagedObjectContext) {
         self.init(context: context)
         self.id = news.id

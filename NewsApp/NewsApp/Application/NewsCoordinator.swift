@@ -15,7 +15,7 @@ final class NewsCoordinator: DetailsShowable, ErrorShowable {
         let viewController = NewsViewController()
         self.viewController = viewController
         let controller = NewsController(model: model, view: viewController, coordinator: self)
-        viewController.delegate = controller
+        viewController.controller = controller
         return viewController
     }
 }

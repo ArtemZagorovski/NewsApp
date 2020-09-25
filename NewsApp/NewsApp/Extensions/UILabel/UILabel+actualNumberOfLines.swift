@@ -11,7 +11,7 @@ import UIKit
 extension UILabel {
     func actualNumberOfLines() -> Int {
         self.layoutIfNeeded()
-        let myText = self.text! as NSString
+        guard let myText = self.text as NSString? else { return 0 }
         let rect = CGSize(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude)
         let labelSize = myText.boundingRect(with: rect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: self.font as Any], context: nil)
 

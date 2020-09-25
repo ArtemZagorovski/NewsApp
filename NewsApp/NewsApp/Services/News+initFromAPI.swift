@@ -9,7 +9,7 @@
 import Foundation
 
 extension News {
-    convenience init?(JSON: [String : AnyObject]) {
+    convenience init?(JSON: [String: AnyObject]) {
         guard let id = JSON["url"] as? String,
             let title = JSON["title"] as? String,
             let description = JSON["description"] as? String,
@@ -17,7 +17,7 @@ extension News {
                 return nil
         }
         
-        var imageData: Data? = nil
+        var imageData: Data?
         do {
             let imageUrlString = JSON["urlToImage"]
             if imageUrlString is NSNull {
@@ -33,11 +33,12 @@ extension News {
             Logger.shared.logError(error: error)
         }
         
-        self.init(id: id,
-                  newsTitle: title,
-                  newsDescription: description,
-                  imageData: imageData,
-                  publishedAt: publishedAt,
-                  isFavorite: false)
+        self.init(
+            id: id,
+            newsTitle: title,
+            newsDescription: description,
+            imageData: imageData,
+            publishedAt: publishedAt,
+            isFavorite: false)
     }
 }

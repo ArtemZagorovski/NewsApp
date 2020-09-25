@@ -10,36 +10,63 @@ import XCTest
 @testable import NewsApp
 
 final class NewsManagerTests: XCTestCase {
-    private let mokApiService = MockApiService()
-    private let mokDBService = MockDBService()
-    private var model: DefaultNewsManager?
-    
-    override func setUp() {
-        model = DefaultNewsManager(apiService: mokApiService, dbService: mokDBService)
-        mokApiService.delegate = model
-    }
+    private let mockDBService = MockDBService()
 
-    func testDefaultFilterData() {
-        XCTAssertTrue(filterNewsWith(text: "Bitcoin"))
+    func testNumberStringFilter() {
+        XCTAssertTrue(testFilter(newsIds: ["1", "2", "3"], testText: "1", expected: ["1"]))
     }
     
-    func testWhitespaceFilterData() {
-        XCTAssertTrue(filterNewsWith(text: " "))
+    func testLetterStringFilter() {
+        XCTAssertTrue(testFilter(newsIds: ["a", "b", "c"], testText: "c", expected: ["c"]))
     }
     
-    func testIncorrectInputFilterData() {
-        XCTAssertTrue(filterNewsWith(text: "ABC123"))
+    func testOneLetterFromStringFilterAllMembers() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Artem", "Slavik"], testText: "a", expected: ["Vitali", "Artem", "Slavik"]))
     }
     
-    private func filterNewsWith(text: String) -> Bool {
+    func testOneLetterFromStringFilterTwoMembers() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Artem", "Slavik"], testText: "i", expected: ["Vitali", "Slavik"]))
+    }
+    
+    func testOneLetterFromStringFilterDifferentRegister() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Artem", "Slavik"], testText: "v", expected: ["Vitali", "Slavik"]))
+    }
+    
+    func testSomeLetterFromStringFilter() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Vilat", "Zhan"], testText: "vi", expected: ["Vitali", "Vilat"]))
+    }
+    
+    func testEmptyStringFilter() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Vilat", "Zhan"], testText: "", expected: ["Vitali", "Vilat", "Zhan"]))
+    }
+    
+    func testSpaceFilter() {
+        XCTAssertTrue(testFilter(newsIds: ["Vitali", "Vilat", "Zhan"], testText: " ", expected: []))
+    }
+    
+    func testFilter(newsIds: [String], testText: String, expected: [String]) -> Bool {
+        let ids = newsIds
+        let apiService = MockApiService(newsArray: ids.map { makeNews(with: $0) })
         let filterExpectation = expectation(description: "")
         let mockDelegate = MockDelegate(expectation: filterExpectation)
-        model?.loadNews()
-        model?.delegate = mockDelegate
-        model?.filter(favorite: false, for: text)
-        waitForExpectations(timeout: 5, handler: nil)
-        let filtredArray = mockDelegate.news.filter { $0.newsTitle.lowercased().contains(text.lowercased()) ||
-            $0.newsDescription.lowercased().contains(text.lowercased()) }
-        return filtredArray == mockDelegate.news
+        
+        let text = testText
+        let model = DefaultNewsManager(apiService: apiService, dbService: mockDBService)
+        model.loadNews()
+        model.delegate = mockDelegate
+        model.filter(favorite: false, for: text)
+        waitForExpectations(timeout: 1, handler: nil)
+        return expected == mockDelegate.news.map { $0.newsTitle }
+    }
+    
+    private func makeNews(with id: String) -> [String: AnyObject] {
+        let anyId = id as AnyObject
+        return  [
+            "author": anyId,
+            "title": anyId,
+            "description": anyId,
+            "url": anyId,
+            "publishedAt": anyId
+        ]
     }
 }

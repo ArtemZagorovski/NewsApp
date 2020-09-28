@@ -65,14 +65,14 @@ final class NewsViewController: UIViewController {
 // MARK: - Setup layout and views
 extension NewsViewController {
     private func setupView() {
-        self.title = Constants.SystemWords.news.rawValue
+        self.title = NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "Page title")
         navigationItem.searchController = searchController
         tableView.tableFooterView = UIView()
         tableView.refreshControl = refreshControl
         tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID.rawValue)
         tableView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
-        emptyStateLabel.text = "There are no news"
+        emptyStateLabel.text = NSLocalizedString(Constants.SystemWords.noNews.rawValue, comment: "No news label")
         emptyStateLabel.isHidden = true
     }
     

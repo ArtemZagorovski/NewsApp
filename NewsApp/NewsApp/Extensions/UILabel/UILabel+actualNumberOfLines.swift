@@ -9,12 +9,17 @@
 import UIKit
 
 extension UILabel {
-    func actualNumberOfLines() -> Int {
-        self.layoutIfNeeded()
-        guard let myText = self.text as NSString? else { return 0 }
-        let rect = CGSize(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude)
-        let labelSize = myText.boundingRect(with: rect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: self.font as Any], context: nil)
-
-        return Int(ceil(CGFloat(labelSize.height) / self.font.lineHeight))
+    var isTruncated: Bool {
+        guard let labelText = text else {
+            return false
+        }
+        
+        let labelTextSize = (labelText as NSString).boundingRect(
+            with: CGSize(width: frame.size.width, height: .greatestFiniteMagnitude),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: font as Any],
+            context: nil).size
+        
+        return labelTextSize.height > bounds.size.height
     }
 }

@@ -26,12 +26,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func loadNews() {
-        if newsFromApi.isEmpty {
-            apiService.loadNews(page: page)
-        } else {
-            newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
-            delegate?.modelDidLoadNews(newsFromApi)
-        }
+        apiService.loadNews(page: page)
     }
     
     func filter(favorite: Bool, for text: String) {

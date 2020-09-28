@@ -48,7 +48,11 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void) {
-        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, completion: updateCell)
+        if currentFavoriteState {
+            model.deleteFromFavoritesFromNews(news: News(viewModel: viewModel), completion: updateCell)
+        } else {
+            model.addToFavorites(news: News(viewModel: viewModel), completion: updateCell)
+        }
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

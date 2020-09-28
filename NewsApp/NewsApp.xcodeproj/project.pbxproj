@@ -28,6 +28,7 @@
 		512F7C04251DD553009764A9 /* MockDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7C03251DD553009764A9 /* MockDBService.swift */; };
 		512F7C0A251DFB15009764A9 /* Optional+or.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7C09251DFB15009764A9 /* Optional+or.swift */; };
 		512F7C14251E3235009764A9 /* MockApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F7BE0251C994C009764A9 /* MockApiService.swift */; };
+		512F7C1E2521C5E4009764A9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 512F7C1D2521C5E4009764A9 /* Localizable.strings */; };
 		5132034A25026C8000435E23 /* NewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034925026C8000435E23 /* NewsController.swift */; };
 		5132035025028A9500435E23 /* NewsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5132034F25028A9500435E23 /* NewsCoordinator.swift */; };
 		513FA006250668C30069B14F /* NewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513FA005250668C30069B14F /* NewsModel.swift */; };
@@ -92,6 +93,7 @@
 		512F7BEB251CB1CE009764A9 /* MockApiServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockApiServiceDelegate.swift; sourceTree = "<group>"; };
 		512F7C03251DD553009764A9 /* MockDBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDBService.swift; sourceTree = "<group>"; };
 		512F7C09251DFB15009764A9 /* Optional+or.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+or.swift"; sourceTree = "<group>"; };
+		512F7C1D2521C5E4009764A9 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		5132034925026C8000435E23 /* NewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsController.swift; path = NewsApp/Services/NewsController.swift; sourceTree = SOURCE_ROOT; };
 		5132034F25028A9500435E23 /* NewsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCoordinator.swift; sourceTree = "<group>"; };
 		513FA005250668C30069B14F /* NewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsModel.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 			children = (
 				076643AB24BC6DEE003EB706 /* Assets.xcassets */,
 				076643B024BC6DEE003EB706 /* Info.plist */,
+				512F7C1D2521C5E4009764A9 /* Localizable.strings */,
 			);
 			path = SupportFiles;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				076643AF24BC6DEE003EB706 /* LaunchScreen.storyboard in Resources */,
+				512F7C1E2521C5E4009764A9 /* Localizable.strings in Resources */,
 				076643AC24BC6DEE003EB706 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

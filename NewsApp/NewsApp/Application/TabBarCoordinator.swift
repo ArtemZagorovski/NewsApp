@@ -33,11 +33,11 @@ final class TabBarCoordinator {
         tabBarController.viewControllers = [
             makeNavigationController(
                 rootViewController: newsViewController,
-                title: NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "Name of first tab"),
+                title: NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "Name of news tab"),
                 image: listImage),
             makeNavigationController(
                 rootViewController: favoriteNewsController,
-                title: NSLocalizedString(Constants.SystemWords.favorite.rawValue, comment: "Name of second tab"),
+                title: NSLocalizedString(Constants.SystemWords.favorite.rawValue, comment: "Name of favorite news tab"),
                 image: favoriteImage)
         ]
         

@@ -48,7 +48,9 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void) {
-        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, completion: updateCell)
+        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState) {
+            updateCell(.refresh)
+        }
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

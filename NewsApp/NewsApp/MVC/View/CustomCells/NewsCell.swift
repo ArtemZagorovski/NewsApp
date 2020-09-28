@@ -33,30 +33,30 @@ final class NewsCell: UITableViewCell {
     }()
     
     private let titleLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.textColor = .black
-        lbl.textAlignment = .left
-        lbl.font = UIFont.boldSystemFont(ofSize: 14.0)
-        lbl.numberOfLines = 2
-        return lbl
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .left
+        label.font = UIFont.boldSystemFont(ofSize: 14.0)
+        label.numberOfLines = 2
+        return label
     }()
     
     private let descriptionLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.textColor = .black
-        lbl.textAlignment = .left
-        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
-        lbl.numberOfLines = 3
-        return lbl
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .left
+        label.font = UIFont.italicSystemFont(ofSize: 12.0)
+        label.numberOfLines = 3
+        return label
     }()
     
     private let showMoreLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = Constants.SystemWords.textShowMore.rawValue
-        lbl.textColor = .systemBlue
-        lbl.textAlignment = .right
-        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
-        return lbl
+        let label = UILabel()
+        label.text = NSLocalizedString(Constants.SystemWords.textShowMore.rawValue, comment: "SHow more label")
+        label.textColor = .systemBlue
+        label.textAlignment = .right
+        label.font = UIFont.italicSystemFont(ofSize: 12.0)
+        return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

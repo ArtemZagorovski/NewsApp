@@ -31,8 +31,14 @@ final class TabBarCoordinator {
         let favoriteNewsController = FavoriteNewsCoordinator().createViewController(model: model)
         
         tabBarController.viewControllers = [
-            makeNavigationController(rootViewController: newsViewController, title: "News", image: listImage),
-            makeNavigationController(rootViewController: favoriteNewsController, title: "Favorite", image: favoriteImage)
+            makeNavigationController(
+                rootViewController: newsViewController,
+                title: NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "Name of first tab"),
+                image: listImage),
+            makeNavigationController(
+                rootViewController: favoriteNewsController,
+                title: NSLocalizedString(Constants.SystemWords.favorite.rawValue, comment: "Name of second tab"),
+                image: favoriteImage)
         ]
         
         return tabBarController

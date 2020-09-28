@@ -15,7 +15,7 @@ final class NewsViewController: UIViewController {
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
     private let emptyStateLabel = UILabel()
-    lazy private var refreshControl: UIRefreshControl? = {
+    private lazy var refreshControl: UIRefreshControl? = {
         guard controller?.isPullToRefreshAvailable() == true else { return nil }
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)

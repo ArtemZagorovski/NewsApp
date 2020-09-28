@@ -56,6 +56,7 @@ final class NewsCell: UITableViewCell {
         label.textColor = .systemBlue
         label.textAlignment = .right
         label.font = UIFont.italicSystemFont(ofSize: 12.0)
+        label.isHidden = false
         return label
     }()
     
@@ -138,12 +139,7 @@ final class NewsCell: UITableViewCell {
         } else {
             favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName.rawValue), for: .normal)
         }
-        let hasMoreText = descriptionLabel.actualNumberOfLines() > 3
+        let hasMoreText = descriptionLabel.isTruncated
         showMoreLabel.isHidden = !hasMoreText
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        showMoreLabel.isHidden = true
     }
 }

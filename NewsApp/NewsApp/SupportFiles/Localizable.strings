@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  NewsApp
+
+  Created by Zagorovsky, Artem on 9/28/20.
+  Copyright © 2020 Artem Zagorovski. All rights reserved.
+*/
+
+"News" = "Новости";
+"Search news" = "Поиск новостей";
+"...show more" = "...показать больше";
+"Favorite" = "Избранные";

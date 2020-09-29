@@ -15,7 +15,12 @@ final class NewsViewController: UIViewController {
     private let newPageLoadActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let mainPageLoadActivityIndicator = UIActivityIndicatorView(style: .large)
     private let emptyStateLabel = UILabel()
-    private var refreshControl: UIRefreshControl?
+    private lazy var refreshControl: UIRefreshControl? = {
+        guard controller?.isPullToRefreshAvailable() == true else { return nil }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+        return refreshControl
+    }()
     
     lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
@@ -60,19 +65,15 @@ final class NewsViewController: UIViewController {
 // MARK: - Setup layout and views
 extension NewsViewController {
     private func setupView() {
-        self.title = Constants.SystemWords.news.rawValue
+        self.title = NSLocalizedString(Constants.SystemWords.news.rawValue, comment: "Page title")
         navigationItem.searchController = searchController
         tableView.tableFooterView = UIView()
         tableView.refreshControl = refreshControl
         tableView.register(NewsCell.self, forCellReuseIdentifier: Constants.NewsTable.newsCellID.rawValue)
         tableView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         view.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
-        emptyStateLabel.text = "There are no news"
+        emptyStateLabel.text = NSLocalizedString(Constants.SystemWords.noNews.rawValue, comment: "No news label")
         emptyStateLabel.isHidden = true
-        guard let isPullToRefreshAvailable = controller?.isPullToRefreshAvailable(), isPullToRefreshAvailable else { return }
-        
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
     }
     
     private func setupLayout() {

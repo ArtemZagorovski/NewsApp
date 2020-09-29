@@ -19,17 +19,17 @@ final class APIService: RemoteNewsService {
         guard let url = NewsApiUrlBuilder(page: page).url else { return }
         let request = URLRequest(url: url)
         let session = URLSession(configuration: URLSessionConfiguration.default)
-        let dataTask = session.dataTask(with: request) { data, response, error in
+        let dataTask = session.dataTask(with: request) { [weak self] data, response, error in
             guard let httpResponse = response as? HTTPURLResponse else { return }
             switch httpResponse.statusCode {
             case 200:
                 do {
                     guard let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else { return }
                     if let dictionary = json["articles"] as? [[String: AnyObject]] {
-                        self.delegate?.didLoadData(dictionary)
+                        self?.delegate?.didLoadData(dictionary)
                     } else {
                         Logger.shared.logError(error: NewsError.parseDataError)
-                        self.delegate?.didLoadData([])
+                        self?.delegate?.didLoadData([])
                         return
                     }
                 } catch let error as NSError {
@@ -40,7 +40,7 @@ final class APIService: RemoteNewsService {
             }
             if let error = error {
                 Logger.shared.logError(error: error)
-                self.delegate?.didGetAnError(error: error)
+                self?.delegate?.didGetAnError(error: error)
             }
         }
         dataTask.resume()

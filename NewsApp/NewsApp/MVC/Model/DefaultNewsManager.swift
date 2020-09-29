@@ -11,8 +11,8 @@ import Foundation
 final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService: RemoteNewsService
     private let dbService: LocalNewsService
-    private var newsFromApi: [News] = []
-    private var newsFromBD: [News] = []
+    var newsFromApi: [News] = []
+    var newsFromBD: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
@@ -29,16 +29,16 @@ final class DefaultNewsManager: MainNewsDataProvider {
         apiService.loadNews(page: page)
     }
     
-    func filter(favorite: Bool, for text: String) {
+    func filter(favorite: Bool, for text: String) -> [News] {
         let news = favorite ? newsFromBD : newsFromApi
         if text.isEmpty {
-            delegate?.modelDidLoadNews(news)
+            return news
         } else {
-            delegate?.modelDidLoadNews(news.filter { news in
+            return news.filter { news in
                 let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
                 let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
                 return isTitleContainsFilter || isDescriptionContainsFilter
-            })
+            }
         }
     }
     
@@ -70,7 +70,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
 
 extension DefaultNewsManager: FavoriteNewsDataProvider {
     func loadFavoriteNews() {
-        delegate?.modelDidLoadNews(newsFromBD)
+        delegate?.modelDidLoadNews()
     }
 }
 
@@ -78,7 +78,7 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
         newsFromApi = news.compactMap { News(JSON: $0) }
         newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
-        delegate?.modelDidLoadNews(newsFromApi)
+        delegate?.modelDidLoadNews()
     }
     
     func didGetAnError(error: Error) {

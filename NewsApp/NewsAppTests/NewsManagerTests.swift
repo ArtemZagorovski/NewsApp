@@ -47,16 +47,11 @@ final class NewsManagerTests: XCTestCase {
     func testFilter(newsIds: [String], testText: String, expected: [String]) -> Bool {
         let ids = newsIds
         let apiService = MockApiService(newsArray: ids.map { makeNews(with: $0) })
-        let filterExpectation = expectation(description: "")
-        let mockDelegate = MockDelegate(expectation: filterExpectation)
-        
         let text = testText
         let model = DefaultNewsManager(apiService: apiService, dbService: mockDBService)
         model.loadNews()
-        model.delegate = mockDelegate
-        model.filter(favorite: false, for: text)
-        waitForExpectations(timeout: 1, handler: nil)
-        return expected == mockDelegate.news.map { $0.newsTitle }
+        let filtredNews = model.filter(favorite: false, for: text)
+        return expected == filtredNews.map { $0.newsTitle }
     }
     
     private func makeNews(with id: String) -> [String: AnyObject] {

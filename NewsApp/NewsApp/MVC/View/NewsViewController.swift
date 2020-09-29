@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 final class NewsViewController: UIViewController {
 // MARK: - Variables and constatns

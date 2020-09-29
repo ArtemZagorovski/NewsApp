@@ -20,6 +20,7 @@ protocol NewsViewDelegate: class {
 }
 
 protocol NewsView: class {
+    var viewModels: [NewsViewModel] { get }
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
 }
@@ -27,7 +28,7 @@ protocol NewsView: class {
 protocol NewsDataProvider {
     var delegate: NewsManagerDelegate? { get set }
     func filter(favorite: Bool, for text: String)
-    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void)
+    func updateFavorites(with news: News, currentFavoriteState: Bool, completion: () -> Void)
     func saveData()
 }
 

@@ -30,8 +30,9 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewWillAppear() {
-        view?.animateActivity()
         model.delegate = self
+        guard view?.viewModels.isEmpty == true else { return }
+        view?.animateActivity()
         model.loadNews()
     }
     
@@ -48,7 +49,9 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void) {
-        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState, completion: updateCell)
+        model.updateFavorites(with: News(viewModel: viewModel), currentFavoriteState: currentFavoriteState) {
+            updateCell(.refresh)
+        }
     }
     
     func viewDidTapCell(for viewModel: NewsViewModel) {

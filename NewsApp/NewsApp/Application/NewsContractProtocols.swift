@@ -10,6 +10,7 @@ import UIKit
 
 protocol NewsViewDelegate: class {
     func viewWillAppear()
+    func viewWasDeinited()
     func viewDidScrollToEnd()
     func viewDidPullToRefresh()
     func viewDidChangeSearchTerm(_ term: String)
@@ -35,7 +36,6 @@ protocol NewsDataProvider {
 protocol MainNewsDataProvider: NewsDataProvider {
     func loadNews()
     func refresh()
-    func loadMoreNews()
 }
 
 protocol FavoriteNewsDataProvider: NewsDataProvider {

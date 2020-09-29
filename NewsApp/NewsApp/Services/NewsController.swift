@@ -21,6 +21,10 @@ final class NewsController {
 }
 
 extension NewsController: NewsViewDelegate {
+    func viewWasDeinited() {
+        model.saveData()
+    }
+    
     func isPullToRefreshAvailable() -> Bool {
         return true
     }
@@ -31,16 +35,21 @@ extension NewsController: NewsViewDelegate {
     
     func viewWillAppear() {
         model.delegate = self
-        guard view?.viewModels.isEmpty == true else { return }
-        view?.animateActivity()
-        model.loadNews()
+        if view?.viewModels.isEmpty == true {
+            view?.animateActivity()
+            model.loadNews()
+        } else {
+            let news = model.news(onlyFavorite: false, filter: nil)
+            view?.updateView(news.map { NewsModel(news: $0) })
+        }
     }
     
     func viewDidScrollToEnd() {
-        model.loadMoreNews()
+        model.loadNews()
     }
     
     func viewDidPullToRefresh() {
+        view?.updateView([])
         model.refresh()
     }
     
@@ -68,6 +77,8 @@ extension NewsController: NewsManagerDelegate {
     }
     
     func modelDidGetAnError(error: Error) {
-        coordinator?.showAnError(error: error)
+        DispatchQueue.main.async {
+            self.coordinator?.showAnError(error: error)
+        }
     }
 }

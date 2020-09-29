@@ -18,8 +18,7 @@ final class MockDelegate: NewsManagerDelegate {
         self.expectation = expectation
     }
     
-    func modelDidLoadNews(_ news: [News]) {
-        self.news = news
+    func modelDidLoadNews() {
         expectation.fulfill()
     }
     

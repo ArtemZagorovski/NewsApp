@@ -27,7 +27,7 @@ protocol NewsView: class {
 
 protocol NewsDataProvider {
     var delegate: NewsManagerDelegate? { get set }
-    func filter(favorite: Bool, for text: String)
+    func news(onlyFavorite: Bool, filter: String?) -> [News]
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: () -> Void)
     func saveData()
 }
@@ -43,7 +43,7 @@ protocol FavoriteNewsDataProvider: NewsDataProvider {
 }
 
 protocol NewsManagerDelegate: class {
-    func modelDidLoadNews(_ news: [News])
+    func modelDidLoadNews()
     func modelDidGetAnError(error: Error)
 }
 

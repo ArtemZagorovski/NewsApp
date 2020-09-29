@@ -12,7 +12,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService: RemoteNewsService
     private let dbService: LocalNewsService
     private var newsFromApi: [News] = []
-    private var newsFromBD: [News] = []
+    private var newsFromDB: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
@@ -25,21 +25,18 @@ final class DefaultNewsManager: MainNewsDataProvider {
         dbService.loadNews()
     }
     
-    func loadNews() {
-        apiService.loadNews(page: page)
+    func news(onlyFavorite: Bool, filter: String?) -> [News] {
+        let news = onlyFavorite ? newsFromDB : newsFromApi
+        guard let filterText = filter, filterText.isEmpty == false else { return news }
+        return news.filter { news in
+            let isTitleContainsFilter = news.newsTitle.lowercased().contains(filterText.lowercased())
+            let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(filterText.lowercased())
+            return isTitleContainsFilter || isDescriptionContainsFilter
+        }
     }
     
-    func filter(favorite: Bool, for text: String) {
-        let news = favorite ? newsFromBD : newsFromApi
-        if text.isEmpty {
-            delegate?.modelDidLoadNews(news)
-        } else {
-            delegate?.modelDidLoadNews(news.filter { news in
-                let isTitleContainsFilter = news.newsTitle.lowercased().contains(text.lowercased())
-                let isDescriptionContainsFilter = news.newsDescription.lowercased().contains(text.lowercased())
-                return isTitleContainsFilter || isDescriptionContainsFilter
-            })
-        }
+    func loadNews() {
+        apiService.loadNews(page: page)
     }
     
     func refresh() {
@@ -53,16 +50,16 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func saveData() {
-        dbService.saveData(newsFromBD)
+        dbService.saveData(newsFromDB)
     }
     
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: () -> Void) {
-        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
-            newsFromBD.remove(at: indexOfEqual)
+        if currentFavoriteState, let indexOfEqual = newsFromDB.firstIndex(of: news) {
+            newsFromDB.remove(at: indexOfEqual)
             completion()
         } else {
             news.isFavorite = !currentFavoriteState
-            newsFromBD.append(news)
+            newsFromDB.append(news)
             completion()
         }
     }
@@ -70,15 +67,15 @@ final class DefaultNewsManager: MainNewsDataProvider {
 
 extension DefaultNewsManager: FavoriteNewsDataProvider {
     func loadFavoriteNews() {
-        delegate?.modelDidLoadNews(newsFromBD)
+        delegate?.modelDidLoadNews()
     }
 }
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
         newsFromApi = news.compactMap { News(JSON: $0) }
-        newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
-        delegate?.modelDidLoadNews(newsFromApi)
+        newsFromApi.forEach { $0.isFavorite = newsFromDB.contains($0) }
+        delegate?.modelDidLoadNews()
     }
     
     func didGetAnError(error: Error) {
@@ -88,7 +85,7 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
 
 extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
-        newsFromBD = news.compactMap { News(newsCD: $0) }
-        newsFromBD.forEach { $0.isFavorite = true }
+        newsFromDB = news.compactMap { News(newsCD: $0) }
+        newsFromDB.forEach { $0.isFavorite = true }
     }
 }

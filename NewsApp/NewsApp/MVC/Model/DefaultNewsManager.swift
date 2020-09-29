@@ -12,7 +12,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService: RemoteNewsService
     private let dbService: LocalNewsService
     var newsFromApi: [News] = []
-    var newsFromBD: [News] = []
+    var newsFromDB: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
@@ -30,7 +30,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func filter(favorite: Bool, for text: String) -> [News] {
-        let news = favorite ? newsFromBD : newsFromApi
+        let news = favorite ? newsFromDB : newsFromApi
         if text.isEmpty {
             return news
         } else {
@@ -53,16 +53,16 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func saveData() {
-        dbService.saveData(newsFromBD)
+        dbService.saveData(newsFromDB)
     }
     
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void) {
-        if currentFavoriteState, let indexOfEqual = newsFromBD.firstIndex(of: news) {
-            newsFromBD.remove(at: indexOfEqual)
+        if currentFavoriteState, let indexOfEqual = newsFromDB.firstIndex(of: news) {
+            newsFromDB.remove(at: indexOfEqual)
             completion(.delete)
         } else {
             news.isFavorite = !currentFavoriteState
-            newsFromBD.append(news)
+            newsFromDB.append(news)
             completion(.refresh)
         }
     }
@@ -77,7 +77,7 @@ extension DefaultNewsManager: FavoriteNewsDataProvider {
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
         newsFromApi = news.compactMap { News(JSON: $0) }
-        newsFromApi.forEach { $0.isFavorite = newsFromBD.contains($0) }
+        newsFromApi.forEach { $0.isFavorite = newsFromDB.contains($0) }
         delegate?.modelDidLoadNews()
     }
     
@@ -88,7 +88,7 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
 
 extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
-        newsFromBD = news.compactMap { News(newsCD: $0) }
-        newsFromBD.forEach { $0.isFavorite = true }
+        newsFromDB = news.compactMap { News(newsCD: $0) }
+        newsFromDB.forEach { $0.isFavorite = true }
     }
 }

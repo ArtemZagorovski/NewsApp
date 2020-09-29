@@ -39,7 +39,7 @@ protocol MainNewsDataProvider: NewsDataProvider {
 }
 
 protocol FavoriteNewsDataProvider: NewsDataProvider {
-    var newsFromBD: [News] { get }
+    var newsFromDB: [News] { get }
     func loadFavoriteNews()
 }
 

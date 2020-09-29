@@ -55,7 +55,8 @@ extension FavoriteNewsController: NewsViewDelegate {
 
 extension FavoriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews(_ news: [News]) {
-        view?.updateView(news.map { NewsModel(news: $0) })
+        view?.viewModels = news.map { NewsModel(news: $0) }
+        view?.updateView()
     }
     
     func modelDidGetAnError(error: Error) {

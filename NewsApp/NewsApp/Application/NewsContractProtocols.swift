@@ -27,20 +27,18 @@ protocol NewsView: class {
 
 protocol NewsDataProvider {
     var delegate: NewsManagerDelegate? { get set }
-    func filter(favorite: Bool, for text: String) -> [News]
+    func news(onlyFavorite: Bool, filter: String?) -> [News]
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: () -> Void)
     func saveData()
 }
 
 protocol MainNewsDataProvider: NewsDataProvider {
-    var news: [News] { get }
     func loadNews()
     func refresh()
     func loadMoreNews()
 }
 
 protocol FavoriteNewsDataProvider: NewsDataProvider {
-    var favoriteNews: [News] { get }
     func loadFavoriteNews()
 }
 

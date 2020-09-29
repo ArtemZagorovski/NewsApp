@@ -45,7 +45,7 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidChangeSearchTerm(_ term: String) {
-        view?.updateView(model.filter(favorite: false, for: term).map { NewsModel(news: $0) })
+        view?.updateView(model.news(onlyFavorite: false, filter: term).map { NewsModel(news: $0) })
     }
     
     func viewDidTapFavoriteButton(for viewModel: NewsViewModel, currentFavoriteState: Bool, updateCell: (Actions) -> Void) {
@@ -61,7 +61,7 @@ extension NewsController: NewsViewDelegate {
 
 extension NewsController: NewsManagerDelegate {
     func modelDidLoadNews() {
-        let viewModels = model.news.map { NewsModel(news: $0) }
+        let viewModels = model.news(onlyFavorite: false, filter: nil).map { NewsModel(news: $0) }
         view?.updateView(viewModels)
     }
     

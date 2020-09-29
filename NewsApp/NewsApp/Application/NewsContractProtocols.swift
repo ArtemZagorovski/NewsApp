@@ -20,6 +20,7 @@ protocol NewsViewDelegate: class {
 }
 
 protocol NewsView: class {
+    var viewModels: [NewsViewModel] { get }
     func updateView(_ news: [NewsViewModel])
     func animateActivity()
 }

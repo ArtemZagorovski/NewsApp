@@ -30,8 +30,9 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewWillAppear() {
-        view?.animateActivity()
         model.delegate = self
+        guard view?.viewModels.isEmpty == true else { return }
+        view?.animateActivity()
         model.loadNews()
     }
     

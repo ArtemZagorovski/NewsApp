@@ -62,7 +62,8 @@ extension NewsController: NewsViewDelegate {
 extension NewsController: NewsManagerDelegate {
     func modelDidLoadNews() {
         let viewModels = model.news(onlyFavorite: false, filter: nil).map { NewsModel(news: $0) }
-        view?.updateView(viewModels)
+        guard let viewModelsFromView = view?.viewModels else { return }
+        view?.updateView(viewModelsFromView + viewModels)
     }
     
     func modelDidGetAnError(error: Error) {

@@ -49,7 +49,6 @@ extension NewsController: NewsViewDelegate {
     }
     
     func viewDidPullToRefresh() {
-        view?.updateView([])
         model.refresh()
     }
     
@@ -71,9 +70,8 @@ extension NewsController: NewsViewDelegate {
 
 extension NewsController: NewsManagerDelegate {
     func modelDidLoadNews() {
-        let viewModels = model.news(onlyFavorite: false, filter: nil).map { NewsModel(news: $0) }
-        guard let viewModelsFromView = view?.viewModels else { return }
-        view?.updateView(viewModelsFromView + viewModels)
+        let news = model.news(onlyFavorite: false, filter: nil)
+        view?.updateView(news.map { NewsModel(news: $0) })
     }
     
     func modelDidGetAnError(error: Error) {

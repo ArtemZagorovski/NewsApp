@@ -46,6 +46,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     
     func refresh() {
         page = 1
+        newsFromApi = []
         apiService.loadNews(page: page)
     }
     
@@ -75,7 +76,7 @@ extension DefaultNewsManager: FavoriteNewsDataProvider {
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
-        newsFromApi = news.compactMap { News(JSON: $0) }
+        newsFromApi += news.compactMap { News(JSON: $0) }
         newsFromApi.forEach { $0.isFavorite = newsFromDB.contains($0) }
         delegate?.modelDidLoadNews()
         page += 1

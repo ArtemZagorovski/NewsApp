@@ -166,7 +166,8 @@ extension NewsViewController {
 }
 
 extension NewsViewController: NewsView {
-    func updateView() {
+    func updateView(_ news: [NewsViewModel]) {
+        viewModels = news
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.mainPageLoadActivityIndicator.stopAnimating()

@@ -33,30 +33,31 @@ final class NewsCell: UITableViewCell {
     }()
     
     private let titleLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.textColor = .black
-        lbl.textAlignment = .left
-        lbl.font = UIFont.boldSystemFont(ofSize: 14.0)
-        lbl.numberOfLines = 2
-        return lbl
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .left
+        label.font = UIFont.boldSystemFont(ofSize: 14.0)
+        label.numberOfLines = 2
+        return label
     }()
     
     private let descriptionLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.textColor = .black
-        lbl.textAlignment = .left
-        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
-        lbl.numberOfLines = 3
-        return lbl
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .left
+        label.font = UIFont.italicSystemFont(ofSize: 12.0)
+        label.numberOfLines = 3
+        return label
     }()
     
     private let showMoreLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = Constants.SystemWords.textShowMore.rawValue
-        lbl.textColor = .systemBlue
-        lbl.textAlignment = .right
-        lbl.font = UIFont.italicSystemFont(ofSize: 12.0)
-        return lbl
+        let label = UILabel()
+        label.text = NSLocalizedString(Constants.SystemWords.textShowMore.rawValue, comment: "Show more label")
+        label.textColor = .systemBlue
+        label.textAlignment = .right
+        label.font = UIFont.italicSystemFont(ofSize: 12.0)
+        label.isHidden = false
+        return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -138,12 +139,7 @@ final class NewsCell: UITableViewCell {
         } else {
             favoriteButton.setImage(UIImage(systemName: Constants.SystemWords.flameImageName.rawValue), for: .normal)
         }
-        let hasMoreText = descriptionLabel.actualNumberOfLines() > 3
+        let hasMoreText = descriptionLabel.isTruncated
         showMoreLabel.isHidden = !hasMoreText
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        showMoreLabel.isHidden = true
     }
 }

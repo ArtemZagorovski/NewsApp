@@ -15,10 +15,12 @@ enum Constants {
     
     enum SystemWords: String {
         case news = "News"
+        case favorite = "Favorite"
         case searchNews = "Search news"
         case defaultImageName = "news"
         case flameImageName = "flame"
         case fillFlameImageName = "flame.fill"
         case textShowMore = "...show more"
+        case noNews = "There are no news"
     }
 }

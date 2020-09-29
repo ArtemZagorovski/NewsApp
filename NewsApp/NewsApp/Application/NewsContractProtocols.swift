@@ -32,14 +32,14 @@ protocol NewsDataProvider {
 }
 
 protocol MainNewsDataProvider: NewsDataProvider {
-    var newsFromApi: [News] { get }
+    var news: [News] { get }
     func loadNews()
     func refresh()
     func loadMoreNews()
 }
 
 protocol FavoriteNewsDataProvider: NewsDataProvider {
-    var newsFromDB: [News] { get }
+    var favoriteNews: [News] { get }
     func loadFavoriteNews()
 }
 

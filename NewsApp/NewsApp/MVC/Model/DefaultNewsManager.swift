@@ -11,8 +11,8 @@ import Foundation
 final class DefaultNewsManager: MainNewsDataProvider {
     private let apiService: RemoteNewsService
     private let dbService: LocalNewsService
-    var newsFromApi: [News] = []
-    var newsFromDB: [News] = []
+    var news: [News] = []
+    var favoriteNews: [News] = []
     private var page = 1
     
     weak var delegate: NewsManagerDelegate?
@@ -30,7 +30,7 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func filter(favorite: Bool, for text: String) -> [News] {
-        let news = favorite ? newsFromDB : newsFromApi
+        let news = favorite ? newsFromDB : news
         if text.isEmpty {
             return news
         } else {
@@ -53,16 +53,16 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func saveData() {
-        dbService.saveData(newsFromDB)
+        dbService.saveData(favoriteNews)
     }
     
     func updateFavorites(with news: News, currentFavoriteState: Bool, completion: (Actions) -> Void) {
-        if currentFavoriteState, let indexOfEqual = newsFromDB.firstIndex(of: news) {
-            newsFromDB.remove(at: indexOfEqual)
+        if currentFavoriteState, let indexOfEqual = favoriteNews.firstIndex(of: news) {
+            favoriteNews.remove(at: indexOfEqual)
             completion(.delete)
         } else {
             news.isFavorite = !currentFavoriteState
-            newsFromDB.append(news)
+            favoriteNews.append(news)
             completion(.refresh)
         }
     }
@@ -76,8 +76,8 @@ extension DefaultNewsManager: FavoriteNewsDataProvider {
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
-        newsFromApi = news.compactMap { News(JSON: $0) }
-        newsFromApi.forEach { $0.isFavorite = newsFromDB.contains($0) }
+        news = news.compactMap { News(JSON: $0) }
+        news.forEach { $0.isFavorite = newsFromDB.contains($0) }
         delegate?.modelDidLoadNews()
     }
     
@@ -88,7 +88,7 @@ extension DefaultNewsManager: NewsRemoteServiceDelegate {
 
 extension DefaultNewsManager: NewsLocalServiceDelegate {
     func didLoadData(_ news: [NewsEntity]) {
-        newsFromDB = news.compactMap { News(newsCD: $0) }
-        newsFromDB.forEach { $0.isFavorite = true }
+        favoriteNews = news.compactMap { News(newsCD: $0) }
+        favoriteNews.forEach { $0.isFavorite = true }
     }
 }

@@ -21,9 +21,7 @@ final class FavoriteNewsController {
 }
 
 extension FavoriteNewsController: NewsViewDelegate {
-    func viewWasDeinited() {
-        model.saveData()
-    }
+    func viewWasDeinited() {}
     
     func isPullToRefreshAvailable() -> Bool {
         return false

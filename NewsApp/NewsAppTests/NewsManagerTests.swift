@@ -50,7 +50,7 @@ final class NewsManagerTests: XCTestCase {
         let text = testText
         let model = DefaultNewsManager(apiService: apiService, dbService: mockDBService)
         model.loadNews()
-        let filtredNews = model.filter(favorite: false, for: text)
+        let filtredNews = model.news(onlyFavorite: false, filter: text)
         return expected == filtredNews.map { $0.newsTitle }
     }
     

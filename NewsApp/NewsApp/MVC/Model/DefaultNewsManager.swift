@@ -36,16 +36,17 @@ final class DefaultNewsManager: MainNewsDataProvider {
     }
     
     func loadNews() {
-        apiService.loadNews(page: page)
+        if InternetConnectionManager.shared.isConnectedToNetwork() {
+            apiService.loadNews(page: page)
+        } else {
+            delegate?.modelDidLoadNews()
+            delegate?.modelDidGetAnError(error: NewsError.badInernetConnection)
+        }
     }
     
     func refresh() {
         page = 1
-        apiService.loadNews(page: page)
-    }
-    
-    func loadMoreNews() {
-        page += 1
+        newsFromApi = []
         apiService.loadNews(page: page)
     }
     
@@ -62,6 +63,8 @@ final class DefaultNewsManager: MainNewsDataProvider {
             newsFromDB.append(news)
             completion()
         }
+        guard let indexOfNews = newsFromApi.firstIndex(of: news) else { return }
+        newsFromApi[indexOfNews].isFavorite = !currentFavoriteState
     }
 }
 
@@ -73,9 +76,10 @@ extension DefaultNewsManager: FavoriteNewsDataProvider {
 
 extension DefaultNewsManager: NewsRemoteServiceDelegate {
     func didLoadData(_ news: [[String: AnyObject]]) {
-        newsFromApi = news.compactMap { News(JSON: $0) }
+        newsFromApi += news.compactMap { News(JSON: $0) }
         newsFromApi.forEach { $0.isFavorite = newsFromDB.contains($0) }
         delegate?.modelDidLoadNews()
+        page += 1
     }
     
     func didGetAnError(error: Error) {

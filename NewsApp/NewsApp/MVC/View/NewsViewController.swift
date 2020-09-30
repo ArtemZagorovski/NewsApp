@@ -54,6 +54,10 @@ final class NewsViewController: UIViewController {
         controller?.viewWillAppear()
     }
     
+    deinit {
+        controller?.viewWasDeinited()
+    }
+    
 // MARK: - Private Methods
     private func setDelegats() {
         tableView.delegate = self
@@ -195,7 +199,7 @@ extension NewsViewController: NewsCellDelegate {
                     guard let self = self else { return }
                     switch cellAction {
                     case .refresh:
-                        self.viewModels[indexOfCell.row].isFavorite = !(self.viewModels[indexOfCell.row].isFavorite)
+                        self.viewModels[indexOfCell.row].isFavorite.toggle()
                         self.tableView.reloadRows(at: [indexOfCell], with: .none)
                     case .delete:
                         self.viewModels.remove(at: indexOfCell.row)

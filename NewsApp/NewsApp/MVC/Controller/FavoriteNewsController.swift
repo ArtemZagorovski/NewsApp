@@ -21,6 +21,8 @@ final class FavoriteNewsController {
 }
 
 extension FavoriteNewsController: NewsViewDelegate {
+    func viewWasDeinited() {}
+    
     func isPullToRefreshAvailable() -> Bool {
         return false
     }
@@ -56,10 +58,13 @@ extension FavoriteNewsController: NewsViewDelegate {
 
 extension FavoriteNewsController: NewsManagerDelegate {
     func modelDidLoadNews() {
-        view?.updateView(model.news(onlyFavorite: true, filter: nil).map { NewsModel(news: $0) })
+        let news = model.news(onlyFavorite: true, filter: nil)
+        view?.updateView(news.map { NewsModel(news: $0) })
     }
     
     func modelDidGetAnError(error: Error) {
-        coordinator.showAnError(error: error)
+        DispatchQueue.main.async {
+            self.coordinator.showAnError(error: error)
+        }
     }
 }

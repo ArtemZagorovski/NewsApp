@@ -25,7 +25,7 @@ final class NewsViewController: UIViewController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = Constants.SystemWords.searchNews.rawValue
+        searchController.searchBar.placeholder = NSLocalizedString(Constants.SystemWords.searchNews.rawValue, comment: "placeholder of search bar") 
         searchController.searchBar.sizeToFit()
         searchController.searchBar.searchBarStyle = .prominent
         searchController.searchBar.delegate = self
